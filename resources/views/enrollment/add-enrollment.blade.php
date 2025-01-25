@@ -15,7 +15,6 @@
                 <label for="prefix" class="form-label">Enrollment Prefix</label>
                 <select name="prefix" class="form-select" aria-label="Default select example">
                     @foreach ($enrollmentDetails['prefix'] as $key => $prefix)
-                        @dump($key)
                         <option value="{{$prefix}}">{{$key}}</option>
                     @endforeach
                 </select>

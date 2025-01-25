@@ -21,19 +21,19 @@ class AddCenterSeeder extends Seeder
             $oldCenter = DB::table('old_centers')->where('user_id', $user->id)->first();
 
             $newUser = User::create([
-                'name' => ucfirst(strtolower($user->name)),
-                'email' => strtolower($user->email),
-                'phone' => $user->phone,
+                'name' => trim(ucfirst(strtolower($user->name))),
+                'email' => trim(strtolower($user->email)),
+                'phone' => trim($user->phone),
                 'role' => $user->role == 'center' ? 'Center' : 'User',
                 'password' => $user->password ?: Hash::make('Test@12345'),
                 'status' => (bool)$oldCenter->status
             ]);
             Center::create([
                 'user_id' => $newUser->id,
-                'registration_prefix' => $oldCenter->registration_prefix,
-                'owner_name' => ucfirst(strtolower($oldCenter->owner_name)),
-                'state' => ucfirst(strtolower($oldCenter->state)),
-                'address' => $oldCenter->address,
+                'registration_prefix' => trim($oldCenter->registration_prefix),
+                'owner_name' => trim(ucfirst(strtolower($oldCenter->owner_name))),
+                'state' => trim(ucfirst(strtolower($oldCenter->state))),
+                'address' => trim($oldCenter->address),
             ]);
             $this->command->info("{$key} Center {$newUser->email} Added Successfully");
         }

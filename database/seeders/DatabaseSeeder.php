@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             AddPrefixesSeeder::class,
             AddSvnStreamSeeder::class,
             UpdateCenterImages::class,
+            CourseSeeder::class,
         ]);
 
     }

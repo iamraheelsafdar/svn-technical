@@ -12,13 +12,4 @@ class Prefix extends Model
 
     protected $guarded = [];
 
-//    public function enrollments()
-//    {
-//        return $this->morphedByMany(Enrollment::class, 'prefixable');
-//    }
-
-//    public function courses()
-//    {
-//        return $this->morphedByMany(Course::class, 'prefixable');
-//    }
 }

@@ -15,12 +15,13 @@ class AddPrefixesSeeder extends Seeder
     {
         $oldPrefixes = DB::table('old_svn_prefix_starts')->get();
         foreach ($oldPrefixes as $key => $oldPrefix) {
-            $prefix = Prefix::create([
-                'prefix' => $oldPrefix->reg_prefix,
+            $prefix = Prefix::firstOrCreate([
+                'prefix' => trim($oldPrefix->reg_prefix),  // Search condition
+            ], [
                 'prefix_assign_to' => $oldPrefix->table_name == 'course_managements' ? 'Course Management' : 'Svn Enrollment',
                 'status' => (bool)$oldPrefix->status,
             ]);
-            $this->command->info("{$key} Added prefix: {$prefix->prefix}");
+            $this->command->info("{$key} Added or found prefix: {$prefix->prefix}");
         }
     }
 }

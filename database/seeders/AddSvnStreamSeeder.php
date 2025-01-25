@@ -18,7 +18,7 @@ class AddSvnStreamSeeder extends Seeder
         $svnstream = DB::table('old_svn_streams')->get();
         foreach ($svnstream as $stream) {
             $newStream = SvnStream::create([
-                'name' => $stream->stream_name,
+                'name' => trim($stream->stream_name),
                 'status' => 1,
             ]);
             $session = DB::table('old_svn_sessions')->where('stream_type', $stream->id)->first();
@@ -26,7 +26,7 @@ class AddSvnStreamSeeder extends Seeder
             Enrollment::create([
                 'stream_id' => $newStream->id,
                 'prefix_id' => $prefixes->id,
-                'name' => $session->session_name,
+                'name' => trim($session->session_name),
                 'year_start' => $session->year_start,
             ]);
             $this->command->info('Enrollment created: ' . $session->session_name);

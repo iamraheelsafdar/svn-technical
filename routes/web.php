@@ -30,8 +30,13 @@ Route::group(['middleware' => 'logs'], function () {
         Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
+        /************************* Course Routes *********************************/
         Route::get('/courses', [CourseController::class, 'courses'])->name('coursesPage');
-
+        Route::get('/add-course', [CourseController::class, 'addCourseView'])->name('addCoursePage');
+        Route::post('/add-course', [CourseController::class, 'addCourse'])->name('addCourse');
+        Route::post('/update-course-status', [CourseController::class, 'updateCourseStatus']);
+        Route::get('/update-course/{id}', [CourseController::class, 'updateCourseView'])->name('updateCourseView');
+        Route::post('/update-course', [CourseController::class, 'updateCourse'])->name('updateCourse');
 
         /************************* Enrollment Routes *********************************/
         Route::get('/enrollment', [EnrollmentController::class, 'enrollments'])->name('enrollmentsPage');

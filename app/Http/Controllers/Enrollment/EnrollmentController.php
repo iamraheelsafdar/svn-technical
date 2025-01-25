@@ -91,6 +91,7 @@ class EnrollmentController extends Controller
     public function updateEnrollmentStatus(CheckEnrollmentIdRequest $request): JsonResponse
     {
         $prefix = Enrollment::find($request->id);
+        SvnStream::where('id', $prefix->stream_id)->update(['status' => (bool)$request->status]);
         $prefix->update(['status' => (bool)$request->status]);
         return response()->json([
             'header_code' => 200,
