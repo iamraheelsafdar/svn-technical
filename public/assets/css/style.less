@@ -32,6 +32,8 @@ body {
         min-width: 250px;
         max-width: 250px;
         transition: all 0.3s;
+        z-index: 1;
+
     }
 
     .content {
@@ -148,8 +150,9 @@ body {
 footer {
     left: 0;
     right: 0;
-    z-index: -1;
+    z-index: 0;
     background-color: #337ab7;
+    bottom: 0;
 }
 
 .form-button {
@@ -190,9 +193,18 @@ footer {
     }
 
     thead {
-        tr {
+        tr:first-child {
             background-color: #337ab7;
             color: #fff;
+        }
+    }
+
+    thead {
+        tr:last-child {
+            background-color: #989ea5;
+            color: #fff;
+            border: none;
+
         }
     }
 }
@@ -295,4 +307,11 @@ footer {
         color: #fff;
     }
 
+}
+
+.student-photo {
+    height: 50px;
+    width: 50PX;
+    object-fit: fill;
+    border-radius: 100%;
 }

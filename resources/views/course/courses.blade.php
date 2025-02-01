@@ -15,33 +15,46 @@
                 <th>Status</th>
                 <th>Action</th>
             </tr>
-            </thead>
-            <tbody>
             <form action="{{route('coursesPage')}}" method="GET" class="d-flex justify-content-end">
                 <tr>
-                    <td>#</td>
-                    <td>
+                    <th>#</th>
+                    <th>
                         <input class="form-control border-0" type="text" name="course_name"
                                value="{{ request()->input('course_name') }}" placeholder="Search Course Name"/>
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <input class="form-control border-0" type="text" name="stream_name"
                                value="{{ request()->input('stream_name') }}" placeholder="Search Stream Name"/>
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <input class="form-control border-0" type="text" name="enrollment"
                                value="{{ request()->input('enrollment') }}" placeholder="Search Enrollment"/>
-                    </td>
-                    <td></td>
-                    <td>
-                        <input class="form-control border-0" type="text" name="course_type"
-                               value="{{ request()->input('course_type') }}" placeholder="Search Course Type"/>
-                    </td>
-                    <td>
+                    </th>
+                    <th></th>
+                    <th>
+                        <select class="form-control border-0" name="course_type">
+                            <option
+                                value="" {{ old('course_type', request()->input('course_type')) == null ? 'selected' : '' }}>
+                                Select Type
+                            </option>
+
+                            @php
+                                $types = ['year', 'semester', 'monthly'];
+                                $selectedType = request()->input('course_type'); // Get selected value from request
+                            @endphp
+
+                            @foreach($types as $type)
+                                <option value="{{ $type }}" {{ $selectedType == $type ? 'selected' : '' }}>
+                                    {{ ucfirst($type) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </th>
+                    <th>
                         <input class="form-control border-0" type="text" id="dateInput" name="date"
                                value="{{ request()->input('date') }}" placeholder="dd-mm-yyyy"/>
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <select class="form-control border-0" name="status">
                             <option
                                 value="" {{ old('status', request()->input('status')) == null ? 'selected' : 'disabled' }}>
@@ -54,16 +67,19 @@
                                 Inactive
                             </option>
                         </select>
-                    </td>
-                    <td class="d-flex text-nowrap">
+                    </th>
+                    <th class="d-flex text-nowrap">
                         <button class="btn btn-primary" type="submit">Search</button>
                         <a href="{{route('coursesPage')}}" class="btn btn-dark w-100 d-block ms-2"
                            type="submit">Clear</a>
                         <a href="{{ route('addCoursePage') }}" class="btn btn-warning ms-2">Add Course</a>
-                    </td>
+                    </th>
 
                 </tr>
             </form>
+            </thead>
+            <tbody>
+
 
             @forelse ($courses['data'] as $key => $course)
                 <tr>
@@ -72,10 +88,10 @@
                     <td>{{ $course['stream_name'] }}</td>
                     <td>{{ $course['enrollment'] }}</td>
                     <td>{{ $course['duration'] }}</td>
-                    <td>{{ $course['course_type'] }}</td>
+                    <td>{{ ucfirst($course['course_type']) }}</td>
                     <td>{{ $course['created_at'] }}</td>
                     <td class="align-items-center">
-                        <div class="form-check form-switch">
+                        <div class="form-switch">
                             <input
                                 class="form-check-input toggle-status text-center"
                                 type="checkbox"

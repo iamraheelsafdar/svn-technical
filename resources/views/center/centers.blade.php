@@ -18,57 +18,57 @@
                 <th>Last Login</th>
                 <th>Action</th>
             </tr>
-            </thead>
-            <tbody>
             <form action="{{route('centersPage')}}" method="GET" class="d-flex justify-content-end">
                 <tr>
-                    <td>#</td>
-                    <td>
+                    <th>#</th>
+                    <th>
                         <input class="form-control border-0" type="text" id="dateInput" name="date"
                                value="{{ request()->input('date') }}" placeholder="dd-mm-yyyy"/>
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <input class="form-control border-0" type="text" name="prefix"
                                value="{{ request()->input('prefix') }}" placeholder="Search Registration Prefix"/>
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <input class="form-control border-0" type="text" name="name"
                                value="{{ request()->input('name') }}" placeholder="Search Name"/>
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <input class="form-control border-0" type="text" name="owner_name"
                                value="{{ request()->input('owner_name') }}" placeholder="Search Owner Name"/>
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <input class="form-control border-0" type="text" name="email"
                                value="{{ request()->input('email') }}" placeholder="Search Email"/>
-                    </td>
-{{--                    <td>--}}
-{{--                        <input class="form-control border-0" type="text" name="phone"--}}
-{{--                               value="{{ request()->input('phone') }}" placeholder="Search Phone"/>--}}
-{{--                    </td>--}}
-{{--                    <td>--}}
-{{--                        <input class="form-control border-0" type="text" name="address"--}}
-{{--                               value="{{ request()->input('address') }}" placeholder="Search Address"/>--}}
-{{--                    </td>--}}
-                    <td><input class="form-control border-0" type="text" name="state"
-                               value="{{ request()->input('state') }}" placeholder="Search state"/></td>
-                    <td>
+                    </th>
+                    {{--                    <th>--}}
+                    {{--                        <input class="form-control border-0" type="text" name="phone"--}}
+                    {{--                               value="{{ request()->input('phone') }}" placeholder="Search Phone"/>--}}
+                    {{--                    </th>--}}
+                    {{--                    <th>--}}
+                    {{--                        <input class="form-control border-0" type="text" name="address"--}}
+                    {{--                               value="{{ request()->input('address') }}" placeholder="Search Address"/>--}}
+                    {{--                    </th>--}}
+                    <th><input class="form-control border-0" type="text" name="state"
+                               value="{{ request()->input('state') }}" placeholder="Search state"/></th>
+                    <th>
                         <select class="form-control border-0" name="status">
                             <option value="" {{ old('status', request()->input('status')) == null ? 'selected' : 'disabled' }}>Select Status</option>
                             <option value="1" {{ old('status', request()->input('status')) == 1 ? 'selected' : '' }}>Active</option>
                             <option value="0" {{ old('status', request()->input('status')) == '0' ? 'selected' : '' }}>Inactive</option>
                         </select>
-                    </td>
-                    <td></td>
-                    <td class="d-flex text-nowrap" >
+                    </th>
+                    <th></th>
+                    <th class="d-flex text-nowrap" >
                         <button class="btn btn-primary" type="submit">Search</button>
                         <a href="{{route('centersPage')}}" class="btn btn-dark w-100 d-block ms-2" type="submit">Clear</a>
                         <a href="{{ route('addCenterPage') }}" class="btn btn-warning ms-2">Add Center</a>
-                    </td>
+                    </th>
 
                 </tr>
             </form>
+            </thead>
+            <tbody>
 
             @forelse ($centers['data'] as $key => $center)
                 <tr>
@@ -82,7 +82,7 @@
 {{--                    <td>{{ $center['address'] }}</td>--}}
                     <td>{{ $center['state'] }}</td>
                     <td class="align-items-center">
-                        <div class="form-check form-switch">
+                        <div class="form-switch">
                             <input
                                 class="form-check-input toggle-status text-center"
                                 type="checkbox"

@@ -12,16 +12,14 @@
                 <th>Created At</th>
                 <th>Action</th>
             </tr>
-            </thead>
-            <tbody>
             <form action="{{route('prefixesPage')}}" method="GET" class="d-flex justify-content-end">
                 <tr>
-                    <td>#</td>
-                    <td>
+                    <th>#</th>
+                    <th>
                         <input class="form-control border-0" type="text" name="prefix_name"
                                value="{{ request()->input('prefix_name') }}" placeholder="Search Prefix"/>
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <select class="form-control border-0" name="assign_prefix">
                             <option value="" {{ old('assign_prefix', request()->input('assign_prefix')) == null ? 'selected' : 'disabled' }}>Select Status</option>
                             @foreach($assignedPrefixes as $assignedPrefix)
@@ -29,27 +27,30 @@
                                     {{$assignedPrefix}}</option>
                             @endforeach
                         </select>
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <select class="form-control border-0" name="status">
                             <option value="" {{ old('status', request()->input('status')) == null ? 'selected' : 'disabled' }}>Select Status</option>
                             <option value="1" {{ old('status', request()->input('status')) == 1 ? 'selected' : '' }}>Active</option>
                             <option value="0" {{ old('status', request()->input('status')) == '0' ? 'selected' : '' }}>Inactive</option>
                         </select>
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <input class="form-control border-0" type="text" id="dateInput" name="date"
                                value="{{ request()->input('date') }}" placeholder="dd-mm-yyyy"/>
-                    </td>
-                    <td class="d-flex text-nowrap mx-auto text-center justify-content-center" >
+                    </th>
+                    <th class="d-flex text-nowrap mx-auto text-center justify-content-center" >
                         <button class="btn btn-primary" type="submit">Search</button>
                         <a href="{{route('prefixesPage')}}" class="btn btn-dark d-block ms-2" type="submit">Clear</a>
                         <a href="{{ route('addPrefixPage') }}" class="btn btn-warning ms-2">Add Prefix</a>
-                    </td>
+                    </th>
 
 
                 </tr>
             </form>
+            </thead>
+            <tbody>
+
 
             @forelse ($prefixes['data'] as $key => $prefix)
                 <tr>
@@ -57,7 +58,7 @@
                     <td>{{ $prefix['prefix'] }}</td>
                     <td>{{ $prefix['prefix_assign_to'] }}</td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-switch">
                             <input
                                 class="form-check-input toggle-status text-center"
                                 type="checkbox"

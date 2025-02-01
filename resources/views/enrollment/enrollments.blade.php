@@ -14,47 +14,48 @@
                 <th>Status</th>
                 <th>Action</th>
             </tr>
-            </thead>
-            <tbody>
             <form action="{{route('enrollmentsPage')}}" method="GET" class="d-flex justify-content-end">
                 <tr>
-                    <td>#</td>
-                    <td>
+                    <th>#</th>
+                    <th>
                         <input class="form-control border-0" type="text" name="enrollment_name"
                                value="{{ request()->input('enrollment_name') }}" placeholder="Search Enrollment Name"/>
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <input class="form-control border-0" type="text" name="prefix_name"
                                value="{{ request()->input('prefix_name') }}" placeholder="Search Prefix Name"/>
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <input class="form-control border-0" type="text" name="stream_name"
                                value="{{ request()->input('stream_name') }}" placeholder="Search Stream Name"/>
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <input class="form-control border-0" type="text" name="enrollment_year"
                                value="{{ request()->input('enrollment_year') }}" placeholder="Search Enrollment Year"/>
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <input class="form-control border-0" type="text" id="dateInput" name="date"
                                value="{{ request()->input('date') }}" placeholder="dd-mm-yyyy"/>
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <select class="form-control border-0" name="status">
                             <option value="" {{ old('status', request()->input('status')) == null ? 'selected' : 'disabled' }}>Select Status</option>
                             <option value="1" {{ old('status', request()->input('status')) == 1 ? 'selected' : '' }}>Active</option>
                             <option value="0" {{ old('status', request()->input('status')) == '0' ? 'selected' : '' }}>Inactive</option>
                         </select>
-                    </td>
-                    <td class="d-flex text-nowrap">
+                    </th>
+                    <th class="d-flex text-nowrap">
                         <button class="btn btn-primary" type="submit">Search</button>
                         <a href="{{route('enrollmentsPage')}}" class="btn btn-dark w-100 d-block ms-2" type="submit">Clear</a>
                         <a href="{{ route('addEnrollmentPage') }}" class="btn btn-warning ms-2">Add Enrollment</a>
 
-                    </td>
+                    </th>
 
                 </tr>
             </form>
+            </thead>
+            <tbody>
+
 
             @forelse ($enrollments['data'] as $key => $enrollment)
                 <tr>
@@ -65,7 +66,7 @@
                     <td>{{ $enrollment['enrollment_year'] }}</td>
                     <td>{{ $enrollment['created_at'] }}</td>
                     <td class="align-items-center">
-                        <div class="form-check form-switch">
+                        <div class="form-switch">
                             <input
                                 class="form-check-input toggle-status text-center"
                                 type="checkbox"
