@@ -99,7 +99,7 @@
                     </div>
                 @endfor
             </div>
-            <button type="submit" class="btn btn-primary mt-5 mx-auto d-block">Add Subjects</button>
+            <button type="submit" class="btn btn-success mt-5 mx-auto d-block">Add Subjects</button>
         </form>
     </div>
 

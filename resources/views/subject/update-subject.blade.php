@@ -85,7 +85,7 @@
                 @endforeach
             </div>
 
-            <button type="submit" class="btn btn-primary mt-5 mx-auto d-block">Update Subjects</button>
+            <button type="submit" class="btn btn-danger mt-5 mx-auto d-block">Update Subjects</button>
         </form>
     </div>
 

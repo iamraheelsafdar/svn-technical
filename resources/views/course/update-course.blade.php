@@ -66,7 +66,7 @@
                     </select>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary form-button w-auto mx-auto">Update</button>
+            <button type="submit" class="btn btn-info w-auto mx-auto">Update Course</button>
         </form>
     </div>
     <script>

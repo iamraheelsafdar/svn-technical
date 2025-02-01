@@ -1,11 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Prefixes')
 @section('content')
-    <div class="pb-4 d-flex justify-content-end align-items-center">
-        <a href="{{ route('addPrefixPage') }}" class="btn btn-primary">Add Prefix</a>
-    </div>
-
-
     <div class="table-responsive d-block">
         <table class="table table-striped pagination-table">
             <thead>
@@ -46,9 +41,10 @@
                         <input class="form-control border-0" type="text" id="dateInput" name="date"
                                value="{{ request()->input('date') }}" placeholder="dd-mm-yyyy"/>
                     </td>
-                    <td class="d-flex" >
+                    <td class="d-flex text-nowrap mx-auto text-center justify-content-center" >
                         <button class="btn btn-primary" type="submit">Search</button>
-                        <a href="{{route('prefixesPage')}}" class="btn btn-dark w-100 d-block ms-2" type="submit">Clear</a>
+                        <a href="{{route('prefixesPage')}}" class="btn btn-dark d-block ms-2" type="submit">Clear</a>
+                        <a href="{{ route('addPrefixPage') }}" class="btn btn-warning ms-2">Add Prefix</a>
                     </td>
 
 
@@ -75,7 +71,7 @@
                     </td>
                     <td>{{ $prefix['created_at'] }}</td>
                     <td>
-                        <a href="{{ route('updatePrefixView', ['id' => $prefix['id']]) }}" class="btn btn-primary">Edit</a>
+                        <a href="{{ route('updatePrefixView', ['id' => $prefix['id']]) }}" class="btn btn-danger"><i class="bi bi-pencil-square"></i> Edit</a>
                     </td>
                 </tr>
             @empty

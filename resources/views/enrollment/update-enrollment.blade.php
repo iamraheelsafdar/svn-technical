@@ -45,7 +45,7 @@
                     @endforeach
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary form-button w-auto mx-auto">Update</button>
+            <button type="submit" class="btn btn-danger w-auto mx-auto">Update Enrollment</button>
         </form>
     </div>
 @endsection

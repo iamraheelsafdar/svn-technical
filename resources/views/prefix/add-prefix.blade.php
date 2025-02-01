@@ -19,7 +19,7 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-primary form-button w-auto mx-auto">Add Prefix</button>
+            <button type="submit" class="btn btn-warning w-auto mx-auto">Add Prefix</button>
         </form>
     </div>
 @endsection

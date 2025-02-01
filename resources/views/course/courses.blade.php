@@ -1,9 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Courses')
 @section('content')
-    <div class="pb-4 d-flex justify-content-end align-items-center">
-        <a href="{{ route('addCoursePage') }}" class="btn btn-primary">Add Course</a>
-    </div>
     <div class="table-responsive d-block">
         <table class="table table-striped pagination-table">
             <thead>
@@ -58,10 +55,11 @@
                             </option>
                         </select>
                     </td>
-                    <td class="d-flex">
+                    <td class="d-flex text-nowrap">
                         <button class="btn btn-primary" type="submit">Search</button>
                         <a href="{{route('coursesPage')}}" class="btn btn-dark w-100 d-block ms-2"
                            type="submit">Clear</a>
+                        <a href="{{ route('addCoursePage') }}" class="btn btn-warning ms-2">Add Course</a>
                     </td>
 
                 </tr>
@@ -91,9 +89,9 @@
                     </td>
                     <td>
                         <a href="{{ count($course['subjects']) > 0 ? route('updateSubjectView', ['id' => $course['id']]) : route('addSubjectPage', ['id' => $course['id']]) }}"
-                           class="btn btn-dark d-block mb-2">{{count($course['subjects']) > 0 ? 'Edit Subject': 'Add Subject'}}</a>
+                           class="btn {{count($course['subjects']) > 0 ? 'btn-danger': 'btn-success'}} "> {!! count($course['subjects']) > 0 ? '<i class="bi bi-pencil-square"></i> Edit Subject' : 'Add Subject' !!}</a>
                         <a href="{{ route('updateCourseView', ['id' => $course['id']]) }}"
-                           class="btn btn-primary d-block">Edit Course</a>
+                           class="btn btn-info"><i class="bi bi-pencil-square"></i> Edit Course</a>
                     </td>
                 </tr>
             @empty

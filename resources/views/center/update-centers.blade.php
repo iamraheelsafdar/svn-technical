@@ -75,7 +75,7 @@
                        value="{{ $center->address }}"
                        placeholder="Enter center address">
             </div>
-            <button type="submit" class="btn btn-primary form-button w-auto mx-auto">Update</button>
+            <button type="submit" class="btn btn-danger w-auto mx-auto">Update Center</button>
         </form>
     </div>
 @endsection

@@ -61,7 +61,7 @@
                     </select>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary form-button w-auto mx-auto">Submit</button>
+            <button type="submit" class="btn btn-warning w-auto mx-auto">Add Course</button>
         </form>
     </div>
     <script>

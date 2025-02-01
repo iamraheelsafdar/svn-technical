@@ -26,7 +26,7 @@
                     <i class="bi bi-people-fill"></i> Centers
                 </a>
             </li>
-            <li class="{{request()->routeIs('coursesPage') ? 'active' : '' }}">
+            <li class="{{request()->routeIs('coursesPage') || request()->routeIs('addCoursePage') || request()->routeIs('updateCourseView') || request()->routeIs('addSubjectPage') || request()->routeIs('updateSubjectView') ? 'active' : '' }}">
                 <a href="{{route('coursesPage')}}"
                    class="text-decoration-none px-3 py-3 d-block d-flex justify-content-between"
                    title="Courses">

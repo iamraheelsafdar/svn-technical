@@ -1,9 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Centers')
 @section('content')
-    <div class="pb-4 d-flex justify-content-end align-items-center">
-        <a href="{{ route('addCenterPage') }}" class="btn btn-primary">Add Center</a>
-    </div>
     <div class="table-responsive d-block">
         <table class="table table-striped pagination-table">
             <thead>
@@ -64,9 +61,10 @@
                         </select>
                     </td>
                     <td></td>
-                    <td class="d-flex" >
+                    <td class="d-flex text-nowrap" >
                         <button class="btn btn-primary" type="submit">Search</button>
                         <a href="{{route('centersPage')}}" class="btn btn-dark w-100 d-block ms-2" type="submit">Clear</a>
+                        <a href="{{ route('addCenterPage') }}" class="btn btn-warning ms-2">Add Center</a>
                     </td>
 
                 </tr>
@@ -98,7 +96,7 @@
                     </td>
                     <td>{{ $center['last_login'] }}</td>
                     <td>
-                        <a href="{{ route('updateCenterView', ['id' => $center['id']]) }}" class="btn btn-primary">Edit</a>
+                        <a href="{{ route('updateCenterView', ['id' => $center['id']]) }}" class="btn btn-danger"><i class="bi bi-pencil-square"></i> Edit</a>
                     </td>
                 </tr>
             @empty
