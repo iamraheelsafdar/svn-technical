@@ -22,4 +22,4 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-storage/app
+/storage/app

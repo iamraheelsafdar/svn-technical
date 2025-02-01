@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             UpdateCenterImages::class,
             CourseSeeder::class,
             AddStudentSeeder::class,
+            UpdateStudentImages::class,
         ]);
 
     }
