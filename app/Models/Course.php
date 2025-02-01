@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Course extends Model
@@ -21,5 +22,10 @@ class Course extends Model
     public function prefix(): HasOne
     {
         return $this->hasOne(Prefix::class, 'id', 'prefix_id');
+    }
+
+    public function subjects(): hasMany
+    {
+        return $this->hasMany(Subject::class, 'course_id', 'id');
     }
 }

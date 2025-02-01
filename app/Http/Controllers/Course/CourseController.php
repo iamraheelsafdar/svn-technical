@@ -15,11 +15,11 @@ use App\Filters\Course\CourseStreamFilter;
 use App\Filters\Course\CourseNameFilter;
 use App\Filters\Course\CourseTypeFilter;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\SvnStream;
 use App\Models\Prefix;
@@ -45,10 +45,11 @@ class CourseController extends Controller
                 CourseCreatedFilter::class
             ])
             ->thenReturn()
-            ->with('stream.enrollments')
+            ->with('stream.enrollments', 'subjects')
             ->latest()
             ->orderBy('id', 'desc')
             ->paginate($request->per_page ?? 5);
+
         $orderRequests = new OrderRequestCollection($enrollments);
         $orderRequests->setResourceClass(CourseResource::class);
         $filteredCourses = $orderRequests->toArray($request);

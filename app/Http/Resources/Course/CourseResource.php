@@ -23,6 +23,7 @@ class CourseResource extends JsonResource
             'stream_name' => $this->stream->name,
             'enrollment' => implode(', ', $this->stream->enrollments->pluck('name')->toArray()),
             'created_at' => $this->created_at->format('d-m-Y'),
+            'subjects' => $this->subjects->toArray(),
         ];
     }
 }

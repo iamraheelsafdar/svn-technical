@@ -46,14 +46,22 @@
                     </td>
                     <td>
                         <select class="form-control border-0" name="status">
-                            <option value="" {{ old('status', request()->input('status')) == null ? 'selected' : 'disabled' }}>Select Status</option>
-                            <option value="1" {{ old('status', request()->input('status')) == 1 ? 'selected' : '' }}>Active</option>
-                            <option value="0" {{ old('status', request()->input('status')) == '0' ? 'selected' : '' }}>Inactive</option>
+                            <option
+                                value="" {{ old('status', request()->input('status')) == null ? 'selected' : 'disabled' }}>
+                                Select Status
+                            </option>
+                            <option value="1" {{ old('status', request()->input('status')) == 1 ? 'selected' : '' }}>
+                                Active
+                            </option>
+                            <option value="0" {{ old('status', request()->input('status')) == '0' ? 'selected' : '' }}>
+                                Inactive
+                            </option>
                         </select>
                     </td>
-                    <td class="d-flex" >
+                    <td class="d-flex">
                         <button class="btn btn-primary" type="submit">Search</button>
-                        <a href="{{route('coursesPage')}}" class="btn btn-dark w-100 d-block ms-2" type="submit">Clear</a>
+                        <a href="{{route('coursesPage')}}" class="btn btn-dark w-100 d-block ms-2"
+                           type="submit">Clear</a>
                     </td>
 
                 </tr>
@@ -82,7 +90,10 @@
                         </div>
                     </td>
                     <td>
-                        <a href="{{ route('updateCourseView', ['id' => $course['id']]) }}" class="btn btn-primary">Edit</a>
+                        <a href="{{ count($course['subjects']) > 0 ? route('updateSubjectView', ['id' => $course['id']]) : route('addSubjectPage', ['id' => $course['id']]) }}"
+                           class="btn btn-dark d-block mb-2">{{count($course['subjects']) > 0 ? 'Edit Subject': 'Add Subject'}}</a>
+                        <a href="{{ route('updateCourseView', ['id' => $course['id']]) }}"
+                           class="btn btn-primary d-block">Edit Course</a>
                     </td>
                 </tr>
             @empty

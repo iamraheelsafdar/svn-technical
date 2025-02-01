@@ -120,5 +120,7 @@
 
 <script src="{{asset('assets/js/script.js')}}"></script>
 <script src="{{asset('assets/js/center.js')}}"></script>
-<script src="{{asset('assets/js/course.js')}}"></script>
+<script src="{{asset('assets/js/addSubject.js')}}"></script>
+<script src="{{asset('assets/js/subject.js')}}"></script>
+<script src="{{asset('assets/js/updateSubject.js')}}"></script>
 </body>
