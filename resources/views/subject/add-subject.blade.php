@@ -1,8 +1,7 @@
 @extends('layouts.app')
-@section('title', 'Add Subject')
+@section('title', $course->name)
 @section('content')
     <div class="pb-4">
-        <h4 class="text-center">{{$course->name}}</h4>
         <form action="{{ route('addSubject') }}" method="POST">
             @csrf
             <div class="row scroll">

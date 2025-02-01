@@ -1,8 +1,7 @@
 @extends('layouts.app')
-@section('title', 'Update Subject')
+@section('title', $course->name)
 @section('content')
     <div class="pb-4">
-        <h4 class="text-center">{{$course->name}}</h4>
         <form action="{{ route('updateSubjects') }}" method="POST">
             @csrf
             <input type="hidden" name="course_id" value="{{$course->id}}">
