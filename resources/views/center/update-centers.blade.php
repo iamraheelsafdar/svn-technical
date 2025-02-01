@@ -45,7 +45,7 @@
                 <label for="logo" class="form-label">Center Logo</label>
                 <img src="" alt="">
                 <div class="d-flex align-items-center">
-                    <img id="profileImage" src="{{ asset('storage/' . $center->user->profile_image)}}"
+                    <img id="profileImage" src="{{isset($center) && $center->user->profile_image ? asset('storage/' . $center->user->profile_image) : asset('assets/img/profileImage.png')}}"
                          alt="Logo Preview"
                          style="max-width: 46px;" class="img-thumbnail">
                     <input type="file" name="profile_image" id="logo" class="form-control">

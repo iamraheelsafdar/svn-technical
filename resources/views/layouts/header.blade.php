@@ -10,7 +10,7 @@
     </header>
 
     <nav>
-        <ul class="list-unstyled px-2">
+        <ul class="px-2">
             @if(in_array(auth()->user()->role, ['Admin', 'Center']))
                 <li class="{{ request()->routeIs('dashboardView') ? 'active' : '' }}">
                     <a href="{{ route('dashboardView') }}" class="text-decoration-none px-3 py-3 d-block"
@@ -18,8 +18,8 @@
                         <i class="bi bi-house-door-fill"></i> Dashboard
                     </a>
                 </li>
-                <li>
-                    <a href="#" class="text-decoration-none px-3 py-3 d-block" title="Services">
+                <li class="{{ request()->routeIs('studentsView') ? 'active' : '' }}">
+                    <a href="{{route('studentsView')}}" class="text-decoration-none px-3 py-3 d-block" title="Services">
                         <i class="bi bi-person-workspace"></i> Students
                     </a>
                 </li>
