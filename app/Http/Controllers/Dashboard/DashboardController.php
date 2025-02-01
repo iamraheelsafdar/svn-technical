@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Requests\Dashboard\ProfileSettingRequest;
 use App\Http\Requests\Dashboard\SiteSettingRequest;
-use App\Models\Center;
-use App\Models\Enrollment;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
@@ -13,7 +11,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Console\Application;
 use Illuminate\View\Factory;
 use App\Models\SiteSettings;
+use App\Models\Enrollment;
 use Illuminate\View\View;
+use App\Models\Students;
+use App\Models\Course;
 use App\Models\User;
 
 class DashboardController extends Controller
@@ -23,6 +24,8 @@ class DashboardController extends Controller
     {
         $centers = User::where('role', 'Center')->get();
         $enrollments = new Enrollment;
+        $students = new Students;
+        $courses = new Course;
         $details = [
             'total_centers' => $centers->count(),
             'inactive_centers' => $centers->where('status', 0)->count(),
@@ -30,8 +33,14 @@ class DashboardController extends Controller
             'total_enrollments' => $enrollments->count(),
             'inactive_enrollments' => $enrollments->where('status', 0)->count(),
             'active_enrollments' => $enrollments->where('status', 1)->count(),
+            'total_courses' => $courses->count(),
+            'inactive_courses' => $courses->where('status', 0)->count(),
+            'active_courses' => $courses->where('status', 1)->count(),
+            'total_students' => auth()->user()->role == 'Admin' ? $students->count() : $students->where('center_id', auth()->user()->id)->count(),
+            'inactive_students' => auth()->user()->role == 'Admin' ? $students->where('status', 0)->count() : $students->where('center_id', auth()->user()->id)->where('status', 0)->count(),
+            'active_students' => auth()->user()->role == 'Admin' ? $students->where('status', 1)->count() : $students->where('center_id', auth()->user()->id)->where('status', 1)->count(),
         ];
-        return view('dashboard.dashboard' , ['details' => $details]);
+        return view('dashboard.dashboard', ['details' => $details]);
     }
 
     /**

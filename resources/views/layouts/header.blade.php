@@ -19,7 +19,7 @@
                     </a>
                 </li>
                 <li class="{{ request()->routeIs('studentsView') ? 'active' : '' }}">
-                    <a href="{{route('studentsView')}}" class="text-decoration-none px-3 py-3 d-block" title="Services">
+                    <a href="{{route('studentsView')}}" class="text-decoration-none px-3 py-3 d-block" title="Students">
                         <i class="bi bi-person-workspace"></i> Students
                     </a>
                 </li>

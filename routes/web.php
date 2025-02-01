@@ -33,6 +33,7 @@ Route::group(['middleware' => 'logs'], function () {
 
         /************************ Students Routes ***********************************/
         Route::get('/students', [StudentController::class, 'students'])->name('studentsView');
+        Route::get('/add-student', [CourseController::class, 'addStudentView'])->name('addStudentView');
         Route::get('/update-student/{id}', [CourseController::class, 'updateStudentView'])->name('updateStudentView');
 
         /************************* Dashboard Routes *********************************/
