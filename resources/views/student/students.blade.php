@@ -91,7 +91,7 @@
                         <button class="btn btn-primary" type="submit">Search</button>
                         <a href="{{route('studentsView')}}" class="btn btn-dark d-block ms-2" type="submit">Clear</a>
                         @if(auth()->user()->role == "Center")
-                            <a href="{{ route('studentsView') }}" class="btn btn-warning ms-2">Add Student</a>
+                            <a href="{{ route('addStudentView') }}" class="btn btn-warning ms-2">Add Student</a>
                         @endif
                     </th>
                 </tr>

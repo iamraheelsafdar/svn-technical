@@ -46,4 +46,9 @@ class StudentController extends Controller
         $filteredStudents = $orderRequests->toArray($request);
         return view('student.students', ['students' => $filteredStudents]);
     }
+
+    public function addStudentView(Request $request): Factory|Application|View
+    {
+        return view('student.add-student');
+    }
 }

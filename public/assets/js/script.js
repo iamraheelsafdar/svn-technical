@@ -1,4 +1,10 @@
-// Side Navigation
+document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(() => {
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("content").style.display = "block";
+    }, 500); // Simulating delay for smooth effect
+});// Side Navigation
+
 $('.open-btn').on('click', function () {
     $('#side_nav').addClass('active');
 });

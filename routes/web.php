@@ -33,8 +33,8 @@ Route::group(['middleware' => 'logs'], function () {
 
         /************************ Students Routes ***********************************/
         Route::get('/students', [StudentController::class, 'students'])->name('studentsView');
-        Route::get('/add-student', [CourseController::class, 'addStudentView'])->name('addStudentView');
-        Route::get('/update-student/{id}', [CourseController::class, 'updateStudentView'])->name('updateStudentView');
+        Route::get('/add-student', [StudentController::class, 'addStudentView'])->name('addStudentView');
+        Route::get('/update-student/{id}', [StudentController::class, 'updateStudentView'])->name('updateStudentView');
 
         /************************* Dashboard Routes *********************************/
         Route::get('/dashboard', [DashboardController::class, 'dashboardView'])->name('dashboardView');

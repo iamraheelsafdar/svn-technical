@@ -16,6 +16,9 @@
     <link rel="shortcut icon" href="{{asset('assets/img/siteLogo.png')}}">
 </head>
 <body>
+<div id="loader">
+    <div class="spinner"></div>
+</div>
 <div id="toastContainer" class="toast-container"></div>
 <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -66,7 +69,7 @@
 
 
 @if(auth()->user())
-    <div class="main-container d-flex">
+    <div class="main-container d-flex" id="content">
         @include('layouts.header')
         <main class="content">
             <nav class="navbar navbar-expand-md navbar-light bg-light top-bar" aria-label="Main navigation">
