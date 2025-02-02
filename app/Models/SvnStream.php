@@ -17,4 +17,9 @@ class SvnStream extends Model
     {
         return $this->hasMany(Enrollment::class, 'stream_id', 'id');
     }
+
+    public function courses(): HasMany
+    {
+        return $this->hasMany(Course::class, 'stream_id', 'id');
+    }
 }

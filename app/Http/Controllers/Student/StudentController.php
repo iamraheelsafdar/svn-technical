@@ -9,14 +9,20 @@ use App\Filters\Student\StudentStatusFilter;
 use App\Filters\Student\StudentNameFilter;
 use App\Filters\Student\CourseTypeFilter;
 use App\Filters\Student\CourseNameFilter;
+use App\Models\Prefix;
+use App\Models\SvnStream;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
 use App\Filters\Student\CenterStudent;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Http\Request;
 use App\Models\Students;
+use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {
@@ -47,8 +53,160 @@ class StudentController extends Controller
         return view('student.students', ['students' => $filteredStudents]);
     }
 
+    /**
+     * Helper method to fetch streams with courses
+     */
+    private function getStreamsWithCourses()
+    {
+        return SvnStream::where('status', 1)
+            ->with(['courses' => function ($query) {
+                $query->where('status', 1)->select('id', 'name', 'stream_id', 'duration', 'type');
+            }])
+            ->get()
+            ->map(function ($stream) {
+                return [
+                    'stream_id' => $stream->id,
+                    'stream_name' => $stream->name,
+                    'courses' => $stream->courses->map(function ($course) {
+                        return [
+                            'course_id' => $course->id,
+                            'course_name' => $course->name . ', ' . $course->duration . '-' . ucfirst($course->type),
+                        ];
+                    })->toArray(),
+                ];
+            })
+            ->toArray();
+    }
+
+    /**
+     * Show the student add view
+     */
     public function addStudentView(Request $request): Factory|Application|View
     {
-        return view('student.add-student');
+        $streams = $this->getStreamsWithCourses();
+        $coursePrefixes = Prefix::where([['prefix_assign_to', 'Course Management'], ['status', 1]])
+            ->pluck('id', 'prefix')
+            ->toArray();
+
+        $courseDetails = ['streams' => $streams, 'coursePrefixes' => $coursePrefixes];
+        return view('student.add-student', ['courseDetails' => $courseDetails]);
+    }
+
+    /**
+     * Handle the student registration
+     */
+    public function addStudent(Request $request): RedirectResponse
+    {
+        $allStudents = Students::count();
+
+        // Handle file uploads using a loop for better scalability and readability
+        $files = ['student_image', 'student_qualification', 'student_id', 'student_signature'];
+        $uploadedFiles = [];
+
+        foreach ($files as $file) {
+            if ($request->hasFile($file)) {
+                $uploadedFiles[$file] = Storage::disk('public')->put('students/', $request->file($file));
+            }
+        }
+
+        // Create the student record
+        Students::create([
+            'center_id' => auth()->user()->id,
+            'course_id' => $request->course,
+            'enrollment' => Carbon::createFromFormat('d-m-Y', $request->admission_date)
+                    ->format('dmY') . '/' . ($allStudents + 1),
+            'name' => $request->student_name,
+            'father_name' => $request->father_name,
+            'mother_name' => $request->mother_name,
+            'dob' => Carbon::createFromFormat('d-m-Y', $request->dob)->format('Y-m-d'),
+            'registration_date' => Carbon::now()->format('Y-m-d'),
+            'admission_date' => Carbon::createFromFormat('d-m-Y', $request->admission_date)->format('Y-m-d'),
+            'gender' => ucfirst($request->gender),
+            'state' => $request->state,
+            'mode' => $request->mode,
+            'photo' => $uploadedFiles['student_image'] ?? null,
+            'signature' => $uploadedFiles['student_signature'] ?? null,
+            'qualification' => $uploadedFiles['student_qualification'] ?? null,
+            'identity_card' => $uploadedFiles['student_id'] ?? null,
+        ]);
+
+        session()->flash('success', 'Student registered successfully.');
+        return redirect()->route('studentsView');
+    }
+
+    /**
+     * Show the student update view
+     */
+    public function updateStudentView($id): Application|View|Factory|RedirectResponse
+    {
+        $student = Students::find($id);
+
+        if (!$student) {
+            return redirect()->back()->with('validation_errors', ['Student not found.']);
+        }
+
+        $streams = $this->getStreamsWithCourses();
+        $student->dob = Carbon::parse($student->dob)->format('d-m-Y');
+        $student->admission_date = Carbon::parse($student->admission_date)->format('d-m-Y');
+
+        $coursePrefixes = Prefix::where([['prefix_assign_to', 'Course Management'], ['status', 1]])
+            ->pluck('id', 'prefix')
+            ->toArray();
+
+        $courseDetails = ['streams' => $streams, 'coursePrefixes' => $coursePrefixes];
+
+        return view('student.update-student', ['student' => $student, 'courseDetails' => $courseDetails]);
+    }
+
+
+    public function updateStudentStatus(Request $request): JsonResponse
+    {
+        $prefix = Students::find($request->id);
+        $prefix->update(['status' => (bool)$request->status]);
+        return response()->json([
+            'header_code' => 200,
+            'message' => 'Student status updated successfully.',
+        ]);
+    }
+
+    public function updateStudent(Request $request)
+    {
+        $student = Students::where('id', $request->student_id)->first();
+        $student->update([
+            'name' => $request->student_name,
+            'father_name' => $request->father_name,
+            'mother_name' => $request->mother_name,
+            'dob' => Carbon::createFromFormat('d-m-Y', $request->dob)->format('Y-m-d'),
+            'registration_date' => Carbon::now()->format('Y-m-d'),
+            'admission_date' => Carbon::createFromFormat('d-m-Y', $request->admission_date)->format('Y-m-d'),
+            'gender' => ucfirst($request->gender),
+            'state' => $request->state,
+            'mode' => $request->mode,
+        ]);
+
+        $files = ['student_image', 'student_qualification', 'student_id', 'student_signature'];
+        $uploadedFiles = [];
+
+        foreach ($files as $file) {
+            if ($request->hasFile($file)) {
+                $uploadedFiles[$file] = Storage::disk('public')->put('students/', $request->file($file));
+            }
+        }
+
+        if ($request->hasFile('student_image')) {
+            $student->update(['photo' => $uploadedFiles['student_image']]);
+        }
+        if ($request->hasFile('student_signature')) {
+            $student->update(['signature' => $uploadedFiles['student_signature']]);
+        }
+        if ($request->hasFile('student_qualification')) {
+            $student->update(['qualification' => $uploadedFiles['student_qualification']]);
+        }
+        if ($request->hasFile('student_id')) {
+            $student->update(['identity_card' => $uploadedFiles['student_id']]);
+        }
+
+        session()->flash('success', 'Student updated successfully.');
+        return redirect()->route('studentsView');
     }
 }

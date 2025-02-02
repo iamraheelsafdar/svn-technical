@@ -2,15 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\Center;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Seeder;
+use App\Models\Students;
 use App\Models\Course;
 use App\Models\Prefix;
-use App\Models\Students;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class AddStudentSeeder extends Seeder
 {
@@ -83,11 +81,10 @@ class AddStudentSeeder extends Seeder
                 'registration_date' => $student->reg_date ? Carbon::parse($student->reg_date)->format('Y-m-d') : null,
                 'admission_date' => $student->admission_date ? Carbon::parse($student->admission_date)->format('Y-m-d') : null,
                 'gender' => $student->gender,
-                'mobile_number' => $student->mobile_number,
                 'state' => $student->state,
                 'mode' => $student->mode,
                 'lateral_entry' => $student->laterl_entry == 'No' ? 0 : 1,
-                'term_and_conditions' => $student->term_condition == 'on' ? 1 : 0,
+                'lateral_duration' => $student->lateral_duration,
                 'status' => $student->status == "0" ? 0 : 1,
             ]);
             $this->command->info("{$key} Added or found prefix: {$student->name}");

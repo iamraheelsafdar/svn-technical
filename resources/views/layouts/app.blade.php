@@ -100,7 +100,7 @@
 
             <section class="{{auth()->check() ? 'dashboard-content px-3 pt-4' : ''}}">
                 @if(auth()->user())
-                <h1 class="mb-4">@yield('title')</h1>
+                <h1 class="mb-4 heading">@yield('title')</h1>
                 @endif
                 @yield('content')
             </section>

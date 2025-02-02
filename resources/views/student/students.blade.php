@@ -12,7 +12,7 @@
                     <th>Lateral Entry</th>
                 @endif
                 <th>Course Name</th>
-                <th>Course Type-Duration</th>
+                <th>Course Duration-Type</th>
                 <th>Status</th>
                 <th>Action</th>
             </tr>
@@ -34,11 +34,11 @@
                                 </option>
                                 <option
                                     value="1" {{ old('lateral_entry', request()->input('lateral_entry')) == 1 ? 'selected' : '' }}>
-                                    Active
+                                    Yes
                                 </option>
                                 <option
                                     value="0" {{ old('lateral_entry', request()->input('lateral_entry')) == '0' ? 'selected' : '' }}>
-                                    Inactive
+                                    No
                                 </option>
                             </select>
                         </th>
@@ -110,20 +110,22 @@
                     @if(auth()->user()->role == "Admin")
                         <td>
                             <div class="form-switch">
-                                <input
-                                    class="form-check-input toggle-status text-center"
-                                    type="checkbox"
-                                    id="statusToggle{{ $student['id'] }}"
-                                    data-id="{{ $student['id'] }}"
-                                    data-type="lateral"
-                                    {{ $student['lateral'] ? 'checked' : '' }}
-                                    onclick="showConfirmationModal(this)"
-                                >
+                                <span
+                                    class="{{$student['lateral'] ? 'text-white btn btn-success py-0' : 'text-white btn btn-danger py-0'}}">{{$student['lateral'] ? 'Yes' : 'No'}}</span>
+                                {{--                                <input--}}
+                                {{--                                    class="form-check-input toggle-status text-center"--}}
+                                {{--                                    type="checkbox"--}}
+                                {{--                                    id="statusToggle{{ $student['id'] }}"--}}
+                                {{--                                    data-id="{{ $student['id'] }}"--}}
+                                {{--                                    data-type="lateral"--}}
+                                {{--                                    {{ $student['lateral'] ? 'checked' : '' }}--}}
+                                {{--                                    onclick="showConfirmationModal(this)"--}}
+                                {{--                                >--}}
                             </div>
                         </td>
                     @endif
                     <td>{{ $student['course_name'] }}</td>
-                    <td>{{ ucfirst($student['course_type']) }}-{{ $student['course_duration'] }}</td>
+                    <td>{{ $student['course_duration'] }}-{{ ucfirst($student['course_type']) }}</td>
                     <td>
                         @if(auth()->user()->role == "Admin")
                             <div class="form-switch">
@@ -139,12 +141,8 @@
                             </div>
                         @else
                             <div class="form-switch">
-                                <input
-                                    class="form-check-input toggle-status text-center"
-                                    type="checkbox"
-                                    disabled
-                                    {{ $student['status'] ? 'checked' : '' }}
-                                >
+                                <span
+                                    class="{{$student['status'] ? 'text-white btn btn-success py-0' : 'text-white btn btn-danger py-0'}}">{{$student['status'] ? 'Active' : 'Inactive'}}</span>
                             </div>
                         @endif
                     </td>

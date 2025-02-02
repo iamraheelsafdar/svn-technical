@@ -24,7 +24,6 @@ return new class extends Migration {
             $table->date('registration_date')->nullable();
             $table->date('admission_date')->nullable();
             $table->enum('gender', ['male', 'female', 'other'])->nullable();
-            $table->string('mobile_number')->nullable();
             $table->string('state')->nullable();
             $table->string('mode')->nullable();
             $table->string('photo')->nullable();
@@ -32,7 +31,7 @@ return new class extends Migration {
             $table->string('qualification')->nullable();
             $table->string('identity_card')->nullable();
             $table->boolean('lateral_entry')->default(false);
-            $table->boolean('term_and_conditions')->default(false);
+            $table->string('lateral_duration')->nullable();
             $table->boolean('status')->default(false);
             $table->timestamps();
         });

@@ -25,7 +25,7 @@ class AddCenterSeeder extends Seeder
                 'email' => trim(strtolower($user->email)),
                 'phone' => trim($user->phone),
                 'role' => $user->role == 'center' ? 'Center' : 'User',
-                'password' => $user->password ?: Hash::make('Test@12345'),
+                'password' => Hash::make('Test@12345'),
                 'status' => (bool)$oldCenter->status
             ]);
             Center::create([

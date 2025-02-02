@@ -29,7 +29,7 @@ class DashboardController extends Controller
         $details = [
             'total_centers' => $centers->count(),
             'inactive_centers' => $centers->where('status', 0)->count(),
-            'active_centers' => $centers->where('status', true)->count(),
+            'active_centers' => $centers->where('status', 1)->count(),
             'total_enrollments' => $enrollments->count(),
             'inactive_enrollments' => $enrollments->where('status', 0)->count(),
             'active_enrollments' => $enrollments->where('status', 1)->count(),

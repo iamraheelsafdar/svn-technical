@@ -22,4 +22,9 @@ class Students extends Model
         return $this->hasOne(Center::class, 'id', 'center_id');
     }
 
+    public function stream(): HasOne
+    {
+        return $this->hasOne(SvnStream::class, 'id', 'stream_id');
+    }
+
 }
