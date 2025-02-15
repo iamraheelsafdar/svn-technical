@@ -13,7 +13,7 @@
     <div class="container my-5">
         <div class="row">
             <!-- Card 1 -->
-            <div class="{{auth()->user()->role == 'Center' ? 'col-12' : 'col-12 col-md-6 col-lg-3 mb-4'}}">
+            <div class="{{auth()->user()->role == 'Center' ? 'col-12 col-md-6 clo-lg-6' : 'col-12 col-md-6 col-lg-3 mb-4'}}">
                 <div class="card bg-success-custom text-white shadow">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">

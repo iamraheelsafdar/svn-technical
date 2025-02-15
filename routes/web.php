@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Certificate\CertificateController;
 use App\Http\Controllers\Enrollment\EnrollmentController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Subject\SubjectController;
@@ -30,6 +31,10 @@ Route::group(['middleware' => 'logs'], function () {
 
 
     Route::group(['middleware' => ['auth']], function () {
+        /*********************** Application Form **********************/
+        Route::get('/form/{id}', [CertificateController::class, 'applicationForm'])->name('applicationForm');
+        Route::get('/migration/{id}', [CertificateController::class, 'migrationForm'])->name('migrationForm');
+
 
         /************************ Students Routes ***********************************/
         Route::get('/students', [StudentController::class, 'students'])->name('studentsView');

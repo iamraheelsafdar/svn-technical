@@ -146,15 +146,18 @@
                             </div>
                         @endif
                     </td>
-                    @if(auth()->user()->role == "Admin")
-                        <td>
-
-                            <a href="{{ route('updateStudentView', ['id' => $student['id']]) }}" class="btn btn-danger"><i
-                                    class="bi bi-pencil-square"></i> Edit</a>
-                        </td>
-                    @else
-                        <td>-</td>
-                    @endif
+                    {{--                    @if(auth()->user()->role == "Admin")--}}
+                    <td style="white-space: nowrap">
+                        <a href="{{ route('migrationForm', ['id' => $student['id']]) }}" class="btn btn-primary"><i
+                                class="bi bi-file-earmark-fill"></i> Migration</a>
+                        <a href="{{ route('applicationForm', ['id' => $student['id']]) }}" class="btn btn-primary"><i
+                                class="bi bi-file-earmark-fill"></i> Application Form</a>
+                        <a href="{{ route('updateStudentView', ['id' => $student['id']]) }}" class="btn btn-danger"><i
+                                class="bi bi-pencil-square"></i> Edit</a>
+                    </td>
+                    {{--                    @else--}}
+                    {{--                        <td>-</td>--}}
+                    {{--                    @endif--}}
                 </tr>
             @empty
                 <tr>

@@ -9,20 +9,20 @@ use App\Filters\Student\StudentStatusFilter;
 use App\Filters\Student\StudentNameFilter;
 use App\Filters\Student\CourseTypeFilter;
 use App\Filters\Student\CourseNameFilter;
-use App\Models\Prefix;
-use App\Models\SvnStream;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\View\Factory;
 use App\Filters\Student\CenterStudent;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Http\Request;
+use App\Models\SvnStream;
 use App\Models\Students;
-use Illuminate\Support\Facades\Storage;
+use App\Models\Prefix;
+use Carbon\Carbon;
 
 class StudentController extends Controller
 {
@@ -55,15 +55,14 @@ class StudentController extends Controller
 
     /**
      * Helper method to fetch streams with courses
+     * @return mixed
      */
-    private function getStreamsWithCourses()
+    private function getStreamsWithCourses(): mixed
     {
         return SvnStream::where('status', 1)
             ->with(['courses' => function ($query) {
                 $query->where('status', 1)->select('id', 'name', 'stream_id', 'duration', 'type');
-            }])
-            ->get()
-            ->map(function ($stream) {
+            }])->get()->map(function ($stream) {
                 return [
                     'stream_id' => $stream->id,
                     'stream_name' => $stream->name,
@@ -74,12 +73,13 @@ class StudentController extends Controller
                         ];
                     })->toArray(),
                 ];
-            })
-            ->toArray();
+            })->toArray();
     }
 
     /**
      * Show the student add view
+     * @param Request $request
+     * @return Factory|Application|View
      */
     public function addStudentView(Request $request): Factory|Application|View
     {
@@ -94,6 +94,8 @@ class StudentController extends Controller
 
     /**
      * Handle the student registration
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function addStudent(Request $request): RedirectResponse
     {
@@ -136,6 +138,8 @@ class StudentController extends Controller
 
     /**
      * Show the student update view
+     * @param $id
+     * @return Application|View|Factory|RedirectResponse
      */
     public function updateStudentView($id): Application|View|Factory|RedirectResponse
     {
@@ -154,11 +158,13 @@ class StudentController extends Controller
             ->toArray();
 
         $courseDetails = ['streams' => $streams, 'coursePrefixes' => $coursePrefixes];
-
         return view('student.update-student', ['student' => $student, 'courseDetails' => $courseDetails]);
     }
 
-
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function updateStudentStatus(Request $request): JsonResponse
     {
         $prefix = Students::find($request->id);
@@ -169,7 +175,11 @@ class StudentController extends Controller
         ]);
     }
 
-    public function updateStudent(Request $request)
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function updateStudent(Request $request): RedirectResponse
     {
         $student = Students::where('id', $request->student_id)->first();
         $student->update([
@@ -182,7 +192,14 @@ class StudentController extends Controller
             'gender' => ucfirst($request->gender),
             'state' => $request->state,
             'mode' => $request->mode,
+
         ]);
+        if (auth()->user()->role == 'Admin') {
+            $student->update([
+                'lateral_entry' => $request->lateral == '1' ? 1 : 0,
+                'lateral_duration' => $request->lateral == '1' ? $request->lateral_duration : 0
+            ]);
+        }
 
         $files = ['student_image', 'student_qualification', 'student_id', 'student_signature'];
         $uploadedFiles = [];

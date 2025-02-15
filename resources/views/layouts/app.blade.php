@@ -126,4 +126,5 @@
 <script src="{{asset('assets/js/addSubject.js')}}"></script>
 <script src="{{asset('assets/js/subject.js')}}"></script>
 <script src="{{asset('assets/js/updateSubject.js')}}"></script>
+
 </body>
