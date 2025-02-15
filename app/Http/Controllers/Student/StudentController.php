@@ -7,6 +7,7 @@ use App\Http\Resources\OrderRequestCollection;
 use App\Filters\Student\StudentLiteralFilter;
 use App\Filters\Student\StudentStatusFilter;
 use App\Filters\Student\StudentNameFilter;
+use App\Filters\Student\StreamNameFilter;
 use App\Filters\Student\CourseTypeFilter;
 use App\Filters\Student\CourseNameFilter;
 use Illuminate\Support\Facades\Storage;
@@ -22,6 +23,7 @@ use Illuminate\Http\Request;
 use App\Models\SvnStream;
 use App\Models\Students;
 use App\Models\Prefix;
+use App\Models\Course;
 use Carbon\Carbon;
 
 class StudentController extends Controller
@@ -41,15 +43,19 @@ class StudentController extends Controller
                 CourseTypeFilter::class,
                 CourseNameFilter::class,
                 CenterStudent::class,
+                StreamNameFilter::class,
             ])
             ->thenReturn()
-            ->with('course')
-            ->latest()
+            ->with(['course.stream'])
+            ->orderBy('created_at', 'desc')
             ->orderBy('id', 'desc')
-            ->paginate($request->per_page ?? 5);
+            ->paginate($request->input('per_page', 5));
         $orderRequests = new OrderRequestCollection($students);
         $orderRequests->setResourceClass(StudentsResource::class);
         $filteredStudents = $orderRequests->toArray($request);
+        $filteredStudents['all_stream'] = SvnStream::pluck('name')->toArray();
+        $filteredStudents['courses'] =  Course::distinct('name')->pluck('name')->unique()->toArray();
+
         return view('student.students', ['students' => $filteredStudents]);
     }
 

@@ -33,15 +33,11 @@ Route::group(['middleware' => 'logs'], function () {
     Route::group(['middleware' => ['auth']], function () {
         /*********************** Application Form **********************/
         Route::get('/form/{id}', [CertificateController::class, 'applicationForm'])->name('applicationForm');
-        Route::get('/migration/{id}', [CertificateController::class, 'migrationForm'])->name('migrationForm');
-
 
         /************************ Students Routes ***********************************/
         Route::get('/students', [StudentController::class, 'students'])->name('studentsView');
         Route::get('/add-student', [StudentController::class, 'addStudentView'])->name('addStudentView');
         Route::post('/add-student', [StudentController::class, 'addStudent'])->name('addStudent');
-        Route::get('/update-student/{id}', [StudentController::class, 'updateStudentView'])->name('updateStudentView');
-        Route::post('/update-student', [StudentController::class, 'updateStudent'])->name('updateStudent');
 
 
         /************************* Dashboard Routes *********************************/
@@ -55,9 +51,15 @@ Route::group(['middleware' => 'logs'], function () {
 
         Route::group(['middleware' => ['admin']], function () {
 
+            /*********************** Certificates **********************/
+            Route::get('/migration/{id}', [CertificateController::class, 'migrationForm'])->name('migrationForm');
+            Route::get('/paramedical-registration-certificate/{id}', [CertificateController::class, 'paramedicalRegCertificate'])->name('paramedicalRegCertificate');
+            Route::get('/paramedical-certificate/{id}', [CertificateController::class, 'paramedicalCertificate'])->name('paramedicalCertificate');
+
             /************************ Students Routes ***********************************/
             Route::post('/update-student-status', [StudentController::class, 'updateStudentStatus']);
-
+            Route::get('/update-student/{id}', [StudentController::class, 'updateStudentView'])->name('updateStudentView');
+            Route::post('/update-student', [StudentController::class, 'updateStudent'])->name('updateStudent');
 
             /************************* Subject Routes *********************************/
             Route::get('/add-subject/{id}', [SubjectController::class, 'addSubjectView'])->name('addSubjectPage');

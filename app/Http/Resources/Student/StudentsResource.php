@@ -22,9 +22,9 @@ class StudentsResource extends JsonResource
             'course_name' => $this->course->name,
             'course_type' => $this->course->type,
             'course_duration' => $this->course->duration,
-            'courses' => $this->course->distinct('name')->pluck('name')->toArray(),
             'types' => $this->course->distinct('type')->pluck('type')->toArray(),
             'photo' => $this->photo,
+            'steam_name' => $this->course->stream->name
         ];
     }
 }

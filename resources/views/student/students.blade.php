@@ -7,6 +7,7 @@
             <tr>
                 <th>#</th>
                 <th>Student Name</th>
+                <th>Stream Name</th>
                 <th>Student Image</th>
                 @if(auth()->user()->role == "Admin")
                     <th>Lateral Entry</th>
@@ -24,7 +25,15 @@
                                value="{{ request()->input('student_name') }}" placeholder="Search Name"/>
                     </th>
                     <th>
+                        <input type="text" value="{{ request()->input('stream_name') }}" name="stream_name"
+                               list="stream_name" class="form-control border-0" placeholder="Search Stream"/>
+                        <datalist id="stream_name">
+                            @foreach($students['all_stream'] as $stream)
+                                <option value="{{$stream}}">{{$stream}}</option>
+                            @endforeach
+                        </datalist>
                     </th>
+                    <th></th>
                     @if(auth()->user()->role == "Admin")
                         <th>
                             <select class="form-control border-0" name="lateral_entry">
@@ -47,10 +56,8 @@
                         <input type="text" value="{{ request()->input('course_name') }}" name="course_name"
                                list="courses" class="form-control border-0" placeholder="Search Course"/>
                         <datalist id="courses">
-                            @foreach($students['data'] as $student)
-                                @foreach($student['courses'] as $course)
-                                    <option value="{{$course}}">{{$course}}</option>
-                                @endforeach
+                            @foreach($students['courses'] as $course)
+                                <option value="{{$course}}">{{$course}}</option>
                             @endforeach
                         </datalist>
                     </th>
@@ -104,6 +111,7 @@
                 <tr>
                     <td>{{ ($students['current_page'] - 1) * $students['per_page'] + $key + 1 }}</td>
                     <td>{{ $student['name'] }}</td>
+                    <td>{{ $student['steam_name'] }}</td>
                     <td><img
                             src="{{isset($student) && $student['photo'] ? asset('storage/' . $student['photo']) : asset('assets/img/profileImage.png')}}"
                             alt="photo" class="student-photo"></td>
@@ -146,18 +154,28 @@
                             </div>
                         @endif
                     </td>
-                    {{--                    @if(auth()->user()->role == "Admin")--}}
+                    @if(auth()->user()->role == "Admin")
                     <td style="white-space: nowrap">
-                        <a href="{{ route('migrationForm', ['id' => $student['id']]) }}" class="btn btn-primary"><i
-                                class="bi bi-file-earmark-fill"></i> Migration</a>
+                        <a href="{{ route('paramedicalCertificate', ['id' => $student['id']]) }}" class="btn btn-primary"><i
+                                class="bi bi-file-earmark-fill"></i> Certificate</a>
+                        @if($student['steam_name'] == 'PARAMEDICAL' && $student['status'])
+                            <a href="{{ route('paramedicalRegCertificate', ['id' => $student['id']]) }}" class="btn btn-primary"><i
+                                    class="bi bi-file-earmark-fill"></i> Reg Certificate</a>
+                        @endif
+                        @if($student['status'])
+                            <a href="{{ route('migrationForm', ['id' => $student['id']]) }}" class="btn btn-primary"><i
+                                    class="bi bi-file-earmark-fill"></i> Migration</a>
+                        @endif
                         <a href="{{ route('applicationForm', ['id' => $student['id']]) }}" class="btn btn-primary"><i
                                 class="bi bi-file-earmark-fill"></i> Application Form</a>
+
                         <a href="{{ route('updateStudentView', ['id' => $student['id']]) }}" class="btn btn-danger"><i
                                 class="bi bi-pencil-square"></i> Edit</a>
                     </td>
-                    {{--                    @else--}}
-                    {{--                        <td>-</td>--}}
-                    {{--                    @endif--}}
+                    @else
+                            <td><a href="{{ route('applicationForm', ['id' => $student['id']]) }}" class="btn btn-primary"><i
+                                        class="bi bi-file-earmark-fill"></i> Application Form</a></td>
+                    @endif
                 </tr>
             @empty
                 <tr>
