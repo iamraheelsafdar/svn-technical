@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Student\StudentReferenceController;
 use App\Http\Controllers\Certificate\CertificateController;
 use App\Http\Controllers\Enrollment\EnrollmentController;
 use App\Http\Controllers\Dashboard\DashboardController;
@@ -50,6 +51,15 @@ Route::group(['middleware' => 'logs'], function () {
 
 
         Route::group(['middleware' => ['admin']], function () {
+
+            /******************** Student Referece ********************/
+            Route::get('/student-reference', [StudentReferenceController::class, 'studentsReference'])->name('studentsReference');
+            Route::get('/add-student-reference', [StudentReferenceController::class, 'addStudentReferenceView'])->name('addStudentReference');
+            Route::get('/update-student-reference', [StudentReferenceController::class, 'updateStudentReferenceView'])->name('updateStudentReferenceView');
+            Route::post('/add-student-reference', [StudentReferenceController::class, 'addStudentReference'])->name('addStudentReference');
+            Route::post('/update-student-reference', [StudentReferenceController::class, 'updateStudentReference'])->name('updateStudentReference');
+            Route::post('/update-reference-status', [StudentReferenceController::class, 'updateReferenceStatus']);
+
 
             /*********************** Certificates **********************/
             Route::get('/migration/{id}', [CertificateController::class, 'migrationForm'])->name('migrationForm');

@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('center_id');
             $table->unsignedBigInteger('course_id');
+            $table->unsignedBigInteger('reference_id')->nullable();
             $table->foreign('center_id')->references('id')->on('centers')->onDelete('cascade');
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
             $table->string('enrollment')->nullable();

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,6 +26,16 @@ class Students extends Model
     public function stream(): HasOne
     {
         return $this->hasOne(SvnStream::class, 'id', 'stream_id');
+    }
+
+    public function reference(): HasOne
+    {
+        return $this->hasOne(StudentReference::class, 'id', 'reference_id');
+    }
+
+    public function rollNumbers(): hasMany
+    {
+        return $this->hasMany(StudentRollNumber::class, 'student_id', 'id');
     }
 
 }

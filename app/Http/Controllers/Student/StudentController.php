@@ -19,6 +19,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pipeline\Pipeline;
+use App\Models\StudentReference;
 use Illuminate\Http\Request;
 use App\Models\SvnStream;
 use App\Models\Students;
@@ -54,7 +55,7 @@ class StudentController extends Controller
         $orderRequests->setResourceClass(StudentsResource::class);
         $filteredStudents = $orderRequests->toArray($request);
         $filteredStudents['all_stream'] = SvnStream::pluck('name')->toArray();
-        $filteredStudents['courses'] =  Course::distinct('name')->pluck('name')->unique()->toArray();
+        $filteredStudents['courses'] = Course::distinct('name')->pluck('name')->unique()->toArray();
 
         return view('student.students', ['students' => $filteredStudents]);
     }
@@ -76,6 +77,8 @@ class StudentController extends Controller
                         return [
                             'course_id' => $course->id,
                             'course_name' => $course->name . ', ' . $course->duration . '-' . ucfirst($course->type),
+                            'course_duration' => $course->duration,
+                            'course_type' => ucfirst($course->type)
                         ];
                     })->toArray(),
                 ];
@@ -106,7 +109,6 @@ class StudentController extends Controller
     public function addStudent(Request $request): RedirectResponse
     {
         $allStudents = Students::count();
-
         // Handle file uploads using a loop for better scalability and readability
         $files = ['student_image', 'student_qualification', 'student_id', 'student_signature'];
         $uploadedFiles = [];
@@ -136,6 +138,8 @@ class StudentController extends Controller
             'signature' => $uploadedFiles['student_signature'] ?? null,
             'qualification' => $uploadedFiles['student_qualification'] ?? null,
             'identity_card' => $uploadedFiles['student_id'] ?? null,
+            'lateral_entry' => $request->lateral == '1' ? 1 : 0,
+            'lateral_duration' => $request->lateral == '1' ? $request->lateral_duration : 0
         ]);
 
         session()->flash('success', 'Student registered successfully.');
@@ -158,13 +162,13 @@ class StudentController extends Controller
         $streams = $this->getStreamsWithCourses();
         $student->dob = Carbon::parse($student->dob)->format('d-m-Y');
         $student->admission_date = Carbon::parse($student->admission_date)->format('d-m-Y');
-
+        $studentReference = StudentReference::where('status', 1)->get();
         $coursePrefixes = Prefix::where([['prefix_assign_to', 'Course Management'], ['status', 1]])
             ->pluck('id', 'prefix')
             ->toArray();
 
         $courseDetails = ['streams' => $streams, 'coursePrefixes' => $coursePrefixes];
-        return view('student.update-student', ['student' => $student, 'courseDetails' => $courseDetails]);
+        return view('student.update-student', ['student' => $student, 'courseDetails' => $courseDetails, 'references' => $studentReference]);
     }
 
     /**
@@ -192,20 +196,14 @@ class StudentController extends Controller
             'name' => $request->student_name,
             'father_name' => $request->father_name,
             'mother_name' => $request->mother_name,
-            'dob' => Carbon::createFromFormat('d-m-Y', $request->dob)->format('Y-m-d'),
-            'registration_date' => Carbon::now()->format('Y-m-d'),
-            'admission_date' => Carbon::createFromFormat('d-m-Y', $request->admission_date)->format('Y-m-d'),
+//            'dob' => Carbon::createFromFormat('d-m-Y', $request->dob)->format('Y-m-d'),
+//            'registration_date' => Carbon::now()->format('Y-m-d'),
+//            'admission_date' => Carbon::createFromFormat('d-m-Y', $request->admission_date)->format('Y-m-d'),
             'gender' => ucfirst($request->gender),
             'state' => $request->state,
             'mode' => $request->mode,
-
+            'reference_id' => $request->reference_id,
         ]);
-        if (auth()->user()->role == 'Admin') {
-            $student->update([
-                'lateral_entry' => $request->lateral == '1' ? 1 : 0,
-                'lateral_duration' => $request->lateral == '1' ? $request->lateral_duration : 0
-            ]);
-        }
 
         $files = ['student_image', 'student_qualification', 'student_id', 'student_signature'];
         $uploadedFiles = [];

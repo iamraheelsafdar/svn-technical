@@ -20,7 +20,9 @@ class AddStudentSeeder extends Seeder
         $students = DB::table('old_students')->get();
 
         foreach ($students as $key => $student) {
-            $course = Course::where('name', $student->course_name)->first();
+            $course = Course::where('name', $student->course_name)
+                ->where('type', 'LIKE', "%{$student->course_type}%")
+                ->first();
 
             if (!$course) {
                 continue; // Skip if course not found

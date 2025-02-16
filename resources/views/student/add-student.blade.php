@@ -40,7 +40,7 @@
                 </select>
             </div>
 
-            <div class="col-6 col-md-6 col-lg-6 mb-3">
+            <div class="col-6 col-md-6 col-lg-3 mb-3">
                 <label for="stream_name" class="form-label">Select Stream</label>
                 <select id="stream_id" required class="form-control" name="stream_id">
                     <option value="" {{ old('stream_id', request()->input('stream_id')) == null ? 'selected' : '' }}>
@@ -54,12 +54,26 @@
                 </select>
             </div>
 
-            <div class="col-6 col-md-6 col-lg-6 mb-3">
+            <div class="col-6 col-md-6 col-lg-3 mb-3">
                 <label for="course" class="form-label">Enrollment</label>
                 <div id="course-container">
                     <input list="courses" id="course-input" name="course" class="form-control" placeholder="Search Course">
                     <datalist id="courses"></datalist>
                 </div>
+            </div>
+
+            <div id="lateral-container" class="col-12 col-md-6 col-lg-6 mb-3" style="display: none;">
+                <label for="lateral" class="form-label">Lateral Entry</label>
+                <select id="lateral" required class="form-control" name="lateral">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+
+            <!-- Lateral Duration Section -->
+            <div class="col-12 col-md-3 col-lg-3 mb-3" id="reduce-lateral-container" style="display: none;">
+                <label for="lateral_duration" class="form-label">Reduce Lateral</label>
+                <select id="lateral_duration" required class="form-control" name="lateral_duration"></select>
             </div>
 
 
@@ -138,7 +152,9 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-warning w-auto mx-auto">Add Student</button>
+            <div class="col-12 mx-auto text-center">
+                <button type="submit" class="btn btn-warning w-auto mx-auto">Add Student</button>
+            </div>
         </form>
     </div>
     <script>

@@ -96,17 +96,15 @@ class CertificateController extends Controller
         // Prepare data for the certificate
         $data = $this->prepareCertificateData($student, $admissionDate, $completionDate, $certificateType);
 
-        // Generate PDF
-        set_time_limit(300); // Set to 5 minutes (adjust if needed)
         $pdf = PDF::loadView("certificate.$viewName", ['student' => $student, 'data' => $data]);
-        $pdf->setPaper([0, 0, 800, 1110]);
+        $pdf->setPaper([0, 0, 600, 850]);
         $pdf->setOptions([
             'defaultFont' => 'sans-serif',
             'isHtml5ParserEnabled' => true,
             'isPhpEnabled' => true,
             'isRemoteEnabled' => true, // Allow loading images from URLs
-            'margin-top' => 120,
-            'margin-bottom' => 120,
+            'margin-top' => 0,
+            'margin-bottom' => 0,
             'margin-left' => 0,
             'margin-right' => 0,
         ]);
@@ -141,28 +139,56 @@ class CertificateController extends Controller
     private function prepareCertificateData($student, $admissionDate, $completionDate, $certificateType): array
     {
         $baseUrl = env('LIVE_URL');
-        $streamName = $student->course->stream->name;
+        $stream = $student->course->stream;
+        $streamName = $stream->name;
+        $prefix = $stream->enrollments->first()->prefix->prefix ?? '';
+        $prefixParts = explode('/', $prefix);
 
         $data = [
-            'stream_prefix' => $student->course->stream->enrollments->first()->name,
-            'reg_no' => 'MIG/REF/SVITM/' . $completionDate->format('Y') . rand(0, 9),
+            'stream_prefix' => $stream->enrollments->first()->name,
+            'reg_no' => "MIG/REF/{$prefixParts[0]}/" . $completionDate->format('Y') . rand(0, 99),
+            'para_reg_no' => $prefix . $student->enrollment,
             'completion_year' => $completionDate->format('m-d-Y'),
-            'footer_date' => $admissionDate->format('d-M-Y'),
+            'footer_date' => $completionDate->copy()->addMonths(2)->format('d-M-Y'),
+            'reg_date' => $completionDate->format('d-M-Y'),
             'year' => $admissionDate->format('Y'),
+            'year_completion' => $completionDate->format('Y'),
+            'institute_name' => $this->getInstituteName($streamName),
+            'roll_number' => $student->course->prefix->prefix . $student->rollNumbers()->latest('id')->first()->roll_number,
+            'serial_number' => $completionDate->format('Yd') . rand(1000, 9999)
         ];
 
-        if ($certificateType === 'migration-certificate') {
-            $data['certificate_image'] = in_array($streamName, ['ITI', 'TECHNOLOGY & MGMT']) ? $baseUrl . 'assets/img/certificates/technology/iti-and-tech-migration.png' : $baseUrl . 'assets/img/certificates/paramedical/paramedical-migration.png';
-        } elseif ($certificateType == 'paramedical-certificate') {
-            $data['certificate_image'] = $baseUrl . 'assets/img/certificates/paramedical/paramedical-certificate.png';
-        } else {
-            $data['certificate_image'] = $baseUrl . 'assets/img/certificates/paramedical/paramedical-registration-certificate.png';
-        }
+        $data['certificate_image'] = $this->getCertificateImage($baseUrl, $streamName, $certificateType);
         $data['student_image'] = $student['photo']
             ? asset($baseUrl . 'storage/' . $student['photo'])
             : asset($baseUrl . 'assets/img/profileImage.png');
         $data['course_name'] = $student->course->name;
         $data['date_of_birth'] = Carbon::parse($student->dob)->format('d-M-Y');
+
         return $data;
+    }
+
+    private function getInstituteName(string $streamName): string
+    {
+        return match ($streamName) {
+            'ITI' => 'SWAMI VIVEKANAND INDUSTRIAL & VOCATIONAL TRAINING INSTITUTE , SOHNA',
+            'TECHNOLOGY & MGMT' => 'SWAMI VIVEKANAND INSTITUTE OF TECHNOLOGY & MANAGEMENT , SOHNA',
+            default => 'SWAMI VIVEKANAND INSTITUTE OF PARAMEDICAL SCIENCE , SOHNA',
+        };
+    }
+
+    private function getCertificateImage(string $baseUrl, string $streamName, string $certificateType): string
+    {
+        if ($certificateType === 'migration-certificate') {
+            $imagePath = $streamName == 'ITI' ? 'technology/iti-migration.png' :
+                ($streamName == 'TECHNOLOGY & MGMT' ? 'technology/tech-migration.png' :
+                    'paramedical/paramedical-migration.png');
+        } elseif ($certificateType == 'paramedical-certificate') {
+            $imagePath = 'paramedical/paramedical-certificate.png';
+        } else {
+            $imagePath = 'paramedical/paramedical-registration-certificate.png';
+        }
+
+        return $baseUrl . 'assets/img/certificates/' . $imagePath;
     }
 }

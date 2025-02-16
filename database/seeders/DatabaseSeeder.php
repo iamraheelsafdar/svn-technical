@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             CourseSeeder::class,
             AddStudentSeeder::class,
             UpdateStudentImages::class,
+            RollNumberSeeder::class,
         ]);
 
     }

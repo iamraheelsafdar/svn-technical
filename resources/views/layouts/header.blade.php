@@ -49,6 +49,12 @@
                         <i class="bi bi-sliders2-vertical"></i> Prefixes
                     </a>
                 </li>
+                <li class="{{ request()->routeIs(['studentsReference','addStudentReference','updateStudentReference']) ? 'active' : '' }}">
+                    <a href="{{ route('studentsReference') }}" class="text-decoration-none px-3 py-3 d-block"
+                       title="Student Reference">
+                        <i class="bi bi-sliders2-vertical"></i> Student Reference
+                    </a>
+                </li>
             @endif
         </ul>
     </nav>
