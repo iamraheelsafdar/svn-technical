@@ -62,14 +62,20 @@ function handleCourseSelection(course) {
     reduceLateralContainer.style.display = 'none';
     document.getElementById('lateral').value = '0';
 
+    // Remove required attribute when hidden
+    lateralDurationSelect.removeAttribute('required');
+
     // Handle lateral entry change
-    document.getElementById('lateral').addEventListener('change', function () {
+    const lateralHandler = function() {
         if (this.value === '1') {
             lateralContainer.classList.remove('col-md-6', 'col-lg-6');
             lateralContainer.classList.add('col-md-3', 'col-lg-3');
             reduceLateralContainer.style.display = 'block';
 
-            // Populate duration options (your existing logic)
+            // Add required attribute when visible
+            lateralDurationSelect.setAttribute('required', 'required');
+
+            // Populate duration options
             lateralDurationSelect.innerHTML = '';
             const courseDuration = parseInt(course.course_duration);
 
@@ -83,8 +89,16 @@ function handleCourseSelection(course) {
             lateralContainer.classList.remove('col-md-3', 'col-lg-3');
             lateralContainer.classList.add('col-md-6', 'col-lg-6');
             reduceLateralContainer.style.display = 'none';
+
+            // Remove required attribute when hidden
+            lateralDurationSelect.removeAttribute('required');
         }
-    });
+    };
+
+    // Remove existing event listener to prevent duplicates
+    document.getElementById('lateral').removeEventListener('change', lateralHandler);
+    // Add new event listener
+    document.getElementById('lateral').addEventListener('change', lateralHandler);
 }
 // Updated JavaScript
 document.getElementById('lateral').addEventListener('change', function () {

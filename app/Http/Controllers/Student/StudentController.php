@@ -10,6 +10,8 @@ use App\Filters\Student\StudentNameFilter;
 use App\Filters\Student\StreamNameFilter;
 use App\Filters\Student\CourseTypeFilter;
 use App\Filters\Student\CourseNameFilter;
+use App\Models\StudentRollNumber;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\View\Factory;
 use App\Filters\Student\CenterStudent;
@@ -120,7 +122,7 @@ class StudentController extends Controller
         }
 
         // Create the student record
-        Students::create([
+        $student = Students::create([
             'center_id' => auth()->user()->id,
             'course_id' => $request->course,
             'enrollment' => Carbon::createFromFormat('d-m-Y', $request->admission_date)
@@ -141,9 +143,29 @@ class StudentController extends Controller
             'lateral_entry' => $request->lateral == '1' ? 1 : 0,
             'lateral_duration' => $request->lateral == '1' ? $request->lateral_duration : 0
         ]);
+        $course = $student->course;
+        $skipLateral = $request->input('lateral_duration', 0);
 
+        // Convert admission_date back to Carbon instance
+        $admissionDate = Carbon::parse($student->admission_date);
+
+        for ($i = 1; $i <= ($course->duration - $skipLateral); $i++) {
+
+            if ($course->type == 'year') {
+                $rollWithDate = $admissionDate->copy()->addYears($i)->format('Y');
+            } elseif ($course->type == 'semester') {
+                $rollWithDate = $admissionDate->copy()->addMonths(6 * $i)->format('Y');
+            } else {
+                $rollWithDate = $admissionDate->copy()->addMonths($course->duration * $i)->format('Y');
+            }
+            StudentRollNumber::create([
+                'student_id' => $student->id,
+                'roll_number' => $rollWithDate . '/' . rand(99, 999) . '/' . rand(1, 1000)
+            ]);
+        }
         session()->flash('success', 'Student registered successfully.');
         return redirect()->route('studentsView');
+
     }
 
     /**

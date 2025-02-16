@@ -73,7 +73,7 @@
             <!-- Lateral Duration Section -->
             <div class="col-12 col-md-3 col-lg-3 mb-3" id="reduce-lateral-container" style="display: none;">
                 <label for="lateral_duration" class="form-label">Reduce Lateral</label>
-                <select id="lateral_duration" required class="form-control" name="lateral_duration"></select>
+                <select id="lateral_duration" class="form-control" name="lateral_duration"></select>
             </div>
 
 
