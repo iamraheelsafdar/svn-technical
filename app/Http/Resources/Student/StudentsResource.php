@@ -24,7 +24,8 @@ class StudentsResource extends JsonResource
             'course_duration' => $this->course->duration,
             'types' => $this->course->distinct('type')->pluck('type')->toArray(),
             'photo' => $this->photo,
-            'steam_name' => $this->course->stream->name
+            'steam_name' => $this->course->stream->name,
+//            'roll_number' => count($this->rollNumbers->pluck('roll_number')->toArray()) > 0
         ];
     }
 }

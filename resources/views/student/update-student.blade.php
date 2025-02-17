@@ -31,7 +31,7 @@
                     <label for="reference_name" class="form-label">Reference Name</label>
                     <select id="reference_name" class="form-control" name="reference_id">
                         <option
-                            value="{{ $student->reference->id ?? '' }}"
+                            value="{{ $student->reference->id ?? null }}"
                             {{ isset($student->reference->id) ? 'selected' : '' }}>
                             {{ $student->reference->reference ?? 'Select Reference' }}
                         </option>

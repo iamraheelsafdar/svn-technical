@@ -156,21 +156,23 @@
                     </td>
                     @if(auth()->user()->role == "Admin")
                     <td style="white-space: nowrap">
-                        <a href="{{ route('paramedicalCertificate', ['id' => $student['id']]) }}" class="btn btn-primary"><i
-                                class="bi bi-file-earmark-fill"></i> Certificate</a>
+
                         @if($student['steam_name'] == 'PARAMEDICAL' && $student['status'])
                             <a href="{{ route('paramedicalRegCertificate', ['id' => $student['id']]) }}" class="btn btn-primary"><i
                                     class="bi bi-file-earmark-fill"></i> Reg Certificate</a>
                         @endif
                         @if($student['status'])
+                            <a href="{{ route('paramedicalCertificate', ['id' => $student['id']]) }}" class="btn btn-primary"><i
+                                    class="bi bi-file-earmark-fill"></i> Certificate</a>
                             <a href="{{ route('migrationForm', ['id' => $student['id']]) }}" class="btn btn-primary"><i
                                     class="bi bi-file-earmark-fill"></i> Migration</a>
                         @endif
                         <a href="{{ route('applicationForm', ['id' => $student['id']]) }}" class="btn btn-primary"><i
                                 class="bi bi-file-earmark-fill"></i> Application Form</a>
-
-                        <a href="{{ route('updateStudentView', ['id' => $student['id']]) }}" class="btn btn-danger"><i
-                                class="bi bi-pencil-square"></i> Edit</a>
+                        @if($student['status'])
+                            <a href="{{ route('updateStudentView', ['id' => $student['id']]) }}" class="btn btn-danger"><i
+                                    class="bi bi-pencil-square"></i> Edit</a>
+                        @endif
                     </td>
                     @else
                             <td><a href="{{ route('applicationForm', ['id' => $student['id']]) }}" class="btn btn-primary"><i

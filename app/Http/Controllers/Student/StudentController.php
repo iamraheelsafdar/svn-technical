@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Student;
 
+use App\Http\Requests\Student\AddStudentRequest;
+use App\Http\Requests\Student\UpdateStudentRequest;
 use App\Http\Resources\Student\StudentsResource;
 use App\Http\Resources\OrderRequestCollection;
 use App\Filters\Student\StudentLiteralFilter;
@@ -11,7 +13,6 @@ use App\Filters\Student\StreamNameFilter;
 use App\Filters\Student\CourseTypeFilter;
 use App\Filters\Student\CourseNameFilter;
 use App\Models\StudentRollNumber;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\View\Factory;
 use App\Filters\Student\CenterStudent;
@@ -58,7 +59,6 @@ class StudentController extends Controller
         $filteredStudents = $orderRequests->toArray($request);
         $filteredStudents['all_stream'] = SvnStream::pluck('name')->toArray();
         $filteredStudents['courses'] = Course::distinct('name')->pluck('name')->unique()->toArray();
-
         return view('student.students', ['students' => $filteredStudents]);
     }
 
@@ -105,10 +105,10 @@ class StudentController extends Controller
 
     /**
      * Handle the student registration
-     * @param Request $request
+     * @param AddStudentRequest $request
      * @return RedirectResponse
      */
-    public function addStudent(Request $request): RedirectResponse
+    public function addStudent(AddStudentRequest $request): RedirectResponse
     {
         $allStudents = Students::count();
         // Handle file uploads using a loop for better scalability and readability
@@ -125,8 +125,7 @@ class StudentController extends Controller
         $student = Students::create([
             'center_id' => auth()->user()->id,
             'course_id' => $request->course,
-            'enrollment' => Carbon::createFromFormat('d-m-Y', $request->admission_date)
-                    ->format('dmY') . '/' . ($allStudents + 1),
+            'enrollment' => Carbon::createFromFormat('d-m-Y', $request->admission_date)->format('dmY') . '/' . ($allStudents + 1),
             'name' => $request->student_name,
             'father_name' => $request->father_name,
             'mother_name' => $request->mother_name,
@@ -208,21 +207,17 @@ class StudentController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param UpdateStudentRequest $request
      * @return RedirectResponse
      */
-    public function updateStudent(Request $request): RedirectResponse
+    public function updateStudent(UpdateStudentRequest $request): RedirectResponse
     {
         $student = Students::where('id', $request->student_id)->first();
         $student->update([
             'name' => $request->student_name,
             'father_name' => $request->father_name,
             'mother_name' => $request->mother_name,
-//            'dob' => Carbon::createFromFormat('d-m-Y', $request->dob)->format('Y-m-d'),
-//            'registration_date' => Carbon::now()->format('Y-m-d'),
-//            'admission_date' => Carbon::createFromFormat('d-m-Y', $request->admission_date)->format('Y-m-d'),
             'gender' => ucfirst($request->gender),
-            'state' => $request->state,
             'mode' => $request->mode,
             'reference_id' => $request->reference_id,
         ]);

@@ -31,6 +31,9 @@ function showConfirmationModal(toggle) {
                 // Success callback
                 showToast(data.message, 'success'); // Show success toast
                 toggle.checked = initialToggleState; // Update the checkbox state after the successful action
+                if (entityType === 'student'){
+                    location.reload();
+                }
             },
             (error) => {
                 // Error callback

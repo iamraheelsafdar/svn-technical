@@ -18,7 +18,7 @@
                         <i class="bi bi-house-door-fill"></i> Dashboard
                     </a>
                 </li>
-                <li class="{{ request()->routeIs('studentsView') ? 'active' : '' }}">
+                <li class="{{ request()->routeIs('studentsView','addStudentView','updateStudentView') ? 'active' : '' }}">
                     <a href="{{route('studentsView')}}" class="text-decoration-none px-3 py-3 d-block" title="Students">
                         <i class="bi bi-person-workspace"></i> Students
                     </a>
@@ -26,6 +26,12 @@
             @endif
 
             @if(auth()->user()->role == 'Admin')
+                <li class="{{ request()->routeIs(['studentsReference','addStudentReference','updateStudentReference']) ? 'active' : '' }}">
+                    <a href="{{ route('studentsReference') }}" class="text-decoration-none px-3 py-3 d-block"
+                       title="Student Reference">
+                        <i class="bi bi-sliders"></i> Student Reference
+                    </a>
+                </li>
                 <li class="{{ request()->routeIs(['enrollmentsPage', 'addEnrollmentPage', 'updateEnrollmentView']) ? 'active' : '' }}">
                     <a href="{{ route('enrollmentsPage') }}" class="text-decoration-none px-3 py-3 d-block"
                        title="Enrollment">
@@ -47,12 +53,6 @@
                     <a href="{{ route('prefixesPage') }}" class="text-decoration-none px-3 py-3 d-block"
                        title="Prefixes">
                         <i class="bi bi-sliders2-vertical"></i> Prefixes
-                    </a>
-                </li>
-                <li class="{{ request()->routeIs(['studentsReference','addStudentReference','updateStudentReference']) ? 'active' : '' }}">
-                    <a href="{{ route('studentsReference') }}" class="text-decoration-none px-3 py-3 d-block"
-                       title="Student Reference">
-                        <i class="bi bi-sliders2-vertical"></i> Student Reference
                     </a>
                 </li>
             @endif
