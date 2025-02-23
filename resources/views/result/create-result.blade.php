@@ -20,8 +20,8 @@
                             <div class="card-body">
                                 <!-- Loop through each subject in this duration -->
                                 @foreach ($subjects as $index => $subject)
-                                    @if(count($result) > 0)
-                                        <input type="hidden" name="subjects[{{ $duration }}][{{ $index }}][subject_id]" value="{{ old("result.$index.id", $result[$index]['id'] ?? '') }}">
+                                    @if(count($result->toArray()) > 0)
+                                        <input type="hidden" name="subjects[{{ $duration }}][{{ $index }}][subject_id]" value="{{ $result->where('subject_id' , $subject->id)->first()?->id }}">
                                     @endif
                                     <h5>Subject {{$index+1}}</h5>
                                     <input type="hidden" name="subjects[{{ $duration }}][{{ $index }}][id]" value="{{ $subject->id }}">
@@ -48,12 +48,12 @@
 
                                         <div class="col-md-12">
                                             <label class="form-label">Obtained Marks</label>
-                                            @if(count($result) > 0)
+                                            @if(count($result->toArray()) > 0 )
                                                 <input  type="number"
                                                        class="form-control mb-2"
                                                        name="subjects[{{ $duration }}][{{ $index }}][obtained_marks]"
                                                        max="{{ old("subjects.$duration.$index.max_marks", $subject->max_marks) }}"
-                                                       value="{{ old("result.$index.subject_obtained_marks", $result[$index]['subject_obtained_marks'] ?? '') }}"
+                                                       value="{{ $result->where('subject_id' , $subject->id)->first()?->subject_obtained_marks }}"
                                                        placeholder="Enter Subject Obtained Marks" required>
                                             @else
                                                 <input  type="number"
@@ -61,7 +61,7 @@
                                                         name="subjects[{{ $duration }}][{{ $index }}][obtained_marks]"
                                                         max="{{ old("subjects.$duration.$index.max_marks", $subject->max_marks) }}"
                                                         value="{{ old("subjects.$duration.$index.obtained_marks") }}"
-                                                        placeholder="Enter Subject Obtained Marks" required>
+                                                        placeholder="Enter Subject Oasbtained Marks" required>
                                             @endif
                                         </div>
 
@@ -94,8 +94,8 @@
                                     <div id="practical-marks-{{ $duration }}-{{ $index }}" class="practical-marks row {{ old("subjects.$duration.$index.is_practical", $subject->is_practical) == 1 ? '' : 'd-none' }}">
                                         <div class="col-md-12">
                                             <label class="form-label">Practical Obtained Marks</label>
-                                            @if(count($result) > 0 && isset($result[$index]['practical_obtained_marks']) && $result[$index]['practical_obtained_marks'] != null)
-                                                <input type="number" class="form-control mb-2" name="subjects[{{ $duration }}][{{ $index }}][practical_obtained_marks]" value="{{ old("result.$index.practical_obtained_marks", $result[$index]['practical_obtained_marks'] ?? '') }}" max="{{ old("subjects.$duration.$index.practical_max_marks", $subject->practical_max_marks) }}" placeholder="Enter Practical Obtained Marks">
+                                            @if(count($result->toArray()) > 0 && isset($result->toArray()[$index]['practical_obtained_marks']) && $result->toArray()[$index]['practical_obtained_marks'] != null)
+                                                <input type="number" class="form-control mb-2" name="subjects[{{ $duration }}][{{ $index }}][practical_obtained_marks]" value="{{ $result->where('subject_id' , $subject->id)->first()?->practical_obtained_marks }}" max="{{ old("subjects.$duration.$index.practical_max_marks", $subject->practical_max_marks) }}" placeholder="Enter Practical Obtained Marks">
                                             @else
                                                 <input type="number" class="form-control mb-2" name="subjects[{{ $duration }}][{{ $index }}][practical_obtained_marks]" value="{{ old("subjects.$duration.$index.practical_obtained_marks") }}" max="{{ old("subjects.$duration.$index.practical_max_marks", $subject->practical_max_marks) }}" placeholder="Enter Practical Obtained Marks">
                                             @endif

@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers\Result;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Result\CreateResultRequest;
-use App\Models\Course;
-use App\Models\Prefix;
+use Illuminate\Console\View\Components\Factory;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Controllers\Controller;
+use Illuminate\Console\Application;
+use Illuminate\Contracts\View\View;
 use App\Models\StudentResult;
 use App\Models\Students;
-use App\Models\SvnStream;
-use Illuminate\Console\Application;
-use Illuminate\Console\View\Components\Factory;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use App\Models\Course;
 
 class ResultController extends Controller
 {
@@ -27,7 +24,7 @@ class ResultController extends Controller
         if (!$student) {
             return redirect()->back()->with('validation_errors', ['Student not found.']);
         }
-        return view('result.create-result', ['course' => $course, 'student' => $student, 'result' => $student->result->toArray()]);
+        return view('result.create-result', ['course' => $course, 'student' => $student, 'result' => $student->result]);
     }
 
     public function createResult(CreateResultRequest $request): Application|Factory|View|RedirectResponse
