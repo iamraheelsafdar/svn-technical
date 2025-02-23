@@ -25,6 +25,8 @@ class StudentsResource extends JsonResource
             'types' => $this->course->distinct('type')->pluck('type')->toArray(),
             'photo' => $this->photo,
             'steam_name' => $this->course->stream->name,
+            'course_id' => $this->course_id,
+            'result' => count($this->result->toArray()) > 0
 //            'roll_number' => count($this->rollNumbers->pluck('roll_number')->toArray()) > 0
         ];
     }

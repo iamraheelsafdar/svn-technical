@@ -9,6 +9,7 @@ use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Center\CenterController;
 use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\Prefix\PrefixController;
+use App\Http\Controllers\Result\ResultController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +52,12 @@ Route::group(['middleware' => 'logs'], function () {
 
 
         Route::group(['middleware' => ['admin']], function () {
+
+            /******************** Result Routes ********************/
+            Route::get('/create-result/{id}/{student_id}', [ResultController::class, 'createResultView'])->name('createResultView');
+            Route::post('/create-result', [ResultController::class, 'createResult'])->name('createResult');
+
+
 
             /******************** Student Referece ********************/
             Route::get('/student-reference', [StudentReferenceController::class, 'studentsReference'])->name('studentsReference');

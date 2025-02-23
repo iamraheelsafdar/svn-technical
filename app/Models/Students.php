@@ -38,4 +38,9 @@ class Students extends Model
         return $this->hasMany(StudentRollNumber::class, 'student_id', 'id');
     }
 
+    public function result(): hasMany
+    {
+        return $this->hasMany(StudentResult::class, 'student_id', 'id');
+    }
+
 }
