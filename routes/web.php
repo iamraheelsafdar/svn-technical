@@ -64,7 +64,7 @@ Route::group(['middleware' => 'logs'], function () {
             /*********************** Certificates **********************/
             Route::get('/migration/{id}', [CertificateController::class, 'migrationForm'])->name('migrationForm');
             Route::get('/paramedical-registration-certificate/{id}', [CertificateController::class, 'paramedicalRegCertificate'])->name('paramedicalRegCertificate');
-            Route::get('/paramedical-certificate/{id}', [CertificateController::class, 'paramedicalCertificate'])->name('paramedicalCertificate');
+            Route::get('/certificate/{id}', [CertificateController::class, 'certificate'])->name('certificate');
 
             /************************ Students Routes ***********************************/
             Route::post('/update-student-status', [StudentController::class, 'updateStudentStatus']);

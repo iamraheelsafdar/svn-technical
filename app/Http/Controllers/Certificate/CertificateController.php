@@ -61,9 +61,9 @@ class CertificateController extends Controller
      * @param $id
      * @return Response|RedirectResponse|View
      */
-    public function paramedicalCertificate($id): Response|RedirectResponse|View
+    public function certificate($id): Response|RedirectResponse|View
     {
-        return $this->generateCertificate($id, 'paramedical-certificate', 'paramedical-certificate');
+        return $this->generateCertificate($id, 'certificate', 'certificate');
     }
 
     /**
@@ -155,7 +155,8 @@ class CertificateController extends Controller
             'year_completion' => $completionDate->format('Y'),
             'institute_name' => $this->getInstituteName($streamName),
             'roll_number' => $student->course->prefix->prefix . $student->rollNumbers()->latest('id')->first()->roll_number,
-            'serial_number' => $completionDate->format('Yd') . rand(1000, 9999)
+            'serial_number' => $completionDate->format('Yd') . rand(1000, 9999),
+            'stream' => $streamName
         ];
 
         $data['certificate_image'] = $this->getCertificateImage($baseUrl, $streamName, $certificateType);
@@ -180,11 +181,15 @@ class CertificateController extends Controller
     private function getCertificateImage(string $baseUrl, string $streamName, string $certificateType): string
     {
         if ($certificateType === 'migration-certificate') {
-            $imagePath = $streamName == 'ITI' ? 'technology/iti-migration.png' :
+            $imagePath = $streamName == 'ITI' ? 'iti/iti-migration.png' :
                 ($streamName == 'TECHNOLOGY & MGMT' ? 'technology/tech-migration.png' :
                     'paramedical/paramedical-migration.png');
-        } elseif ($certificateType == 'paramedical-certificate') {
-            $imagePath = 'paramedical/paramedical-certificate.png';
+
+
+        } elseif ($certificateType == 'certificate') {
+            $imagePath = $streamName == 'ITI' ? 'iti/iti-certificate.png' :
+                ($streamName == 'TECHNOLOGY & MGMT' ? 'technology/tech-certificate.png' :
+                    'paramedical/paramedical-certificate.png');
         } else {
             $imagePath = 'paramedical/paramedical-registration-certificate.png';
         }

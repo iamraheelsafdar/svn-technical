@@ -162,7 +162,7 @@
                                     class="bi bi-file-earmark-fill"></i> Reg Certificate</a>
                         @endif
                         @if($student['status'])
-                            <a href="{{ route('paramedicalCertificate', ['id' => $student['id']]) }}" class="btn btn-primary"><i
+                            <a href="{{ route('certificate', ['id' => $student['id']]) }}" class="btn btn-primary"><i
                                     class="bi bi-file-earmark-fill"></i> Certificate</a>
                             <a href="{{ route('migrationForm', ['id' => $student['id']]) }}" class="btn btn-primary"><i
                                     class="bi bi-file-earmark-fill"></i> Migration</a>
