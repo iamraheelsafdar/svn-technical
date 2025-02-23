@@ -95,7 +95,7 @@
                                         <div class="col-md-12">
                                             <label class="form-label">Practical Obtained Marks</label>
                                             @if(count($result->toArray()) > 0 && isset($result->toArray()[$index]['practical_obtained_marks']) && $result->toArray()[$index]['practical_obtained_marks'] != null)
-                                                <input type="number" class="form-control mb-2" name="subjects[{{ $duration }}][{{ $index }}][practical_obtained_marks]" value="{{ $result->where('subject_id' , $subject->id)->first()?->practical_obtained_marks }}" max="{{ old("subjects.$duration.$index.practical_max_marks", $subject->practical_max_marks) }}" placeholder="Enter Practical Obtained Marks">
+                                                <input type="number" class="form-control mb-2" name="subjects[{{ $duration }}][{{ $index }}][practical_obtained_marks]" value="{{ $result->where('subject_id' , $subject->id)->first()?->practical_obtained_marks }}" {{$result->where('subject_id' , $subject->id)->first()?->practical_obtained_marks ? 'required' : ''}} max="{{ old("subjects.$duration.$index.practical_max_marks", $subject->practical_max_marks) }}" placeholder="Enter Practical Obtained Marks">
                                             @else
                                                 <input type="number" class="form-control mb-2" name="subjects[{{ $duration }}][{{ $index }}][practical_obtained_marks]" value="{{ old("subjects.$duration.$index.practical_obtained_marks") }}" max="{{ old("subjects.$duration.$index.practical_max_marks", $subject->practical_max_marks) }}" placeholder="Enter Practical Obtained Marks">
                                             @endif
@@ -116,7 +116,7 @@
                 @endforeach
             </div>
 
-            <button type="submit" class="btn btn-danger mt-5 mx-auto d-block">Create Result</button>
+            <button type="submit" class="btn {{count($result->toArray()) ? 'btn-warning' : 'btn-primary'}} mt-5 mx-auto d-block">{{count($result->toArray()) ? 'Update Result' : 'Create Result'}}</button>
         </form>
     </div>
     <script>
