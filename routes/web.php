@@ -30,6 +30,8 @@ Route::group(['middleware' => 'logs'], function () {
     Route::view('/forgot-password', 'auth.forgot-password')->name('forgotPasswordPage');
     Route::post('/', [AuthController::class, 'login'])->name('login');
     Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgotPassword');
+    Route::get('/set-password/{email}/{token}', [AuthController::class, 'setPasswordView'])->name('setPasswordView');
+    Route::post('/set-password', [AuthController::class, 'setPassword'])->name('setPassword');
 
 
     Route::group(['middleware' => ['auth']], function () {
@@ -128,4 +130,3 @@ Route::group(['middleware' => 'logs'], function () {
     });
 
 });
-

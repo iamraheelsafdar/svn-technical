@@ -17,6 +17,7 @@ use App\Filters\Center\CenterNameFilter;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
+use App\Jobs\Mail\InvitationMailJob;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Console\Application;
 use Illuminate\Http\JsonResponse;
@@ -48,14 +49,15 @@ class CenterController extends Controller
         $file = $request->file('profile_image');
         $path = Storage::disk('public')->put('centers/', $file);
         $center = Center::count();
+        $random = Str::random(64);
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'password' => Hash::make(Str::random(20)),
+            'password' => Hash::make($random),
             'status' => 0,
             'role' => 'Center',
-            'remember_token' => Str::uuid()->toString(),
+            'remember_token' => $random,
             'profile_image' => $path
         ]);
         Center::create([
@@ -65,6 +67,7 @@ class CenterController extends Controller
             'state' => $request->state,
             'registration_prefix' => $center == 0 ? 'SVN/SC/0' . '331' : 'SVN/SC/0' . (331 + $center)
         ]);
+        InvitationMailJob::dispatch($user);
         session()->flash('success', 'Center registered successfully.');
         return redirect()->route('centersPage');
     }
@@ -107,6 +110,12 @@ class CenterController extends Controller
     public function updateCenterStatus(UpdateCenterStatus $request): JsonResponse
     {
         $center = Center::find($request->id);
+        if ($center->user->remember_token != null) {
+            return response()->json([
+                'header_code' => 400,
+                'errors' => ["You can't update ceneter status until his account verified."],
+            ],400);
+        }
         $center->user->update(['status' => (bool)$request->status]);
         return response()->json([
             'header_code' => 200,

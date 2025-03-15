@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\AdminRoleMiddleware::class,
     ];
     protected $middlewarePriority = [
+//        'logs' => \App\Http\Middleware\RequestLogsMiddleware::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
     ];
 }
