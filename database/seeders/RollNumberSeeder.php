@@ -31,7 +31,6 @@ class RollNumberSeeder extends Seeder
                     $q->where('duration', $student->course_duration);
                 })
                 ->first();
-
             // Skip if no matching student found
             if (!$savedStudent) {
                 $this->command->info("Skipping student: {$student->name} (Not Found)");
