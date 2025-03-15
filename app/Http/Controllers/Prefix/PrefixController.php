@@ -73,12 +73,12 @@ class PrefixController extends Controller
     }
 
     /**
-     * @param $id
+     * @param $prefixId
      * @return Application|Factory|View|RedirectResponse
      */
-    public function updatePrefixView($id): Factory|View|Application|RedirectResponse
+    public function updatePrefixView($prefixId): Factory|View|Application|RedirectResponse
     {
-        $prefix = Prefix::find($id);
+        $prefix = Prefix::find($prefixId);
         if (!$prefix) {
             return redirect()->back()->with('validation_errors', ['Prefix not found.']);
         }

@@ -13,12 +13,12 @@ use Carbon\Carbon;
 class CertificateController extends Controller
 {
     /**
-     * @param $id
+     * @param $studentId
      * @return Response|RedirectResponse
      */
-    public function applicationForm($id): Response|RedirectResponse
+    public function applicationForm($studentId): Response|RedirectResponse
     {
-        $student = Students::find($id);
+        $student = Students::find($studentId);
         if (!$student) {
             return redirect()->back()->with('validation_errors', ['Student not found.']);
         }
@@ -32,47 +32,47 @@ class CertificateController extends Controller
     /**
      * Generate a migration certificate for a student.
      *
-     * @param $id
+     * @param $studentId
      * @return Response|RedirectResponse|View
      */
-    public function migrationForm($id): Response|RedirectResponse|View
+    public function migrationForm($studentId): Response|RedirectResponse|View
     {
-        return $this->generateCertificate($id, 'migration', 'migration-certificate');
+        return $this->generateCertificate($studentId, 'migration', 'migration-certificate');
     }
 
     /**
      * Generate a paramedical certificate for a student.
      *
-     * @param $id
+     * @param $studentId
      * @return Response|RedirectResponse|View
      */
-    public function paramedicalRegCertificate($id): Response|RedirectResponse|View
+    public function paramedicalRegCertificate($studentId): Response|RedirectResponse|View
     {
-        return $this->generateCertificate($id, 'paramedical-reg-certificate', 'paramedical-registration-certificate');
+        return $this->generateCertificate($studentId, 'paramedical-reg-certificate', 'paramedical-registration-certificate');
     }
 
     /**
      * Generate a paramedical certificate for a student.
      *
-     * @param $id
+     * @param $studentId
      * @return Response|RedirectResponse|View
      */
-    public function certificate($id): Response|RedirectResponse|View
+    public function certificate($studentId): Response|RedirectResponse|View
     {
-        return $this->generateCertificate($id, 'certificate', 'certificate');
+        return $this->generateCertificate($studentId, 'certificate', 'certificate');
     }
 
     /**
      * Common logic for generating certificates.
      *
-     * @param  $id
+     * @param  $studentId
      * @param  $viewName
      * @param  $certificateType
      * @return Response|RedirectResponse|View
      */
-    private function generateCertificate($id, $viewName, $certificateType): Response|RedirectResponse|View
+    private function generateCertificate($studentId, $viewName, $certificateType): Response|RedirectResponse|View
     {
-        $student = Students::find($id);
+        $student = Students::find($studentId);
         if (!$student) {
             return redirect()->back()->with('validation_errors', ['Student not found.']);
         }

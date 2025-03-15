@@ -158,25 +158,25 @@
                     <td style="white-space: nowrap; text-align: right !important;">
 
                         @if($student['steam_name'] == 'PARAMEDICAL' && $student['status']  && $student['result'])
-                            <a href="{{ route('paramedicalRegCertificate', ['id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Reg Certificate</a>
+                            <a href="{{ route('paramedicalRegCertificate', ['student_id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Reg Certificate</a>
                         @endif
 
                         @if($student['status'] && $student['result'])
-                            <a href="{{ route('viewResult', ['id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> View Result</a>
-                            <a href="{{ route('certificate', ['id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Certificate</a>
-                            <a href="{{ route('migrationForm', ['id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Migration</a>
+                            <a href="{{ route('viewResult', ['student_id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> View Result</a>
+                            <a href="{{ route('certificate', ['student_id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Certificate</a>
+                            <a href="{{ route('migrationForm', ['student_id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Migration</a>
                         @endif
 
                         @if($student['status'])
-                        <a href="{{ route('createResultView', ['id' => $student['course_id'], 'student_id'=> $student['id']]) }}" class="{{$student['result'] ? 'btn btn-warning' : 'btn btn-primary'}}"><i class="bi bi-pencil-square"></i>
+                        <a href="{{ route('createResultView', ['course_id' => $student['course_id'], 'student_id'=> $student['id']]) }}" class="{{$student['result'] ? 'btn btn-warning' : 'btn btn-primary'}}"><i class="bi bi-pencil-square"></i>
                             {{$student['result'] ? 'Update Result' : 'Create Result'}}</a>
-                            <a href="{{ route('updateStudentView', ['id' => $student['id']]) }}" class="btn btn-danger"><i class="bi bi-pencil-square"></i> Edit</a>
+                            <a href="{{ route('updateStudentView', ['student_id' => $student['id']]) }}" class="btn btn-danger"><i class="bi bi-pencil-square"></i> Edit</a>
                         @endif
-                        <a href="{{ route('applicationForm', ['id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Application Form</a>
+                        <a href="{{ route('applicationForm', ['student_id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Application Form</a>
 
                     </td>
                     @else
-                            <td><a href="{{ route('applicationForm', ['id' => $student['id']]) }}" class="btn btn-primary"><i
+                            <td><a href="{{ route('applicationForm', ['student_id' => $student['id']]) }}" class="btn btn-primary"><i
                                         class="bi bi-file-earmark-fill"></i> Application Form</a></td>
                     @endif
                 </tr>

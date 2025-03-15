@@ -15,9 +15,14 @@ use Carbon\Carbon;
 
 class ResultController extends Controller
 {
-    public function createResultView($id, $studentId): Application|Factory|View|RedirectResponse
+    /**
+     * @param $courseId
+     * @param $studentId
+     * @return Application|Factory|View|RedirectResponse
+     */
+    public function createResultView($courseId, $studentId): Application|Factory|View|RedirectResponse
     {
-        $course = Course::where('status', 1)->find($id);
+        $course = Course::where('status', 1)->find($courseId);
         if (!$course) {
             return redirect()->back()->with('validation_errors', ['Course not found.']);
         }
@@ -28,6 +33,10 @@ class ResultController extends Controller
         return view('result.create-result', ['course' => $course, 'student' => $student, 'result' => $student->result->where('student_id', $studentId)]);
     }
 
+    /**
+     * @param CreateResultRequest $request
+     * @return Application|Factory|View|RedirectResponse
+     */
     public function createResult(CreateResultRequest $request): Application|Factory|View|RedirectResponse
     {
         $student = Students::find($request->student_id);
@@ -57,6 +66,10 @@ class ResultController extends Controller
         return redirect()->route('studentsView');
     }
 
+    /**
+     * @param $studentId
+     * @return Application|Factory|View|RedirectResponse
+     */
     public function viewResult($studentId): Application|Factory|View|RedirectResponse
     {
         $student = Students::find($studentId);
@@ -76,6 +89,7 @@ class ResultController extends Controller
             'course_name' => $student->course->name,
             'dob' => Carbon::parse($student->dob)->format('d-M-Y'),
             'enrollment' => ($student->course->stream->enrollments->first()->prefix->prefix ?? '') . $student->enrollment,
+            'lateral' => $student->lateral_entry,
         ];
 
         // Group subjects by duration_part

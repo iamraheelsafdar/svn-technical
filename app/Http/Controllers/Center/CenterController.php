@@ -124,12 +124,12 @@ class CenterController extends Controller
     }
 
     /**
-     * @param $id
+     * @param $centerId
      * @return Application|View|Factory|RedirectResponse
      */
-    public function updateCenterView($id): Application|View|Factory|RedirectResponse
+    public function updateCenterView($centerId): Application|View|Factory|RedirectResponse
     {
-        $center = Center::find($id);
+        $center = Center::find($centerId);
         if (!$center) {
             return redirect()->back()->with('validation_errors', ['Center not found.']);
         }

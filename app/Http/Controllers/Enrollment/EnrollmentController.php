@@ -100,12 +100,12 @@ class EnrollmentController extends Controller
     }
 
     /**
-     * @param $id
+     * @param $enrollmentId
      * @return Application|View|Factory|RedirectResponse
      */
-    public function updateEnrollmentView($id): Application|View|Factory|RedirectResponse
+    public function updateEnrollmentView($enrollmentId): Application|View|Factory|RedirectResponse
     {
-        $enrollment = Enrollment::find($id);
+        $enrollment = Enrollment::find($enrollmentId);
         if (!$enrollment) {
             return redirect()->back()->with('validation_errors', ['Enrollment not found.']);
         }

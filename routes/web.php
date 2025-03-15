@@ -36,7 +36,7 @@ Route::group(['middleware' => 'logs'], function () {
 
     Route::group(['middleware' => ['auth']], function () {
         /*********************** Application Form **********************/
-        Route::get('/form/{id}', [CertificateController::class, 'applicationForm'])->name('applicationForm');
+        Route::get('/form/{student_id}', [CertificateController::class, 'applicationForm'])->name('applicationForm');
 
         /************************ Students Routes ***********************************/
         Route::get('/students', [StudentController::class, 'students'])->name('studentsView');
@@ -56,9 +56,9 @@ Route::group(['middleware' => 'logs'], function () {
         Route::group(['middleware' => ['admin']], function () {
 
             /******************** Result Routes ********************/
-            Route::get('/create-result/{id}/{student_id}', [ResultController::class, 'createResultView'])->name('createResultView');
+            Route::get('/create-result/{course_id}/{student_id}', [ResultController::class, 'createResultView'])->name('createResultView');
             Route::post('/create-result', [ResultController::class, 'createResult'])->name('createResult');
-            Route::get('/view-result/{id}', [ResultController::class, 'viewResult'])->name('viewResult');
+            Route::get('/view-result/{student_id}', [ResultController::class, 'viewResult'])->name('viewResult');
 
 
 
@@ -72,19 +72,19 @@ Route::group(['middleware' => 'logs'], function () {
 
 
             /*********************** Certificates **********************/
-            Route::get('/migration/{id}', [CertificateController::class, 'migrationForm'])->name('migrationForm');
-            Route::get('/paramedical-registration-certificate/{id}', [CertificateController::class, 'paramedicalRegCertificate'])->name('paramedicalRegCertificate');
-            Route::get('/certificate/{id}', [CertificateController::class, 'certificate'])->name('certificate');
+            Route::get('/migration/{student_id}', [CertificateController::class, 'migrationForm'])->name('migrationForm');
+            Route::get('/paramedical-registration-certificate/{student_id}', [CertificateController::class, 'paramedicalRegCertificate'])->name('paramedicalRegCertificate');
+            Route::get('/certificate/{student_id}', [CertificateController::class, 'certificate'])->name('certificate');
 
             /************************ Students Routes ***********************************/
             Route::post('/update-student-status', [StudentController::class, 'updateStudentStatus']);
-            Route::get('/update-student/{id}', [StudentController::class, 'updateStudentView'])->name('updateStudentView');
+            Route::get('/update-student/{student_id}', [StudentController::class, 'updateStudentView'])->name('updateStudentView');
             Route::post('/update-student', [StudentController::class, 'updateStudent'])->name('updateStudent');
 
             /************************* Subject Routes *********************************/
-            Route::get('/add-subject/{id}', [SubjectController::class, 'addSubjectView'])->name('addSubjectPage');
+            Route::get('/add-subject/{course_id}', [SubjectController::class, 'addSubjectView'])->name('addSubjectPage');
             Route::post('/add-subject', [SubjectController::class, 'addSubject'])->name('addSubject');
-            Route::get('/update-subject/{id}', [SubjectController::class, 'updateSubjectView'])->name('updateSubjectView');
+            Route::get('/update-subject/{course_id}', [SubjectController::class, 'updateSubjectView'])->name('updateSubjectView');
             Route::post('/update-subjects', [SubjectController::class, 'updateSubjects'])->name('updateSubjects');
 
             /************************* Course Routes *********************************/
@@ -92,7 +92,7 @@ Route::group(['middleware' => 'logs'], function () {
             Route::get('/add-course', [CourseController::class, 'addCourseView'])->name('addCoursePage');
             Route::post('/add-course', [CourseController::class, 'addCourse'])->name('addCourse');
             Route::post('/update-course-status', [CourseController::class, 'updateCourseStatus']);
-            Route::get('/update-course/{id}', [CourseController::class, 'updateCourseView'])->name('updateCourseView');
+            Route::get('/update-course/{course_id}', [CourseController::class, 'updateCourseView'])->name('updateCourseView');
             Route::post('/update-course', [CourseController::class, 'updateCourse'])->name('updateCourse');
 
 
@@ -101,7 +101,7 @@ Route::group(['middleware' => 'logs'], function () {
             Route::get('/add-enrollment', [EnrollmentController::class, 'addEnrollmentView'])->name('addEnrollmentPage');
             Route::post('/add-enrollment', [EnrollmentController::class, 'addEnrollment'])->name('addEnrollment');
             Route::post('/update-enrollment-status', [EnrollmentController::class, 'updateEnrollmentStatus']);
-            Route::get('/update-enrollment/{id}', [EnrollmentController::class, 'updateEnrollmentView'])->name('updateEnrollmentView');
+            Route::get('/update-enrollment/{enrollment_id}', [EnrollmentController::class, 'updateEnrollmentView'])->name('updateEnrollmentView');
             Route::post('/update-enrollment', [EnrollmentController::class, 'updateEnrollment'])->name('updateEnrollment');
 
 
@@ -110,7 +110,7 @@ Route::group(['middleware' => 'logs'], function () {
             Route::get('/add-prefix', [PrefixController::class, 'addPrefixView'])->name('addPrefixPage');
             Route::post('/add-prefix', [PrefixController::class, 'addPrefix'])->name('addPrefix');
             Route::post('/update-prefix-status', [PrefixController::class, 'updatePrefixStatus']);
-            Route::get('/update-prefix/{id}', [PrefixController::class, 'updatePrefixView'])->name('updatePrefixView');
+            Route::get('/update-prefix/{prefix_id}', [PrefixController::class, 'updatePrefixView'])->name('updatePrefixView');
             Route::post('/update-prefix', [PrefixController::class, 'updatePrefix'])->name('updatePrefix');
 
 
@@ -119,7 +119,7 @@ Route::group(['middleware' => 'logs'], function () {
             Route::get('/add-center', [CenterController::class, 'addCenterView'])->name('addCenterPage');
             Route::post('/add-center', [CenterController::class, 'addCenter'])->name('addCenter');
             Route::post('/update-center-status', [CenterController::class, 'updateCenterStatus']);
-            Route::get('/update-center/{id}', [CenterController::class, 'updateCenterView'])->name('updateCenterView');
+            Route::get('/update-center/{center_id}', [CenterController::class, 'updateCenterView'])->name('updateCenterView');
             Route::post('/update-center', [CenterController::class, 'updateCenter'])->name('updateCenter');
 
 

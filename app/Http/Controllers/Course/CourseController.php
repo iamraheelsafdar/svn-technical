@@ -113,9 +113,13 @@ class CourseController extends Controller
         ]);
     }
 
-    public function updateCourseView($id): Application|View|Factory|RedirectResponse
+    /**
+     * @param $courseId
+     * @return Application|View|Factory|RedirectResponse
+     */
+    public function updateCourseView($courseId): Application|View|Factory|RedirectResponse
     {
-        $course = Course::find($id);
+        $course = Course::find($courseId);
         if (!$course) {
             return redirect()->back()->with('validation_errors', ['Course not found.']);
         }

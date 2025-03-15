@@ -96,7 +96,7 @@
                     </td>
                     <td>{{ $center['last_login'] }}</td>
                     <td>
-                        <a href="{{ route('updateCenterView', ['id' => $center['id']]) }}" class="btn btn-danger"><i class="bi bi-pencil-square"></i> Edit</a>
+                        <a href="{{ route('updateCenterView', ['center_id' => $center['id']]) }}" class="btn btn-danger"><i class="bi bi-pencil-square"></i> Edit</a>
                     </td>
                 </tr>
             @empty

@@ -169,12 +169,12 @@ class StudentController extends Controller
 
     /**
      * Show the student update view
-     * @param $id
+     * @param $studentId
      * @return Application|View|Factory|RedirectResponse
      */
-    public function updateStudentView($id): Application|View|Factory|RedirectResponse
+    public function updateStudentView($studentId): Application|View|Factory|RedirectResponse
     {
-        $student = Students::find($id);
+        $student = Students::find($studentId);
 
         if (!$student) {
             return redirect()->back()->with('validation_errors', ['Student not found.']);

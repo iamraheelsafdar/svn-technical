@@ -15,12 +15,12 @@ use App\Models\Course;
 class SubjectController extends Controller
 {
     /**
-     * @param $id
+     * @param $courseId
      * @return Factory|View|Application|RedirectResponse
      */
-    public function addSubjectView($id): Factory|Application|View|RedirectResponse
+    public function addSubjectView($courseId): Factory|Application|View|RedirectResponse
     {
-        $course = Course::find($id);
+        $course = Course::find($courseId);
         if (!$course) {
             return redirect()->back()->with('validation_errors', ['Center not found.']);
         }
@@ -63,15 +63,23 @@ class SubjectController extends Controller
         return redirect()->route('coursesPage');
     }
 
-    public function updateSubjectView($id): Application|View|Factory|RedirectResponse
+    /**
+     * @param $courseId
+     * @return Application|View|Factory|RedirectResponse
+     */
+    public function updateSubjectView($courseId): Application|View|Factory|RedirectResponse
     {
-        $course = Course::with('subjects')->find($id);
+        $course = Course::with('subjects')->find($courseId);
         if (!$course) {
             return redirect()->back()->with('validation_errors', ['Subject not found.']);
         }
         return view('subject.update-subject', ['course' => $course]);
     }
 
+    /**
+     * @param UpdateSubjectRequest $request
+     * @return RedirectResponse
+     */
     public function updateSubjects(UpdateSubjectRequest $request): RedirectResponse
     {
         $subjectsData = $request->input('subjects');
