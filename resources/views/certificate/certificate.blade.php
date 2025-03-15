@@ -38,7 +38,7 @@
 
 <h2 style="position: relative; top:215px; text-align: center; display: block; font-weight: bold;color: #6e6c6c;font-size: 20px">{{ $student->name }}</h2>
 <h2 style="position: relative; top:240px; text-align: center; display: block; font-weight: bold;color: #6e6c6c;font-size: 24px">{{ $data['course_name']  }}</h2>
-<p style="position: relative; top:220px; text-align: center; display: block;color: #6e6c6c;font-size: 16px">{{ $student->name  }} Division</p>
+<p style="position: relative; top:220px; text-align: center; display: block;color: #6e6c6c;font-size: 16px">{{ $data['division']  }}</p>
 
 @if($data['stream'] == 'PARAMEDICAL')
 <h2 style="position: relative; text-align: center; display: block;font-weight: bold; color: #6e6c6c;font-size: 18px; top:290px;">{{ $data['year_completion']  }}</h2>

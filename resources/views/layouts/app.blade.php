@@ -100,7 +100,11 @@
 
             <section class="{{auth()->check() ? 'dashboard-content px-3 pt-4' : ''}}">
                 @if(auth()->user())
-                <h1 class="mb-4 heading">@yield('title')</h1>
+
+                    <div class=" heading mb-4 d-inline-flex w-100 align-items-center">
+
+                    <a href="{{ url()->previous() }}" class="btn btn-primary">Go Back</a> <h1 class="mx-auto">@yield('title')</h1>
+                    </div>
                 @endif
                 @yield('content')
             </section>

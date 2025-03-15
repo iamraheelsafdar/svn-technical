@@ -10,8 +10,21 @@
                 <input type="hidden" name="type" value="{{ $course->type }}">
                 <input type="hidden" name="student_id" value="{{ $student->id }}">
 
+                @php
+                    //Update existing result
+                    $subjectIds = $result->pluck('subject_id')->toArray();
+                    if (count($result)>0){
+                        $courseData = $course->subjects->whereIn('id', $subjectIds)->sortBy('duration_part')->groupBy('duration_part');
+                    }else{
+                        if ($student->lateral_entry){
+                            $courseData = $course->subjects->where('duration_part','>',$student->lateral_duration)->sortBy('duration_part')->groupBy('duration_part');
+                        }else{
+                            $courseData = $course->subjects->sortBy('duration_part')->groupBy('duration_part');
+                        }
+                    }
+                @endphp
                 <!-- Group subjects by duration (year/semester) -->
-                @foreach ($course->subjects->groupBy('duration_part') as $duration => $subjects)
+                @foreach ($courseData as $duration => $subjects)
                     <div class="col-md-6 mb-4">
                         <div class="card text-dark">
                             <div class="card-header bg-primary text-white">

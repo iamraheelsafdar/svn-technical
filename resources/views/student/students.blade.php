@@ -162,6 +162,7 @@
                         @endif
 
                         @if($student['status'] && $student['result'])
+                            <a href="{{ route('viewResult', ['id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> View Result</a>
                             <a href="{{ route('certificate', ['id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Certificate</a>
                             <a href="{{ route('migrationForm', ['id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Migration</a>
                         @endif
