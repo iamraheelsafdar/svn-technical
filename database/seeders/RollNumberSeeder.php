@@ -31,14 +31,13 @@ class RollNumberSeeder extends Seeder
                     $q->where('duration', $student->course_duration);
                 })
                 ->first();
-
             // Skip if no matching student found
             if (!$savedStudent) {
                 $this->command->info("Skipping student: {$student->name} (Not Found)");
                 continue;
             }
 
-            foreach ($rollNumbers as $rollNumber) {
+            foreach ($rollNumbers as $key => $rollNumber) {
                 // Extract roll number part
                 if (preg_match('/\d{4}\/\d+\/\d+/', $rollNumber->roll_number, $matches)) {
                     $extractedPart = $matches[0];
@@ -46,8 +45,9 @@ class RollNumberSeeder extends Seeder
                     // Ensure roll number is not null
                     if (!empty($extractedPart)) {
                         StudentRollNumber::create([
-                            'student_id'  => $savedStudent->id,
+                            'student_id' => $savedStudent->id,
                             'roll_number' => $extractedPart,
+                            'duration' => $key+=1
                         ]);
                     }
                 }

@@ -14,67 +14,12 @@ class CourseSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-//    public function run(): void
-//    {
-//
-//        $oldCourses = DB::table('old_course_managements')->get();
-//
-//        foreach ($oldCourses as $key => $oldCourse) {
-//            // Fetch the prefix and stream
-//            $prefix = Prefix::where('prefix', $oldCourse->roll_no)->first();
-//            $svnStream = SvnStream::where('id', $oldCourse->course_stream)->first();
-//
-//            // Prepare the course data
-//            $courseData = [
-//                'stream_id' => $svnStream->id,
-//                'prefix_id' => $prefix->id,
-//                'name' => trim($oldCourse->course_name),
-//                'code' => trim($oldCourse->course_code),
-//                'duration' => $oldCourse->course_semesters,
-//                'status' => (bool)$oldCourse->course_status,
-//                'type' => trim(strtolower($oldCourse->course_type)),
-//                'created_at' => $oldCourse->created_at,
-//                'updated_at' => $oldCourse->updated_at,
-//            ];
-//
-//            // Use updateOrInsert to avoid duplicates
-//            $existingCourse = Course::create(// Conditions to check for existing records
-//                $courseData // Data to insert or update
-//            );
-//
-//            // Fetch the updated course
-//            $course = Course::where('code', $courseData['code'])->where('name', $courseData['name'])->first();
-//            $subjects = DB::table('old_svn_subjects')->where('course_id', $oldCourse->id)->get();
-//            foreach ($subjects as $subject) {
-//                $duration = DB::table('old_course_types')->where('id', $subject->course_type_id)->first();
-//                $string = $duration->slug;
-//                $parts = explode('-', $string);
-//                $number = end($parts);
-//                Subject::create([
-//                    'course_id' => $course->id,
-//                    'duration_part' => $number,
-//                    'name' => $subject->subject_name,
-//                    'code' => $subject->subject_code,
-//                    'min_marks' => $subject->sub_min_marks,
-//                    'max_marks' => $subject->sub_max_marks,
-//                    'is_practical' => $subject->subject_practical == '0' ? 0 : 1,
-//                    'practical_min_marks' => $subject->p_min_marks == 'undefined' ? null : $subject->p_min_marks,
-//                    'practical_max_marks' => $subject->p_max_marks == 'undefined' ? null : $subject->p_max_marks,
-//                ]);
-//            }
-//
-//
-//            // Print a message based on whether a new course was created or not
-//            if ($existingCourse) {
-//                $this->command->info("Course {$oldCourse->course_name} ({$oldCourse->course_code}) inserted or updated");
-//            } else {
-//                $this->command->alert("Duplicate course found: {$oldCourse->course_name} ({$oldCourse->course_code})");
-//            }
-//        }
-//    }
     public function run(): void
     {
-        $oldCourses = DB::table('old_course_managements')->get();
+        $oldCourses = DB::table('old_course_managements')
+            ->selectRaw('MIN(id) as id, course_name, course_code, course_type, course_semesters, roll_no, course_stream, course_status, course_semesters, created_at, updated_at')
+            ->groupBy('course_name', 'course_code', 'course_type', 'course_semesters', 'roll_no','course_stream','course_status', 'course_semesters', 'created_at','updated_at')
+            ->get();
 
         foreach ($oldCourses as $oldCourse) {
             // Fetch the prefix and stream
@@ -108,7 +53,32 @@ class CourseSeeder extends Seeder
             }
 
             // Fetch and insert subjects for the course
-            $subjects = DB::table('old_svn_subjects')->where('course_id', $oldCourse->id)->get();
+//            $subjects = DB::table('old_svn_subjects')
+//                ->where('course_id', $oldCourse->id)
+//                ->selectRaw('MIN(id) as id, course_type_id, subject_name, subject_code, sub_min_marks, sub_max_marks, subject_practical, p_min_marks, p_max_marks, semester_name, semester_rollno_start, sem_year_code, created_at, updated_at')
+//                ->groupBy('course_type_id', 'subject_name', 'subject_code', 'sub_min_marks', 'sub_max_marks', 'subject_practical', 'p_min_marks', 'p_max_marks', 'semester_name', 'semester_rollno_start', 'sem_year_code', 'created_at', 'updated_at')
+//                ->get();
+            $subjects = DB::table('old_svn_subjects')
+                ->where('course_id', $oldCourse->id)
+                ->selectRaw('
+                    MIN(id) as id,
+                    MIN(course_type_id) as course_type_id,
+                    subject_name,
+                    subject_code,
+                    sub_min_marks,
+                    MIN(sub_max_marks) as sub_max_marks,
+                    MIN(subject_practical) as subject_practical,
+                    p_min_marks,
+                    p_max_marks,
+                    MIN(semester_name) as semester_name,
+                    MIN(semester_rollno_start) as semester_rollno_start,
+                    MIN(sem_year_code) as sem_year_code,
+                    MIN(created_at) as created_at,
+                    MAX(updated_at) as updated_at
+                ')
+                ->groupBy('course_type_id','course_id','subject_name', 'subject_code', 'sub_max_marks','sub_min_marks', 'p_min_marks', 'p_max_marks')
+                ->get();
+//            $subjects = DB::table('old_svn_subjects')->where('course_id', $oldCourse->id)->get();
             foreach ($subjects as $subject) {
                 $duration = DB::table('old_course_types')->where('id', $subject->course_type_id)->first();
 

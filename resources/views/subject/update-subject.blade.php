@@ -10,7 +10,7 @@
                 <input type="hidden" name="type" value="{{ $course->type }}">
 
                 <!-- Group subjects by duration (year/semester) -->
-                @foreach ($course->subjects->groupBy('duration_part') as $duration => $subjects)
+                @foreach ($course->subjects->sortBy('duration_part')->groupBy('duration_part') as $duration => $subjects)
                     <div class="col-md-6 mb-4">
                         <div class="card text-dark">
                             <div class="card-header bg-primary text-white">

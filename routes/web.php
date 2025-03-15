@@ -56,6 +56,7 @@ Route::group(['middleware' => 'logs'], function () {
             /******************** Result Routes ********************/
             Route::get('/create-result/{id}/{student_id}', [ResultController::class, 'createResultView'])->name('createResultView');
             Route::post('/create-result', [ResultController::class, 'createResult'])->name('createResult');
+            Route::get('/view-result/{id}', [ResultController::class, 'viewResult'])->name('viewResult');
 
 
 

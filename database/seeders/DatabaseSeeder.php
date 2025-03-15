@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             AddStudentSeeder::class,
             UpdateStudentImages::class,
             RollNumberSeeder::class,
+            ResultSeeder::class
         ]);
 
     }

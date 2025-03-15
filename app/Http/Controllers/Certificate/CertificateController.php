@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers\Certificate;
 
-use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Response;
-use Illuminate\View\Factory;
-use Illuminate\Http\Request;
 use App\Models\Students;
 use Carbon\Carbon;
-use DateInterval;
 
 class CertificateController extends Controller
 {
@@ -143,7 +139,39 @@ class CertificateController extends Controller
         $streamName = $stream->name;
         $prefix = $stream->enrollments->first()->prefix->prefix ?? '';
         $prefixParts = explode('/', $prefix);
+        $subjectsWithResults = $student->course->subjects()
+            ->with(['subjectResult' => function ($query) use ($student) {
+                $query->where('student_id', $student->id);
+            }])->get();
 
+        $totalObtainedMarks = 0;
+        $totalPracticalObtainedMarks = 0;
+        $subjectTotalMarks = 0;
+
+        foreach ($subjectsWithResults as $subject) {
+            $subjectResult = $subject->subjectResult->where('subject_id', $subject->id)->where('student_id', $student->id)->first(); // Assuming there's only one result per subject per student
+
+            if ($subjectResult) {
+                $totalObtainedMarks += $subjectResult->subject_obtained_marks;
+                $totalPracticalObtainedMarks += $subjectResult->practical_obtained_marks;
+            }
+
+            $subjectTotalMarks += $subject->max_marks + $subject->practical_max_marks;
+        }
+
+        $obtainedMarks = $totalObtainedMarks + $totalPracticalObtainedMarks;
+        $percentage = ($subjectTotalMarks > 0) ? ($obtainedMarks / $subjectTotalMarks) * 100 : 0;
+
+
+        if($percentage > '60'){
+            $division = 'First Division';
+        }elseif ($percentage >= '50') {
+            $division = 'Second Division';
+        }elseif ($percentage >= '40') {
+            $division = 'Third Division';
+        }else {
+            $division = 'Failed';
+        }
         $data = [
             'stream_prefix' => $stream->enrollments->first()->name,
             'reg_no' => "MIG/REF/{$prefixParts[0]}/" . $completionDate->format('Y') . rand(0, 99),
@@ -156,7 +184,8 @@ class CertificateController extends Controller
             'institute_name' => $this->getInstituteName($streamName),
             'roll_number' => $student->course->prefix->prefix . $student->rollNumbers()->latest('id')->first()->roll_number,
             'serial_number' => $completionDate->format('Yd') . rand(1000, 9999),
-            'stream' => $streamName
+            'stream' => $streamName,
+            'division' => $division
         ];
 
         $data['certificate_image'] = $this->getCertificateImage($baseUrl, $streamName, $certificateType);
