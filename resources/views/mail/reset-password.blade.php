@@ -62,7 +62,7 @@
 <body>
 <div class="email-container">
     <div class="email-header">
-        Reset Your Password
+        Set Your Password
     </div>
     <div class="email-body">
         <p>Hi {{$user->name}},</p>

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Course;
 
-use App\Http\Requests\Course\CheckCourseRequest;
 use App\Http\Requests\Course\UpdateCourseRequest;
 use Illuminate\Contracts\Foundation\Application;
+use App\Http\Requests\Course\CheckCourseRequest;
 use App\Http\Requests\Course\AddCourseRequest;
 use App\Filters\Course\CourseEnrollmentFilter;
 use App\Http\Resources\OrderRequestCollection;
@@ -37,12 +37,12 @@ class CourseController extends Controller
         $enrollments = app(Pipeline::class)
             ->send(Course::query())
             ->through([
-                CourseNameFilter::class,
-                CourseStreamFilter::class,
                 CourseEnrollmentFilter::class,
-                CourseTypeFilter::class,
+                CourseCreatedFilter::class,
+                CourseStreamFilter::class,
                 CourseStatusFilter::class,
-                CourseCreatedFilter::class
+                CourseNameFilter::class,
+                CourseTypeFilter::class,
             ])
             ->thenReturn()
             ->with('stream.enrollments', 'subjects')
@@ -91,12 +91,12 @@ class CourseController extends Controller
     public function addCourse(AddCourseRequest $request): RedirectResponse
     {
         Course::create([
-            'stream_id' => $request->stream_name,
-            'prefix_id' => $request->roll_number_prefix,
             'name' => $request->course_name,
             'code' => $request->course_code,
             'type' => $request->course_type,
             'duration' => $request->duration,
+            'stream_id' => $request->stream_name,
+            'prefix_id' => $request->roll_number_prefix,
         ]);
         session()->flash('success', 'Course added successfully');
         return redirect()->route('coursesPage');
@@ -146,12 +146,12 @@ class CourseController extends Controller
     {
         $course = Course::find($request->id);
         $course->update([
-            'stream_id' => $request->stream_name,
-            'prefix_id' => $request->roll_number_prefix,
             'name' => $request->course_name,
             'code' => $request->course_code,
             'type' => $request->course_type,
             'duration' => $request->duration,
+            'stream_id' => $request->stream_name,
+            'prefix_id' => $request->roll_number_prefix,
         ]);
         session()->flash('success', 'Course updated successfully');
         return redirect()->route('coursesPage');

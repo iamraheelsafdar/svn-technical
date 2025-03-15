@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Student;
 
-use App\Http\Requests\Student\AddStudentRequest;
 use App\Http\Requests\Student\UpdateStudentRequest;
+use App\Http\Requests\Student\AddStudentRequest;
 use App\Http\Resources\Student\StudentsResource;
 use App\Http\Resources\OrderRequestCollection;
 use App\Filters\Student\StudentLiteralFilter;
@@ -12,7 +12,6 @@ use App\Filters\Student\StudentNameFilter;
 use App\Filters\Student\StreamNameFilter;
 use App\Filters\Student\CourseTypeFilter;
 use App\Filters\Student\CourseNameFilter;
-use App\Models\StudentRollNumber;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\View\Factory;
 use App\Filters\Student\CenterStudent;
@@ -22,6 +21,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pipeline\Pipeline;
+use App\Models\StudentRollNumber;
 use App\Models\StudentReference;
 use Illuminate\Http\Request;
 use App\Models\SvnStream;
@@ -44,10 +44,10 @@ class StudentController extends Controller
                 StudentLiteralFilter::class,
                 StudentStatusFilter::class,
                 StudentNameFilter::class,
+                StreamNameFilter::class,
                 CourseTypeFilter::class,
                 CourseNameFilter::class,
                 CenterStudent::class,
-                StreamNameFilter::class,
             ])
             ->thenReturn()
             ->with(['course.stream'])
@@ -123,24 +123,24 @@ class StudentController extends Controller
 
         // Create the student record
         $student = Students::create([
-            'center_id' => auth()->user()->id,
+            'mode' => $request->mode,
+            'state' => $request->state,
             'course_id' => $request->course,
-            'enrollment' => Carbon::createFromFormat('d-m-Y', $request->admission_date)->format('dmY') . '/' . ($allStudents + 1),
             'name' => $request->student_name,
+            'center_id' => auth()->user()->id,
+            'gender' => ucfirst($request->gender),
             'father_name' => $request->father_name,
             'mother_name' => $request->mother_name,
-            'dob' => Carbon::createFromFormat('d-m-Y', $request->dob)->format('Y-m-d'),
-            'registration_date' => Carbon::now()->format('Y-m-d'),
-            'admission_date' => Carbon::createFromFormat('d-m-Y', $request->admission_date)->format('Y-m-d'),
-            'gender' => ucfirst($request->gender),
-            'state' => $request->state,
-            'mode' => $request->mode,
             'photo' => $uploadedFiles['student_image'] ?? null,
-            'signature' => $uploadedFiles['student_signature'] ?? null,
-            'qualification' => $uploadedFiles['student_qualification'] ?? null,
-            'identity_card' => $uploadedFiles['student_id'] ?? null,
             'lateral_entry' => $request->lateral == '1' ? 1 : 0,
-            'lateral_duration' => $request->lateral == '1' ? $request->lateral_duration : 0
+            'identity_card' => $uploadedFiles['student_id'] ?? null,
+            'signature' => $uploadedFiles['student_signature'] ?? null,
+            'registration_date' => Carbon::now()->format('Y-m-d'),
+            'qualification' => $uploadedFiles['student_qualification'] ?? null,
+            'lateral_duration' => $request->lateral == '1' ? $request->lateral_duration : 0,
+            'dob' => Carbon::createFromFormat('d-m-Y', $request->dob)->format('Y-m-d'),
+            'admission_date' => Carbon::createFromFormat('d-m-Y', $request->admission_date)->format('Y-m-d'),
+            'enrollment' => Carbon::createFromFormat('d-m-Y', $request->admission_date)->format('dmY') . '/' . ($allStudents + 1),
         ]);
         $course = $student->course;
         $skipLateral = $request->input('lateral_duration', 0);
@@ -214,11 +214,11 @@ class StudentController extends Controller
     {
         $student = Students::where('id', $request->student_id)->first();
         $student->update([
+            'mode' => $request->mode,
             'name' => $request->student_name,
+            'gender' => ucfirst($request->gender),
             'father_name' => $request->father_name,
             'mother_name' => $request->mother_name,
-            'gender' => ucfirst($request->gender),
-            'mode' => $request->mode,
             'reference_id' => $request->reference_id,
         ]);
 

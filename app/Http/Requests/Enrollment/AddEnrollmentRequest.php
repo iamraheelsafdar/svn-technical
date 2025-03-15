@@ -23,10 +23,10 @@ class AddEnrollmentRequest extends BaseRequestForWeb
     public function rules(): array
     {
         return [
+            'session_year' => 'required|date_format:Y',
             'enrollment_name' => 'required|string|max:50',
             'prefix' => 'required|string|exists:prefixes,id',
             'stream' => 'required|string|exists:svn_streams,id',
-            'session_year' => 'required|date_format:Y',
         ];
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Prefix;
 
-use App\Http\Requests\BaseRequestForWeb;
 use Illuminate\Contracts\Validation\ValidationRule;
+use App\Http\Requests\BaseRequestForWeb;
 
 class CheckPrefixIdRequest extends BaseRequestForWeb
 {

@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Http\Requests\BaseRequestForWeb;
 use Illuminate\Contracts\Validation\ValidationRule;
+use App\Http\Requests\BaseRequestForWeb;
 
 class SetPasswordRequest extends BaseRequestForWeb
 {

@@ -26,11 +26,11 @@ class UpdateCourseRequest extends BaseRequestForWeb
             "id" => "required|exists:courses,id",
             "course_name" => "required|string|max:100",
             "course_code" => "required|string|max:100",
-            "course_type" => ["required", "in:year,semester,monthly"],
-            "duration" => ["required", "string", request()->course_type == "year" ? "max:12" : (request()->course_type == "semester" ? "max:30" : "max:20")],
-            "roll_number_prefix" => "required|string|exists:prefixes,id",
-            "stream_name" => "required|string|exists:svn_streams,id",
             "enrollment" => "required|string|exists:enrollments,id",
+            "stream_name" => "required|string|exists:svn_streams,id",
+            "course_type" => ["required", "in:year,semester,monthly"],
+            "roll_number_prefix" => "required|string|exists:prefixes,id",
+            "duration" => ["required", "string", request()->course_type == "year" ? "max:12" : (request()->course_type == "semester" ? "max:30" : "max:20")],
         ];
     }
 }

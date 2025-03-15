@@ -51,20 +51,20 @@ class CenterController extends Controller
         $center = Center::count();
         $random = Str::random(64);
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'password' => Hash::make($random),
             'status' => 0,
             'role' => 'Center',
+            'name' => $request->name,
+            'profile_image' => $path,
+            'email' => $request->email,
+            'phone' => $request->phone,
             'remember_token' => $random,
-            'profile_image' => $path
+            'password' => Hash::make($random),
         ]);
         Center::create([
             'user_id' => $user->id,
-            'owner_name' => $request->owner_name,
-            'address' => $request->address,
             'state' => $request->state,
+            'address' => $request->address,
+            'owner_name' => $request->owner_name,
             'registration_prefix' => $center == 0 ? 'SVN/SC/0' . '331' : 'SVN/SC/0' . (331 + $center)
         ]);
         InvitationMailJob::dispatch($user);

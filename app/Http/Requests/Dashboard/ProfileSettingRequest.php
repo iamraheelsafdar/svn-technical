@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Dashboard;
 
-use App\Http\Requests\BaseRequestForWeb;
 use Illuminate\Contracts\Validation\ValidationRule;
+use App\Http\Requests\BaseRequestForWeb;
 
 class ProfileSettingRequest extends BaseRequestForWeb
 {

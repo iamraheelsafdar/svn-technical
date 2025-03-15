@@ -73,7 +73,7 @@
         <p>🔹 Set Your Password Here:<br><a href="{{env('LIVE_URL')}}set-password/{{$user->email}}/{{$user->remember_token}}" class="reset-button">Set Password</a></p>
         <p>If the button above doesn’t work, copy and paste the following link into your browser:</p>
         <h4>Once your password is set, you can log in and start exploring:</h4>
-        <p>Login Here: <a href="{{env('LIVE_URL')}}">SVN Technical Login</a></p>
+        <p>Login Here:<br><a class="reset-button" href="{{env('LIVE_URL')}}">SVN Technical Login</a></p>
         <h4>What’s Next?</h4>
         <p>
             ✅ Complete Your Profile – Get personalized recommendations.<br>

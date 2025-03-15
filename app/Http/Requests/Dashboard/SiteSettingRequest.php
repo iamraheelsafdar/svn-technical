@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Dashboard;
 
-use App\Http\Requests\BaseRequestForWeb;
 use Illuminate\Contracts\Validation\ValidationRule;
+use App\Http\Requests\BaseRequestForWeb;
 
 class SiteSettingRequest extends BaseRequestForWeb
 {
@@ -25,8 +25,8 @@ class SiteSettingRequest extends BaseRequestForWeb
         return [
             'email' => 'required|email',
             'phone' => 'required|numeric',
-            'title' => 'required|string|max:50',
             'logo' => 'mimes:png|max:2048',
+            'title' => 'required|string|max:50',
             'copyright' => 'required|string|max:100',
         ];
     }

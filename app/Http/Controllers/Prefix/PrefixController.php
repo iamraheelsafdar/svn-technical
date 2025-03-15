@@ -55,10 +55,10 @@ class PrefixController extends Controller
         $prefixes = app(Pipeline::class)
             ->send(Prefix::query())
             ->through([
+                PrefixDateFilter::class,
                 PrefixNameFilter::class,
                 PrefixAssignFilter::class,
                 PrefixStatusFilter::class,
-                PrefixDateFilter::class
             ])
             ->thenReturn()
             ->latest()

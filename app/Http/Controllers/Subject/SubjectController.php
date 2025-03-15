@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\Subject;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Subject\AddSubjectRequest;
 use App\Http\Requests\Subject\UpdateSubjectRequest;
-use App\Models\Course;
-use App\Models\Subject;
+use App\Http\Requests\Subject\AddSubjectRequest;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Contracts\View\View;
+use App\Models\Subject;
+use App\Models\Course;
 
 class SubjectController extends Controller
 {
