@@ -168,8 +168,20 @@
                         @endif
 
                         @if($student['status'])
-                        <a href="{{ route('createResultView', ['course_id' => $student['course_id'], 'student_id'=> $student['id']]) }}" class="{{$student['result'] ? 'btn btn-warning' : 'btn btn-primary'}}"><i class="bi bi-pencil-square"></i>
+
+
+                        <a href="{{ route('createResultView', ['student_id'=> $student['id']]) }}" class="{{$student['result'] ? 'btn btn-warning' : 'btn btn-primary'}}"><i class="bi bi-pencil-square"></i>
                             {{$student['result'] ? 'Update Result' : 'Create Result'}}</a>
+
+                                @if (!$student['result'])
+                                    <button type="button" class="btn btn-primary autoResultBtn"
+                                            data-student-id="{{ $student['id'] }}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#autoResultModal">
+                                        <i class="bi bi-robot"></i> Auto Create Result
+                                    </button>
+                                @endif
+
                             <a href="{{ route('updateStudentView', ['student_id' => $student['id']]) }}" class="btn btn-danger"><i class="bi bi-pencil-square"></i> Edit</a>
                         @endif
                         <a href="{{ route('applicationForm', ['student_id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Application Form</a>
@@ -188,6 +200,39 @@
             </tbody>
         </table>
     </div>
-
+    <div class="modal fade" id="autoResultModal" tabindex="-1" aria-labelledby="autoResultModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form method="POST" action="{{route('autoResultCreation')}}">
+                    @csrf
+                    <input type="hidden" name="student_id" id="modalStudentId">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="autoResultModalLabel">Auto Create Result</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Enter Percentage (40-100)</label>
+                            <input type="number" name="result_percentage" class="form-control" min="40" max="100" placeholder="Enter Percentage">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success">Create Result</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".autoResultBtn").forEach(button => {
+                button.addEventListener("click", function() {
+                    let studentId = this.getAttribute("data-student-id");
+                    document.getElementById("modalStudentId").value = studentId;
+                });
+            });
+        });
+    </script>
     @include('pagination.pagination', ['dataToPaginate' => $students])
+
 @endsection

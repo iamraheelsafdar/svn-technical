@@ -104,24 +104,24 @@
                                         </select>
                                     </div>
                                     <!-- Practical Marks Section (Initially Hidden or Visible Based on Dropdown) -->
-                                    <div id="practical-marks-{{ $duration }}-{{ $index }}" class="practical-marks row {{ old("subjects.$duration.$index.is_practical", $subject->is_practical) == 1 ? '' : 'd-none' }}">
-                                        <div class="col-md-12">
-                                            <label class="form-label">Practical Obtained Marks</label>
-                                            @if(count($result->toArray()) > 0 && isset($result->toArray()[$index]['practical_obtained_marks']) && $result->toArray()[$index]['practical_obtained_marks'] != null)
-                                                <input type="number" class="form-control mb-2" name="subjects[{{ $duration }}][{{ $index }}][practical_obtained_marks]" value="{{ $result->where('subject_id' , $subject->id)->first()?->practical_obtained_marks }}" {{$result->where('subject_id' , $subject->id)->first()?->practical_obtained_marks ? 'required' : ''}} max="{{ old("subjects.$duration.$index.practical_max_marks", $subject->practical_max_marks) }}" placeholder="Enter Practical Obtained Marks">
-                                            @else
-                                                <input type="number" class="form-control mb-2" name="subjects[{{ $duration }}][{{ $index }}][practical_obtained_marks]" value="{{ old("subjects.$duration.$index.practical_obtained_marks") }}" max="{{ old("subjects.$duration.$index.practical_max_marks", $subject->practical_max_marks) }}" placeholder="Enter Practical Obtained Marks">
-                                            @endif
+                                        @php
+                                            $subjectResult = $result->where('subject_id', $subject->id)->first();
+                                        @endphp
+                                        <div id="practical-marks-{{ $duration }}-{{ $index }}" class="practical-marks row {{ ($subject->is_practical == 1 || old("subjects.$duration.$index.is_practical") == 1) ? '' : 'd-none' }}">
+                                            <div class="col-md-12">
+                                                <label class="form-label">Practical Obtained Marks</label>
+                                                <input type="number" class="form-control mb-2" name="subjects[{{ $duration }}][{{ $index }}][practical_obtained_marks]" value="{{ $subjectResult?->practical_obtained_marks }}" max="{{ $subject->practical_max_marks ?? old("subjects.$duration.$index.practical_max_marks") }}" placeholder="Enter Practical Obtained Marks">
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label class="form-label">Practical Min Marks</label>
+                                                <input readonly type="number" class="form-control" name="subjects[{{ $duration }}][{{ $index }}][practical_min_marks]" value="{{ $subject->practical_min_marks ?? old("subjects.$duration.$index.practical_min_marks") }}" placeholder="Min Practical Marks">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Practical Max Marks</label>
+                                                <input readonly type="number" class="form-control" name="subjects[{{ $duration }}][{{ $index }}][practical_max_marks]" value="{{ $subject->practical_max_marks ?? old("subjects.$duration.$index.practical_max_marks") }}" placeholder="Max Practical Marks">
+                                            </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Practical Min Marks</label>
-                                            <input readonly type="number" class="form-control" name="subjects[{{ $duration }}][{{ $index }}][practical_min_marks]" value="{{ old("subjects.$duration.$index.practical_min_marks", $subject->practical_min_marks) }}" placeholder="Min Practical Marks">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Practical Max Marks</label>
-                                            <input readonly type="number" class="form-control" name="subjects[{{ $duration }}][{{ $index }}][practical_max_marks]" value="{{ old("subjects.$duration.$index.practical_max_marks", $subject->practical_max_marks) }}" placeholder="Max Practical Marks">
-                                        </div>
-                                    </div>
                                 @endforeach
                             </div>
                         </div>

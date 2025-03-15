@@ -56,8 +56,9 @@ Route::group(['middleware' => 'logs'], function () {
         Route::group(['middleware' => ['admin']], function () {
 
             /******************** Result Routes ********************/
-            Route::get('/create-result/{course_id}/{student_id}', [ResultController::class, 'createResultView'])->name('createResultView');
+            Route::get('/create-result/{student_id}', [ResultController::class, 'createResultView'])->name('createResultView');
             Route::post('/create-result', [ResultController::class, 'createResult'])->name('createResult');
+            Route::post('/create-result-auto', [ResultController::class, 'autoResultCreation'])->name('autoResultCreation');
             Route::get('/view-result/{student_id}', [ResultController::class, 'viewResult'])->name('viewResult');
 
 
