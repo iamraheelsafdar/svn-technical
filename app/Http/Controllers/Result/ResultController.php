@@ -80,9 +80,16 @@ class ResultController extends Controller
         if (!$studentResult->exists()){
             return redirect()->back()->with('validation_errors', ['Student reult not found.']);
         }
+        $finalResult = self::resultCalculation($student, $studentResult);
+        return view('result.view-result', ['result' => $finalResult]);
+    }
+
+    public static function resultCalculation($student, $studentResult): array
+    {
         $allSubjects = $student->course->subjects->whereIn('id',$studentResult->pluck('subject_id')->toArray())->sortBy('duration_part');
         $finalResult = [
             'results' => [], // Initialize an array to store grouped results by duration
+            'student_id' => $student->id,
             'student_name' => $student->name,
             'lateral' => $student->lateral_entry,
             'mother_name' => $student->mother_name,
@@ -101,7 +108,7 @@ class ResultController extends Controller
             ];
 
             foreach ($subjects as $subject) {
-                $subjectResult = $subject->subjectResult->where('subject_id', $subject->id)->where('student_id',$studentId)->first(); // Assuming one result per subject per student
+                $subjectResult = $subject->subjectResult->where('subject_id', $subject->id)->where('student_id',$student->id)->first(); // Assuming one result per subject per student
                 $durationResults['subjects'][] = [
                     'id' => $subject->id,
                     'subject_name' => $subject->name,
@@ -114,8 +121,10 @@ class ResultController extends Controller
 
             $finalResult['results'][] = $durationResults; // Add duration-specific results to the final result
         }
-        return view('result.view-result', ['result' => $finalResult]);
+        return $finalResult;
     }
+
+
     public function autoResultCreation(AutoResultCreationRequest $request): RedirectResponse
     {
         $student = Students::findOrFail($request->student_id);

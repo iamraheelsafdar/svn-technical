@@ -12,7 +12,7 @@
                 @if(auth()->user()->role == "Admin")
                     <th>Lateral Entry</th>
                 @endif
-{{--                <th>Course Name</th>--}}
+                <th>Course Name</th>
                 <th>Course Duration-Type</th>
                 <th>Status</th>
                 <th>Action</th>
@@ -52,15 +52,15 @@
                             </select>
                         </th>
                     @endif
-{{--                    <th>--}}
-{{--                        <input type="text" value="{{ request()->input('course_name') }}" name="course_name"--}}
-{{--                               list="courses" class="form-control border-0" placeholder="Search Course"/>--}}
-{{--                        <datalist id="courses">--}}
-{{--                            @foreach($students['courses'] as $course)--}}
-{{--                                <option value="{{$course}}">{{$course}}</option>--}}
-{{--                            @endforeach--}}
-{{--                        </datalist>--}}
-{{--                    </th>--}}
+                    <th>
+                        <input type="text" value="{{ request()->input('course_name') }}" name="course_name"
+                               list="courses" class="form-control border-0" placeholder="Search Course"/>
+                        <datalist id="courses">
+                            @foreach($students['courses'] as $course)
+                                <option value="{{$course}}">{{$course}}</option>
+                            @endforeach
+                        </datalist>
+                    </th>
                     <th>
                         <select class="form-control border-0" name="course_type">
                             <option
@@ -132,7 +132,7 @@
                             </div>
                         </td>
                     @endif
-{{--                    <td>{{ $student['course_name'] }}</td>--}}
+                    <td>{{ $student['course_name'] }}</td>
                     <td>{{ $student['course_duration'] }}-{{ ucfirst($student['course_type']) }}</td>
                     <td>
                         @if(auth()->user()->role == "Admin")

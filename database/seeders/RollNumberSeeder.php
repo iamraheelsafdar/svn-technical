@@ -27,6 +27,8 @@ class RollNumberSeeder extends Seeder
             $savedStudent = Students::where('father_name', $student->father_name)
                 ->where('mother_name', $student->mother_name)
                 ->where('name', $student->name)
+                ->where('lateral_duration', $student->lateral_duration)
+                ->where('lateral_entry', $student->laterl_entry == 'No' ? 0 : 1)
                 ->whereHas('course', function ($q) use ($student) {
                     $q->where('duration', $student->course_duration);
                 })

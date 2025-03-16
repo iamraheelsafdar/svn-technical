@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', ( $result['lateral'] ? ' ( Lateral Entry )' : '') . ' Result of ' . $result['student_name'])
+@section('title', ( $result['lateral'] ? ' ( Lateral Entry )' : ' Result ') . ' of ' . $result['student_name'])
 @section('content')
     {{--    @dd($result)--}}
 {{--    <div class="pb-4">--}}
@@ -44,7 +44,7 @@
 
 {{--    </div>--}}
     <div class="pb-4">
-        <a class="text-center text-white btn btn-dark d-table mx-auto mb-4" href="#">
+        <a class="text-center text-white btn btn-dark d-table mx-auto mb-4" href="{{route('consolidateResult', ['student_id' => $result['student_id']])}}">
             <i class="bi bi-download"></i> Download Full Result
         </a>
 

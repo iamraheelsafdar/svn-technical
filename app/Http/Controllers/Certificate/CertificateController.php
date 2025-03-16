@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Certificate;
 
+use App\Http\Controllers\Result\ResultController;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\StudentResult;
 use Illuminate\Http\Response;
 use App\Models\Students;
 use Carbon\Carbon;
@@ -63,6 +65,17 @@ class CertificateController extends Controller
     }
 
     /**
+     * Generate a paramedical certificate for a student.
+     *
+     * @param $studentId
+     * @return Response|RedirectResponse|View
+     */
+    public function consolidateResult($studentId): Response|RedirectResponse|View
+    {
+        return $this->generateCertificate($studentId, 'consolidate-result', 'consolidate-result');
+    }
+
+    /**
      * Common logic for generating certificates.
      *
      * @param  $studentId
@@ -91,9 +104,8 @@ class CertificateController extends Controller
 
         // Prepare data for the certificate
         $data = $this->prepareCertificateData($student, $admissionDate, $completionDate, $certificateType);
-
         $pdf = PDF::loadView("certificate.$viewName", ['student' => $student, 'data' => $data]);
-        $pdf->setPaper([0, 0, 600, 850]);
+        $pdf->setPaper([0, 0, 600, 847]);
         $pdf->setOptions([
             'defaultFont' => 'sans-serif',
             'isHtml5ParserEnabled' => true,
@@ -134,6 +146,11 @@ class CertificateController extends Controller
      */
     private function prepareCertificateData($student, $admissionDate, $completionDate, $certificateType): array
     {
+        $finalResult = [];
+        if ($certificateType == 'consolidate-result') {
+            $studentResult = StudentResult::where('student_id', $student->id);
+            $finalResult = ResultController::resultCalculation($student, $studentResult);
+        }
         $baseUrl = env('LIVE_URL');
         $stream = $student->course->stream;
         $streamName = $stream->name;
@@ -147,9 +164,8 @@ class CertificateController extends Controller
         $totalObtainedMarks = 0;
         $totalPracticalObtainedMarks = 0;
         $subjectTotalMarks = 0;
-
         foreach ($subjectsWithResults as $subject) {
-            $subjectResult = $subject->subjectResult->where('subject_id', $subject->id)->where('student_id', $student->id)->first(); // Assuming there's only one result per subject per student
+                $subjectResult = $subject->subjectResult?->where('subject_id', $subject->id)->where('student_id', $student->id)->first(); // Assuming there's only one result per subject per student
 
             if ($subjectResult) {
                 $totalObtainedMarks += $subjectResult->subject_obtained_marks;
@@ -157,47 +173,49 @@ class CertificateController extends Controller
             }
 
             $subjectTotalMarks += $subject->max_marks + $subject->practical_max_marks;
-        }
-
+            }
         $obtainedMarks = $totalObtainedMarks + $totalPracticalObtainedMarks;
         $percentage = ($subjectTotalMarks > 0) ? ($obtainedMarks / $subjectTotalMarks) * 100 : 0;
 
 
-        if($percentage > '60'){
+        if ($percentage > '60') {
             $division = 'First Division';
-        }elseif ($percentage >= '50') {
+        } elseif ($percentage >= '50') {
             $division = 'Second Division';
-        }elseif ($percentage >= '40') {
+        } elseif ($percentage >= '40') {
             $division = 'Third Division';
-        }else {
+        } else {
             $division = 'Failed';
         }
-        $data = [
-            'stream_prefix' => $stream->enrollments->first()->name,
-            'reg_no' => "MIG/REF/{$prefixParts[0]}/" . $completionDate->format('Y') . rand(0, 99),
-            'para_reg_no' => $prefix . $student->enrollment,
-            'completion_year' => $completionDate->format('m-d-Y'),
-            'footer_date' => $completionDate->copy()->addMonths(2)->format('d-M-Y'),
-            'reg_date' => $completionDate->format('d-M-Y'),
-            'year' => $admissionDate->format('Y'),
-            'year_completion' => $completionDate->format('Y'),
-            'institute_name' => $this->getInstituteName($streamName),
-            'roll_number' => $student->course->prefix->prefix . $student->rollNumbers()->latest('id')->first()->roll_number,
-            'serial_number' => $completionDate->format('Yd') . rand(1000, 9999),
+        $payload = [
             'stream' => $streamName,
-            'division' => $division
+            'division' => $division,
+            'year' => $admissionDate->format('Y'),
+            'reg_date' => $completionDate->format('d-M-Y'),
+            'para_reg_no' => $prefix . $student->enrollment,
+            'year_completion' => $completionDate->format('Y'),
+            'completion_year' => $completionDate->format('m-d-Y'),
+            'stream_prefix' => $stream->enrollments->first()->name,
+            'institute_name' => $this->getInstituteName($streamName),
+            'serial_number' => $completionDate->format('Yd') . rand(1000, 9999),
+            'footer_date' => $completionDate->copy()->addMonths(2)->format('d-M-Y'),
+            'reg_no' => "MIG/REF/{$prefixParts[0]}/" . $completionDate->format('Y') . rand(0, 99),
+            'roll_number' => $student->course->prefix->prefix . $student->rollNumbers()->latest('id')->first()?->roll_number,
         ];
-
-        $data['certificate_image'] = $this->getCertificateImage($baseUrl, $streamName, $certificateType);
-        $data['student_image'] = $student['photo']
-            ? asset($baseUrl . 'storage/' . $student['photo'])
-            : asset($baseUrl . 'assets/img/profileImage.png');
+        $data = array_merge($finalResult, $payload);
         $data['course_name'] = $student->course->name;
         $data['date_of_birth'] = Carbon::parse($student->dob)->format('d-M-Y');
+        $data['certificate_image'] = $this->getCertificateImage($baseUrl, $streamName, $certificateType);
+        $data['student_image'] = $student['photo'] ? asset($baseUrl . 'storage/' . $student['photo']) : asset($baseUrl . 'assets/img/profileImage.png');
+
 
         return $data;
     }
 
+    /**
+     * @param string $streamName
+     * @return string
+     */
     private function getInstituteName(string $streamName): string
     {
         return match ($streamName) {
@@ -207,6 +225,12 @@ class CertificateController extends Controller
         };
     }
 
+    /**
+     * @param string $baseUrl
+     * @param string $streamName
+     * @param string $certificateType
+     * @return string
+     */
     private function getCertificateImage(string $baseUrl, string $streamName, string $certificateType): string
     {
         if ($certificateType === 'migration-certificate') {
@@ -219,6 +243,10 @@ class CertificateController extends Controller
             $imagePath = $streamName == 'ITI' ? 'iti/iti-certificate.png' :
                 ($streamName == 'TECHNOLOGY & MGMT' ? 'technology/tech-certificate.png' :
                     'paramedical/paramedical-certificate.png');
+        } elseif ($certificateType == 'consolidate-result'){
+            $imagePath = $streamName == 'ITI' ? 'iti/iti-consolidate.png' :
+                ($streamName == 'TECHNOLOGY & MGMT' ? 'technology/tech-consolidate.png' :
+                    'paramedical/paramedical-consolidate.png');
         } else {
             $imagePath = 'paramedical/paramedical-registration-certificate.png';
         }
