@@ -103,6 +103,8 @@ class ResultController extends Controller
         foreach ($allSubjects->groupBy('duration_part') as $duration => $subjects) {
             $durationResults = [
                 'subjects' => [], // Initialize an array to store subject results for this duration
+                'digit_duration' =>$duration,
+                'ids'=>$subjects->pluck('id')->toArray(),
                 'duration' => ucfirst($student->course->type) . ' ' . $duration, // e.g., "Year 1" or "Semester 1"
                 'roll_number' => $student->course->prefix->prefix . $student->rollNumbers->where('duration' , $duration)->first()?->roll_number, // e.g., "Year 1" or "Semester 1"
             ];

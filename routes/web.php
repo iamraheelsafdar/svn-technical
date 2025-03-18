@@ -74,7 +74,7 @@ Route::group(['middleware' => 'logs'], function () {
 
             /*********************** Results **********************/
             Route::get('/consolidate-result/{student_id}', [CertificateController::class, 'consolidateResult'])->name('consolidateResult');
-            Route::get('/result-cum/{student_id}', [CertificateController::class, 'consolidateResult'])->name('consolidateResult');
+            Route::get('/result-cum/{student_id}/{subject_ids}/{duration}', [CertificateController::class, 'resultCum'])->name('resultCum');
 
 
 

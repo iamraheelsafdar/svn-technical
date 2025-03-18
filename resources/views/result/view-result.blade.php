@@ -47,20 +47,20 @@
         <a class="text-center text-white btn btn-dark d-table mx-auto mb-4" href="{{route('consolidateResult', ['student_id' => $result['student_id']])}}">
             <i class="bi bi-download"></i> Download Full Result
         </a>
-
         <div class="accordion" id="resultsAccordion" style="height: 800px; overflow: auto;">
             @foreach($result['results'] as $key => $singleResults)
                 <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading{{$key}}">
-                        <button class="bg-primary text-white d-flex justify-content-between align-items-center w-100 border-0 py-2 px-3"
+                    <h2 class="accordion-header d-flex" id="heading{{$key}}">
+                        <button class="bg-primary text-white d-flex justify-content-between align-items-center w-100 border-0 py-2 px-3 "
                                 type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse{{$key}}" aria-expanded="true"
                                 aria-controls="collapse{{$key}}">
                             <h4 class="mb-0 flex-grow-1 text-start">{{$singleResults['duration']}}</h4>
-                            <a class="btn btn-light text-dark" href="#">
+                        </button>
+                            <a class="btn btn-light text-dark text-nowrap" href="{{route('resultCum',['student_id' => $result['student_id'], 'subject_ids' => json_encode($singleResults['ids'],true), 'duration' => $singleResults['digit_duration']])}}">
                                 <i class="bi bi-download"></i> Download Result
                             </a>
-                        </button>
+
                     </h2>
 
                     <div id="collapse{{$key}}" class="accordion-collapse collapse {{ $key == 0 ? 'show' : '' }}"

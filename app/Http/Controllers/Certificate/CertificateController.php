@@ -15,19 +15,33 @@ use Carbon\Carbon;
 class CertificateController extends Controller
 {
     /**
+     * Default PDF options
+     */
+    private const PDF_OPTIONS = [
+        'defaultFont' => 'sans-serif',
+        'isHtml5ParserEnabled' => true,
+        'isPhpEnabled' => true,
+        'isRemoteEnabled' => true,
+        'margin-top' => 0,
+        'margin-bottom' => 0,
+        'margin-left' => 0,
+        'margin-right' => 0,
+    ];
+
+    /**
      * @param $studentId
      * @return Response|RedirectResponse
      */
     public function applicationForm($studentId): Response|RedirectResponse
     {
-        $student = Students::find($studentId);
+        $student = $this->findStudent($studentId);
         if (!$student) {
-            return redirect()->back()->with('validation_errors', ['Student not found.']);
+            return $this->studentNotFoundResponse();
         }
-        // Load the Blade view
+
         $pdf = PDF::loadView('certificate.application-form', ['student' => $student]);
-        $pdf->setPaper([0, 0, 800, 1050]);  // Custom dimensions in points 800 width , 1050 height
-        // Download the PDF
+        $pdf->setPaper([0, 0, 800, 1050]);
+
         return $pdf->download($student->name . '-application-form.pdf');
     }
 
@@ -54,7 +68,7 @@ class CertificateController extends Controller
     }
 
     /**
-     * Generate a paramedical certificate for a student.
+     * Generate a certificate for a student.
      *
      * @param $studentId
      * @return Response|RedirectResponse|View
@@ -65,7 +79,7 @@ class CertificateController extends Controller
     }
 
     /**
-     * Generate a paramedical certificate for a student.
+     * Generate consolidated results for a student.
      *
      * @param $studentId
      * @return Response|RedirectResponse|View
@@ -76,48 +90,85 @@ class CertificateController extends Controller
     }
 
     /**
+     * Generate result cum for a student.
+     *
+     * @param $studentId
+     * @param $subjectIds
+     * @param $duration
+     * @return Response|RedirectResponse|View
+     */
+    public function resultCum($studentId, $subjectIds, $duration): Response|RedirectResponse|View
+    {
+        return $this->generateCertificate($studentId, 'result-cum', 'result-cum', json_decode($subjectIds, true), $duration);
+    }
+
+    /**
      * Common logic for generating certificates.
      *
      * @param  $studentId
      * @param  $viewName
      * @param  $certificateType
+     * @param null $subjectIds
      * @return Response|RedirectResponse|View
      */
-    private function generateCertificate($studentId, $viewName, $certificateType): Response|RedirectResponse|View
+    private function generateCertificate($studentId, $viewName, $certificateType, $subjectIds = null, $duration = null): Response|RedirectResponse|View
     {
-        $student = Students::find($studentId);
+        $student = $this->findStudent($studentId);
         if (!$student) {
-            return redirect()->back()->with('validation_errors', ['Student not found.']);
+            return $this->studentNotFoundResponse();
         }
 
-        // Calculate course duration in months
+        // Calculate course duration and dates
         $courseTotalMonth = $this->calculateCourseDuration($student->course);
-
-        // Calculate completion date
-        $admissionDate = Carbon::parse($student->admission_date);
+        $admissionDate = $this->getAdjustedAdmissionDate($student->admission_date);
         $completionDate = $admissionDate->copy()->addMonths($courseTotalMonth);
 
-        // Adjust admission date if it's a Sunday
-        if ($admissionDate->isSunday()) {
-            $admissionDate->addDay(); // Move to the next day (Monday)
-        }
-
         // Prepare data for the certificate
-        $data = $this->prepareCertificateData($student, $admissionDate, $completionDate, $certificateType);
+        $data = $this->prepareCertificateData($student, $admissionDate, $completionDate, $certificateType, $subjectIds, $duration);
+        // Generate PDF
         $pdf = PDF::loadView("certificate.$viewName", ['student' => $student, 'data' => $data]);
         $pdf->setPaper([0, 0, 600, 847]);
-        $pdf->setOptions([
-            'defaultFont' => 'sans-serif',
-            'isHtml5ParserEnabled' => true,
-            'isPhpEnabled' => true,
-            'isRemoteEnabled' => true, // Allow loading images from URLs
-            'margin-top' => 0,
-            'margin-bottom' => 0,
-            'margin-left' => 0,
-            'margin-right' => 0,
-        ]);
+        $pdf->setOptions(self::PDF_OPTIONS);
 
         return $pdf->download(strtolower($student->name) . "-$certificateType.pdf");
+    }
+
+    /**
+     * Find student by ID.
+     *
+     * @param $studentId
+     * @return Students|null
+     */
+    private function findStudent($studentId): ?Students
+    {
+        return Students::find($studentId);
+    }
+
+    /**
+     * Return redirect response when student not found.
+     *
+     * @return RedirectResponse
+     */
+    private function studentNotFoundResponse(): RedirectResponse
+    {
+        return redirect()->back()->with('validation_errors', ['Student not found.']);
+    }
+
+    /**
+     * Adjust admission date if it's a Sunday.
+     *
+     * @param string $admissionDate
+     * @return Carbon
+     */
+    private function getAdjustedAdmissionDate(string $admissionDate): Carbon
+    {
+        $date = Carbon::parse($admissionDate);
+
+        if ($date->isSunday()) {
+            $date->addDay(); // Move to the next day (Monday)
+        }
+
+        return $date;
     }
 
     /**
@@ -142,54 +193,27 @@ class CertificateController extends Controller
      * @param $admissionDate
      * @param $completionDate
      * @param $certificateType
+     * @param null $subjectIds
      * @return array
      */
-    private function prepareCertificateData($student, $admissionDate, $completionDate, $certificateType): array
+    private function prepareCertificateData($student, $admissionDate, $completionDate, $certificateType, $subjectIds = null, $duration = null): array
     {
-        $finalResult = [];
-        if ($certificateType == 'consolidate-result') {
-            $studentResult = StudentResult::where('student_id', $student->id);
-            $finalResult = ResultController::resultCalculation($student, $studentResult);
-        }
         $baseUrl = env('LIVE_URL');
         $stream = $student->course->stream;
         $streamName = $stream->name;
         $prefix = $stream->enrollments->first()->prefix->prefix ?? '';
         $prefixParts = explode('/', $prefix);
-        $subjectsWithResults = $student->course->subjects()
-            ->with(['subjectResult' => function ($query) use ($student) {
-                $query->where('student_id', $student->id);
-            }])->get();
 
-        $totalObtainedMarks = 0;
-        $totalPracticalObtainedMarks = 0;
-        $subjectTotalMarks = 0;
-        foreach ($subjectsWithResults as $subject) {
-                $subjectResult = $subject->subjectResult?->where('subject_id', $subject->id)->where('student_id', $student->id)->first(); // Assuming there's only one result per subject per student
+        // Get division and percentage
+        [$division, $percentage] = $this->calculateResults($student);
 
-            if ($subjectResult) {
-                $totalObtainedMarks += $subjectResult->subject_obtained_marks;
-                $totalPracticalObtainedMarks += $subjectResult->practical_obtained_marks;
-            }
+        // Prepare result data for consolidate-result type
+        $resultData = $this->prepareResultData($student, $certificateType, $admissionDate, $subjectIds, $duration);
 
-            $subjectTotalMarks += $subject->max_marks + $subject->practical_max_marks;
-            }
-        $obtainedMarks = $totalObtainedMarks + $totalPracticalObtainedMarks;
-        $percentage = ($subjectTotalMarks > 0) ? ($obtainedMarks / $subjectTotalMarks) * 100 : 0;
-
-
-        if ($percentage > '60') {
-            $division = 'First Division';
-        } elseif ($percentage >= '50') {
-            $division = 'Second Division';
-        } elseif ($percentage >= '40') {
-            $division = 'Third Division';
-        } else {
-            $division = 'Failed';
-        }
         $payload = [
             'stream' => $streamName,
             'division' => $division,
+            'percentage' => $percentage,
             'year' => $admissionDate->format('Y'),
             'reg_date' => $completionDate->format('d-M-Y'),
             'para_reg_no' => $prefix . $student->enrollment,
@@ -201,18 +225,121 @@ class CertificateController extends Controller
             'footer_date' => $completionDate->copy()->addMonths(2)->format('d-M-Y'),
             'reg_no' => "MIG/REF/{$prefixParts[0]}/" . $completionDate->format('Y') . rand(0, 99),
             'roll_number' => $student->course->prefix->prefix . $student->rollNumbers()->latest('id')->first()?->roll_number,
+            'course_name' => $student->course->name,
+            'date_of_birth' => Carbon::parse($student->dob)->format('d-M-Y'),
+            'certificate_image' => $this->getCertificateImage($baseUrl, $streamName, $certificateType),
+            'student_image' => $student['photo'] ? asset($baseUrl . 'storage/' . $student['photo']) : asset($baseUrl . 'assets/img/profileImage.png'),
         ];
-        $data = array_merge($finalResult, $payload);
-        $data['course_name'] = $student->course->name;
-        $data['date_of_birth'] = Carbon::parse($student->dob)->format('d-M-Y');
-        $data['certificate_image'] = $this->getCertificateImage($baseUrl, $streamName, $certificateType);
-        $data['student_image'] = $student['photo'] ? asset($baseUrl . 'storage/' . $student['photo']) : asset($baseUrl . 'assets/img/profileImage.png');
-
-
-        return $data;
+//        dd($payload);
+        return array_merge($resultData, $payload);
     }
 
     /**
+     * Calculate student's results, division and percentage.
+     *
+     * @param $student
+     * @return array
+     */
+    private function calculateResults($student): array
+    {
+        $subjectsWithResults = $student->course->subjects()
+            ->with(['subjectResult' => function ($query) use ($student) {
+                $query->where('student_id', $student->id);
+            }])->get();
+
+        $totalObtainedMarks = 0;
+        $totalPracticalObtainedMarks = 0;
+        $subjectTotalMarks = 0;
+
+        foreach ($subjectsWithResults as $subject) {
+            $subjectResult = $subject->subjectResult?->where('subject_id', $subject->id)
+                ->where('student_id', $student->id)->first();
+
+            if ($subjectResult) {
+                $totalObtainedMarks += $subjectResult->subject_obtained_marks;
+                $totalPracticalObtainedMarks += $subjectResult->practical_obtained_marks;
+            }
+
+            $subjectTotalMarks += $subject->max_marks + $subject->practical_max_marks;
+        }
+
+        $obtainedMarks = $totalObtainedMarks + $totalPracticalObtainedMarks;
+        $percentage = ($subjectTotalMarks > 0) ? ($obtainedMarks / $subjectTotalMarks) * 100 : 0;
+
+        $division = match (true) {
+            $percentage > 60 => 'First Division',
+            $percentage >= 50 => 'Second Division',
+            $percentage >= 40 => 'Third Division',
+            default => 'Failed',
+        };
+
+        return [$division, $percentage];
+    }
+
+    /**
+     * Prepare specific result data for certificates.
+     *
+     * @param $student
+     * @param $certificateType
+     * @param $admissionDate
+     * @param null $subjectIds
+     * @param null $duration
+     * @return array
+     */
+    private function prepareResultData($student, $certificateType, $admissionDate, $subjectIds = null, $duration = null): array
+    {
+        if ($certificateType != 'consolidate-result' && $certificateType != 'result-cum') {
+            return [
+                'result_session' => '',
+                'footer_result_date' => '',
+            ];
+        }
+        $month = Carbon::parse($student->admission_date)->format('M');
+        if ($subjectIds) {
+            $studentResult = StudentResult::where('student_id', $student->id)->whereIn('subject_id', $subjectIds);
+            if ($duration == '1'){
+                $firstYear = $admissionDate->format('Y');
+                $lastYear = $student->rollNumbers->where('duration', $duration)->first()->roll_number;
+            }else{
+                $firstYear = $student->rollNumbers->where('duration', $duration-1)->first()->roll_number;
+                $lastYear = $student->rollNumbers->where('duration', $duration)->first()->roll_number;
+            }
+
+            $firstYearRollNumber = $student->rollNumbers->where('duration', $duration)->first()->roll_number;
+
+
+
+            if (!$lastYear) {
+                $firstYear = $student->rollNumbers->where('duration', $duration-1)->first()->roll_number;
+                $firstYearRollNumber = $student->rollNumbers->where('duration', $duration-1)->first()->roll_number;
+                $lastYear = $student->rollNumbers->last()->roll_number;
+            }
+        } else {
+            $studentResult = StudentResult::where('student_id', $student->id);
+
+            $firstYear = $admissionDate->format('Y');
+            $lastYear = $student->rollNumbers->last()->roll_number;
+        }
+        $startYear = explode("/", $firstYear)[0];
+        $endYear = explode("/", $lastYear)[0];
+
+        $result = "{$month} {$startYear} - {$month} {$endYear}";
+        $resultFooter = $admissionDate->addMonth()->format('m-M-') . $endYear;
+        $finalResult = ResultController::resultCalculation($student, $studentResult);
+
+
+        return array_merge($finalResult, [
+            'result_session' => $result,
+            'footer_result_date' => $resultFooter,
+            'result_serail_number' => $endYear . $admissionDate->format('m') . rand(1000, 9999),
+            'result_cum_roll_number' => $student->course->prefix->prefix . ($firstYearRollNumber ?? ''),
+            'result_cum_sesssion' => ($firstYearRollNumber ?? '')
+        ]);
+    }
+
+    /**
+     * Get the institute name based on the stream.
+     *
      * @param string $streamName
      * @return string
      */
@@ -226,6 +353,8 @@ class CertificateController extends Controller
     }
 
     /**
+     * Get the correct certificate image path.
+     *
      * @param string $baseUrl
      * @param string $streamName
      * @param string $certificateType
@@ -233,24 +362,25 @@ class CertificateController extends Controller
      */
     private function getCertificateImage(string $baseUrl, string $streamName, string $certificateType): string
     {
-        if ($certificateType === 'migration-certificate') {
-            $imagePath = $streamName == 'ITI' ? 'iti/iti-migration.png' :
-                ($streamName == 'TECHNOLOGY & MGMT' ? 'technology/tech-migration.png' :
-                    'paramedical/paramedical-migration.png');
+        $streamFolder = match ($streamName) {
+            'ITI' => 'iti',
+            'TECHNOLOGY & MGMT' => 'technology',
+            default => 'paramedical',
+        };
 
+        $certificateFile = match ($certificateType) {
+            'migration-certificate' => 'migration',
+            'certificate' => 'certificate',
+            'consolidate-result' => 'consolidate',
+            'result-cum' => 'result-cum',
+            default => 'paramedical-registration-certificate',
+        };
 
-        } elseif ($certificateType == 'certificate') {
-            $imagePath = $streamName == 'ITI' ? 'iti/iti-certificate.png' :
-                ($streamName == 'TECHNOLOGY & MGMT' ? 'technology/tech-certificate.png' :
-                    'paramedical/paramedical-certificate.png');
-        } elseif ($certificateType == 'consolidate-result'){
-            $imagePath = $streamName == 'ITI' ? 'iti/iti-consolidate.png' :
-                ($streamName == 'TECHNOLOGY & MGMT' ? 'technology/tech-consolidate.png' :
-                    'paramedical/paramedical-consolidate.png');
-        } else {
-            $imagePath = 'paramedical/paramedical-registration-certificate.png';
+        // Special case for paramedical registration certificate
+        if ($certificateType === 'paramedical-registration-certificate') {
+            return $baseUrl . 'assets/img/certificates/paramedical/paramedical-registration-certificate.png';
         }
 
-        return $baseUrl . 'assets/img/certificates/' . $imagePath;
+        return $baseUrl . "assets/img/certificates/{$streamFolder}/{$streamFolder}-{$certificateFile}.png";
     }
 }
