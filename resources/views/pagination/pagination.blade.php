@@ -1,5 +1,5 @@
-<div class="d-flex justify-content-center align-items-baseline position-relative">
-    <h5 class="position-absolute bottom-0" style="left:0;">Total Record: {{$dataToPaginate['total']}}</h5>
+<div class="d-flex justify-content-center align-items-baseline" style="position: absolute; bottom:0; left: 0; right: 0">
+{{--    <h5 class="position-absolute bottom-0" style="left:0;">Total Record: {{$dataToPaginate['total']}}</h5>--}}
     @if ($dataToPaginate['current_page'] > 1)
         <a href="{{ $dataToPaginate['path'] . '?page=1' . '&' . http_build_query(request()->except('page')) }}" class="btn btn-primary me-2">
             <i class="bi bi-chevron-double-left"></i> First

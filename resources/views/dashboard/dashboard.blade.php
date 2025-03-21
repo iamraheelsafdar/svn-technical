@@ -13,7 +13,7 @@
     <div class="container my-5">
         <div class="row">
             <!-- Card 1 -->
-            <div class="{{auth()->user()->role == 'Center' ? 'col-12 col-md-6 clo-lg-6' : 'col-12 col-md-6 col-lg-3 mb-4'}}">
+            <div class="{{auth()->user()->role == 'Center' ? 'col-12 col-md-6 col-lg-6' : 'col-6 col-md-6 col-lg-3 mb-4'}}">
                 <div class="card bg-success-custom text-white shadow">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
@@ -30,7 +30,7 @@
             </div>
             @if(auth()->user()->role == 'Admin')
                 <!-- Card 2 -->
-                <div class="col-12 col-md-6 col-lg-3 mb-4">
+                <div class="col-6 col-md-6 col-lg-3 mb-4">
                     <div class="card bg-primary-custom text-white shadow">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -47,7 +47,7 @@
                 </div>
 
                 <!-- Card 3 -->
-                <div class="col-12 col-md-6 col-lg-3 mb-4">
+                <div class="col-6 col-md-6 col-lg-3 mb-4">
                     <div class="card bg-danger-custom text-white shadow">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <!-- Card 4 -->
-                <div class="col-12 col-md-6 col-lg-3 mb-4">
+                <div class="col-6 col-md-6 col-lg-3 mb-4">
                     <div class="card bg-warning-custom shadow">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">

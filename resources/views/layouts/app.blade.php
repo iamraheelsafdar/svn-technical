@@ -7,6 +7,7 @@
     <meta name="robots" content="index, follow">
     <title>@yield('title', '') {{$siteSetting->title ?? ''}}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="theme-color" content="#337ab7">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -76,7 +77,7 @@
                 <div class="container-fluid">
                     <div class="d-flex d-md-none d-block">
                         <button class="btn px-1 py-0 open-btn me-2 text-white open-menu" aria-label="Open sidebar">
-                            <i class="bi bi-list"></i>
+                            <i class="bi bi-list" style="font-size: 28px !important;"></i>
                         </button>
                         <img id="logoPreview"
                              src="{{ isset($siteSetting) && $siteSetting->logo ? asset('storage/' . $siteSetting->logo) : asset('assets/img/siteLogo.png') }}"
@@ -98,12 +99,12 @@
             </nav>
             @endif
 
-            <section class="{{auth()->check() ? 'dashboard-content px-3 pt-4' : ''}}">
+            <section class="{{auth()->check() ? 'dashboard-content px-3 pt-4' : ''}} position-relative" style="height: 80%">
                 @if(auth()->user())
 
-                    <div class=" heading mb-4 d-inline-flex w-100 align-items-center">
+                    <div class=" heading mb-4 d-inline-flex w-100 align-items-center position-relative">
 
-                    <a href="{{ url()->previous() }}" class="btn btn-primary">Go Back</a> <h1 class="mx-auto">@yield('title')</h1>
+                    <a href="{{ url()->previous() }}" class="btn btn-primary position-absolute l-3">Go Back</a> <h1 class="mx-auto mb-0">@yield('title')</h1>
                     </div>
                 @endif
                 @yield('content')

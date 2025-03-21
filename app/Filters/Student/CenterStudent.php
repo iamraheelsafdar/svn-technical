@@ -9,7 +9,7 @@ class CenterStudent
     public function handle($query, Closure $next)
     {
         if (auth()->user()->role == 'Center') {
-            $query->where('center_id', auth()->user()->id);
+            $query->where('center_id', auth()->user()->center->id);
         }
         return $next($query);
     }

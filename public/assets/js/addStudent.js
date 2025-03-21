@@ -49,56 +49,58 @@ document.getElementById('course-input').addEventListener('input', function () {
 
 // Handle course selection
 function handleCourseSelection(course) {
-    const lateralContainer = document.getElementById('lateral-container');
-    const reduceLateralContainer = document.getElementById('reduce-lateral-container');
-    const lateralDurationSelect = document.getElementById('lateral_duration');
+    if (course.course_duration > 1) {
+        const lateralContainer = document.getElementById('lateral-container');
+        const reduceLateralContainer = document.getElementById('reduce-lateral-container');
+        const lateralDurationSelect = document.getElementById('lateral_duration');
 
-    // Always show lateral-container when course is selected
-    lateralContainer.style.display = 'block';
+        // Always show lateral-container when course is selected
+        lateralContainer.style.display = 'block';
 
-    // Reset to default state when new course is selected
-    lateralContainer.classList.add('col-md-6', 'col-lg-6');
-    lateralContainer.classList.remove('col-md-3', 'col-lg-3');
-    reduceLateralContainer.style.display = 'none';
-    document.getElementById('lateral').value = '0';
+        // Reset to default state when new course is selected
+        lateralContainer.classList.add('col-md-6', 'col-lg-6');
+        lateralContainer.classList.remove('col-md-3', 'col-lg-3');
+        reduceLateralContainer.style.display = 'none';
+        document.getElementById('lateral').value = '0';
 
-    // Remove required attribute when hidden
-    lateralDurationSelect.removeAttribute('required');
+        // Remove required attribute when hidden
+        lateralDurationSelect.removeAttribute('required');
 
-    // Handle lateral entry change
-    const lateralHandler = function() {
-        if (this.value === '1') {
-            lateralContainer.classList.remove('col-md-6', 'col-lg-6');
-            lateralContainer.classList.add('col-md-3', 'col-lg-3');
-            reduceLateralContainer.style.display = 'block';
+        // Handle lateral entry change
+        const lateralHandler = function () {
+            if (this.value === '1') {
+                lateralContainer.classList.remove('col-md-6', 'col-lg-6');
+                lateralContainer.classList.add('col-md-3', 'col-lg-3');
+                reduceLateralContainer.style.display = 'block';
 
-            // Add required attribute when visible
-            lateralDurationSelect.setAttribute('required', 'required');
+                // Add required attribute when visible
+                lateralDurationSelect.setAttribute('required', 'required');
 
-            // Populate duration options
-            lateralDurationSelect.innerHTML = '';
-            const courseDuration = parseInt(course.course_duration);
+                // Populate duration options
+                lateralDurationSelect.innerHTML = '';
+                const courseDuration = parseInt(course.course_duration);
 
-            for (let i = 1; i < courseDuration; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = `${course.course_type} ${i}`;
-                lateralDurationSelect.appendChild(option);
+                for (let i = 1; i < courseDuration; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = `${course.course_type} ${i}`;
+                    lateralDurationSelect.appendChild(option);
+                }
+            } else {
+                lateralContainer.classList.remove('col-md-3', 'col-lg-3');
+                lateralContainer.classList.add('col-md-6', 'col-lg-6');
+                reduceLateralContainer.style.display = 'none';
+
+                // Remove required attribute when hidden
+                lateralDurationSelect.removeAttribute('required');
             }
-        } else {
-            lateralContainer.classList.remove('col-md-3', 'col-lg-3');
-            lateralContainer.classList.add('col-md-6', 'col-lg-6');
-            reduceLateralContainer.style.display = 'none';
+        };
 
-            // Remove required attribute when hidden
-            lateralDurationSelect.removeAttribute('required');
-        }
-    };
-
-    // Remove existing event listener to prevent duplicates
-    document.getElementById('lateral').removeEventListener('change', lateralHandler);
-    // Add new event listener
-    document.getElementById('lateral').addEventListener('change', lateralHandler);
+        // Remove existing event listener to prevent duplicates
+        document.getElementById('lateral').removeEventListener('change', lateralHandler);
+        // Add new event listener
+        document.getElementById('lateral').addEventListener('change', lateralHandler);
+    }
 }
 // Updated JavaScript
 document.getElementById('lateral').addEventListener('change', function () {

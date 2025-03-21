@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Centers')
+@section('title', "Total ({$centers['total']}) Centers")
 @section('content')
     <div class="table-responsive d-block">
         <table class="table table-striped pagination-table">

@@ -5,7 +5,7 @@
              alt="Logo Preview"
              class="img-fluid site-logo d-block m-auto">
         <button class="btn d-md-none d-block close-btn px-1 py-0 text-danger close-menu" aria-label="Close sidebar">
-            <i class="bi bi-x-circle"></i>
+            <i class="bi bi-x-circle" style="font-size: 28px !important;"></i>
         </button>
     </header>
 
@@ -44,8 +44,7 @@
                     </a>
                 </li>
                 <li class="{{ request()->routeIs(['coursesPage', 'addCoursePage', 'updateCourseView', 'addSubjectPage', 'updateSubjectView']) ? 'active' : '' }}">
-                    <a href="{{ route('coursesPage') }}"
-                       class="text-decoration-none px-3 py-3 d-block d-flex justify-content-between" title="Courses">
+                    <a href="{{ route('coursesPage') }}" class="text-decoration-none px-3 py-3 d-block" title="Courses">
                         <span><i class="bi bi-pencil-fill"></i> Courses</span>
                     </a>
                 </li>

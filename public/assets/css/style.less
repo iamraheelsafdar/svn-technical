@@ -1,9 +1,11 @@
 body {
     font-family: 'Poppins', sans-serif;
 }
-html{
+
+html {
     scroll-behavior: smooth;
 }
+
 .toast-container {
     position: fixed;
     top: 20px;
@@ -35,6 +37,7 @@ html{
         max-width: 250px;
         transition: all 0.3s;
         z-index: 1;
+        height: 100vh !important;
 
     }
 
@@ -53,6 +56,7 @@ html{
             background-color: #337ab7 !important;
             color: #fff !important;
             height: 115px;
+            top: 0;
 
             .open-menu {
                 font-size: 30px;
@@ -97,7 +101,7 @@ html{
         #side_nav {
             margin-left: -250px;
             position: absolute !important;
-            min-height: 100vh;
+            height: 100vh;
             z-index: 1;
         }
 
@@ -360,4 +364,14 @@ footer {
     border-radius: 8px;
     text-align: center;
     color: #fff;
+}
+
+@media (max-width: 576px) {
+    h1, h2, h3, h4, h5, h6 {
+        font-size: 18px !important;
+    }
+
+    a, p, span, table, li, ul, ol, button, select, textarea, input, div, form, tr, th, td {
+        font-size: 12px !important;
+    }
 }

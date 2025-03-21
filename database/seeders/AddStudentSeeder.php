@@ -73,7 +73,7 @@ class AddStudentSeeder extends Seeder
             }
             // Insert only once per student
             Students::create([
-                'center_id' => $savedCenter->id,
+                'center_id' => $savedCenter->center->id,
                 'course_id' => $course->id,
                 'enrollment' => $newSecondPart,
                 'name' => ucfirst($student->name),

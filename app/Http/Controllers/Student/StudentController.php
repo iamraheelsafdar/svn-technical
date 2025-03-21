@@ -127,7 +127,7 @@ class StudentController extends Controller
             'state' => $request->state,
             'course_id' => $request->course,
             'name' => $request->student_name,
-            'center_id' => auth()->user()->id,
+            'center_id' => auth()->user()->center->id,
             'gender' => ucfirst($request->gender),
             'father_name' => $request->father_name,
             'mother_name' => $request->mother_name,
@@ -159,6 +159,7 @@ class StudentController extends Controller
             }
             StudentRollNumber::create([
                 'student_id' => $student->id,
+                'duration' => $rollWithDate,
                 'roll_number' => $rollWithDate . '/' . rand(99, 999) . '/' . rand(1, 1000)
             ]);
         }

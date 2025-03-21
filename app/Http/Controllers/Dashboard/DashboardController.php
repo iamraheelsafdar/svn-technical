@@ -36,9 +36,9 @@ class DashboardController extends Controller
             'total_courses' => $courses->count(),
             'inactive_courses' => $courses->where('status', 0)->count(),
             'active_courses' => $courses->where('status', 1)->count(),
-            'total_students' => auth()->user()->role == 'Admin' ? $students->count() : $students->where('center_id', auth()->user()->id)->count(),
-            'inactive_students' => auth()->user()->role == 'Admin' ? $students->where('status', 0)->count() : $students->where('center_id', auth()->user()->id)->where('status', 0)->count(),
-            'active_students' => auth()->user()->role == 'Admin' ? $students->where('status', 1)->count() : $students->where('center_id', auth()->user()->id)->where('status', 1)->count(),
+            'total_students' => auth()->user()->role == 'Admin' ? $students->count() : $students->where('center_id', auth()->user()->center->id)->count(),
+            'inactive_students' => auth()->user()->role == 'Admin' ? $students->where('status', 0)->count() : $students->where('center_id', auth()->user()->center->id)->where('status', 0)->count(),
+            'active_students' => auth()->user()->role == 'Admin' ? $students->where('status', 1)->count() : $students->where('center_id', auth()->user()->center->id)->where('status', 1)->count(),
         ];
         return view('dashboard.dashboard', ['details' => $details]);
     }
