@@ -24,3 +24,5 @@ yarn-error.log
 /.vscode
 /storage/app
 /storage
+public/img
+/public/img
