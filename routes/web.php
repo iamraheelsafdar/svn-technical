@@ -32,6 +32,7 @@ Route::group(['middleware' => 'logs'], function () {
     Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgotPassword');
     Route::get('/set-password/{email}/{token}', [AuthController::class, 'setPasswordView'])->name('setPasswordView');
     Route::post('/set-password', [AuthController::class, 'setPassword'])->name('setPassword');
+    Route::get('/view-student-result/{key}', [CertificateController::class, 'viewStudentResult'])->name('viewStudentResult');
 
 
     Route::group(['middleware' => ['auth']], function () {
@@ -82,9 +83,11 @@ Route::group(['middleware' => 'logs'], function () {
             Route::get('/migration/{student_id}', [CertificateController::class, 'migrationForm'])->name('migrationForm');
             Route::get('/paramedical-registration-certificate/{student_id}', [CertificateController::class, 'paramedicalRegCertificate'])->name('paramedicalRegCertificate');
             Route::get('/certificate/{student_id}', [CertificateController::class, 'certificate'])->name('certificate');
+            Route::get('/provisonal-certificate/{student_id}', [CertificateController::class, 'provisonalCertificate'])->name('provisonalCertificate');
 
             /************************ Students Routes ***********************************/
             Route::post('/update-student-status', [StudentController::class, 'updateStudentStatus']);
+            Route::post('/delete-student', [StudentController::class, 'deleteStudent'])->name('deleteStudent');
             Route::get('/update-student/{student_id}', [StudentController::class, 'updateStudentView'])->name('updateStudentView');
             Route::post('/update-student', [StudentController::class, 'updateStudent'])->name('updateStudent');
 
@@ -128,6 +131,7 @@ Route::group(['middleware' => 'logs'], function () {
             Route::post('/update-center-status', [CenterController::class, 'updateCenterStatus']);
             Route::get('/update-center/{center_id}', [CenterController::class, 'updateCenterView'])->name('updateCenterView');
             Route::post('/update-center', [CenterController::class, 'updateCenter'])->name('updateCenter');
+            Route::post('/delete-center', [CenterController::class, 'deleteCenter'])->name('deleteCenter');
 
 
             /********************************* Setting Routes *********************************/

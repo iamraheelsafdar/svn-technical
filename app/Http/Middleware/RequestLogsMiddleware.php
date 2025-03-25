@@ -16,7 +16,7 @@ class RequestLogsMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user() && (in_array(Route::currentRouteName(), ['loginPage', 'forgotPassword', 'forgotPasswordPage' ,'setPasswordView']))) {
+        if (auth()->user() && (in_array(Route::currentRouteName(), ['loginPage', 'forgotPassword', 'forgotPasswordPage', 'setPasswordView', 'viewStudentResult']))) {
             // Redirect authenticated users away from login or forget password pages
             return redirect()->route('dashboardView'); // Or any other page you want to redirect to
         }

@@ -32,8 +32,34 @@
             </div>
             <div class="modal-footer">
                 <a href="{{request()->url()}}" type="button" class="btn btn-secondary">Cancel</a>
-                <button type="button" class="btn btn-primary" id="confirmAction" style="background-color: #337ab7;">Yes, Confirm</button>
+                <button type="button" class="btn btn-danger" id="confirmAction" style="background-color: #337ab7;">Yes, Confirm</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #337ab7; color: white;">
+                <h5 class="modal-title" id="confirmationModalLabel">Confirm Action</h5>
+            </div>
+            <form id="deleteForm" method="POST" action="" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="id" id="deleteEntityId">
+                <div class="modal-body">
+                    <p id="deleteMessage">Are you sure you want to delete this <span id="entityName"></span>?</p>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Enter Password:</label>
+                        <input type="password" class="form-control" name="password" id="password" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -131,5 +157,31 @@
 <script src="{{asset('assets/js/addSubject.js')}}"></script>
 <script src="{{asset('assets/js/subject.js')}}"></script>
 <script src="{{asset('assets/js/updateSubject.js')}}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var deleteModal = document.getElementById('deleteModal');
 
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget; // The button that triggered the modal
+            var entity = button.getAttribute('data-entity'); // e.g., 'student', 'center'
+            var entityId = button.getAttribute('data-id'); // Entity ID
+
+            var form = document.getElementById('deleteForm');
+            var entityInput = document.getElementById('deleteEntityId');
+            var entityNameSpan = document.getElementById('entityName');
+            var deleteMessage = document.getElementById('deleteMessage');
+
+            // Update modal text
+            entityNameSpan.textContent = entity;
+            deleteMessage.innerHTML = `Are you sure you want to delete this <strong>${entity}</strong>?`;
+
+            // Update form action dynamically
+            form.action = `/delete-${entity}`; // e.g., /delete-student or /delete-center
+
+            // Update hidden input field dynamically
+            entityInput.name = `${entity}_id`; // e.g., student_id, center_id
+            entityInput.value = entityId;
+        });
+    });
+</script>
 </body>

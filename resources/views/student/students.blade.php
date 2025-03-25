@@ -2,7 +2,7 @@
 @section('title', "Total ({$students['total']}) Students")
 @section('content')
     <div class="table-responsive d-block">
-        <table class="table table-striped pagination-table">
+        <table class="table table-striped pagination-table d-block" style="width: 100px">
             <thead>
             <tr>
                 <th>#</th>
@@ -12,7 +12,7 @@
                 @if(auth()->user()->role == "Admin")
                     <th>Lateral Entry</th>
                 @endif
-                <th>Course Name</th>
+{{--                <th>Course Name</th>--}}
                 <th>Course Duration-Type</th>
                 <th>Status</th>
                 <th>Action</th>
@@ -52,15 +52,15 @@
                             </select>
                         </th>
                     @endif
-                    <th>
-                        <input type="text" value="{{ request()->input('course_name') }}" name="course_name"
-                               list="courses" class="form-control border-0" placeholder="Search Course"/>
-                        <datalist id="courses">
-                            @foreach($students['courses'] as $course)
-                                <option value="{{$course}}">{{$course}}</option>
-                            @endforeach
-                        </datalist>
-                    </th>
+{{--                    <th>--}}
+{{--                        <input type="text" value="{{ request()->input('course_name') }}" name="course_name"--}}
+{{--                               list="courses" class="form-control border-0" placeholder="Search Course"/>--}}
+{{--                        <datalist id="courses">--}}
+{{--                            @foreach($students['courses'] as $course)--}}
+{{--                                <option value="{{$course}}">{{$course}}</option>--}}
+{{--                            @endforeach--}}
+{{--                        </datalist>--}}
+{{--                    </th>--}}
                     <th>
                         <select class="form-control border-0" name="course_type">
                             <option
@@ -132,7 +132,7 @@
                             </div>
                         </td>
                     @endif
-                    <td>{{ $student['course_name'] }}</td>
+{{--                    <td>{{ $student['course_name'] }}</td>--}}
                     <td>{{ $student['course_duration'] }}-{{ ucfirst($student['course_type']) }}</td>
                     <td>
                         @if(auth()->user()->role == "Admin")
@@ -162,9 +162,10 @@
                         @endif
 
                         @if($student['status'] && $student['result'])
-                            <a href="{{ route('viewResult', ['student_id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> View Result</a>
                             <a href="{{ route('certificate', ['student_id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Certificate</a>
+                            <a href="{{ route('provisonalCertificate', ['student_id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Provisonal Certificate</a>
                             <a href="{{ route('migrationForm', ['student_id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Migration</a>
+                            <a href="{{ route('viewResult', ['student_id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> View Result</a>
                         @endif
 
                         @if($student['status'])
@@ -182,8 +183,16 @@
                                     </button>
                                 @endif
 
-                            <a href="{{ route('updateStudentView', ['student_id' => $student['id']]) }}" class="btn btn-danger"><i class="bi bi-pencil-square"></i> Edit</a>
                         @endif
+                            <a href="{{ route('updateStudentView', ['student_id' => $student['id']]) }}" class="btn btn-info"><i class="bi bi-pencil-square"></i> Edit</a>
+{{--                            <a href="{{ route('deleteStudent', ['student_id' => $student['id']]) }}" class="btn btn-danger"><i class="bi bi-trash"></i> Delete</a>--}}
+                                <a href="#" class="btn btn-danger delete-btn"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#deleteModal"
+                                   data-entity="student"
+                                   data-id="{{ $student['id'] }}">
+                                    <i class="bi bi-trash"></i> Delete
+                                </a>
                         <a href="{{ route('applicationForm', ['student_id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Application Form</a>
 
                     </td>

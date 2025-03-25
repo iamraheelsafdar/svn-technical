@@ -42,7 +42,7 @@
 @php
     $isSingleRecord = count($data['results']) === 1;
     $isLargeDataset = count($data['results']) > 6;
-    $fontSize = $isSingleRecord ? '13px' : ($isLargeDataset ? '6px' : '8px');
+    $fontSize = $isSingleRecord ? '13px' : ($isLargeDataset ? '6px' : '6px');
 
     $columnWidths = $isSingleRecord
         ? ['all_entries'=>'50px' , 'subject'=>'450px']
@@ -149,7 +149,6 @@
         </tbody>
     </table>
 </div>
-
 
 <h4 style="
     position: absolute;

@@ -24,7 +24,7 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-danger w-auto mx-auto">Update Prefix</button>
+            <button type="submit" class="btn btn-info w-auto mx-auto">Update Prefix</button>
         </form>
     </div>
 @endsection

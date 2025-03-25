@@ -167,4 +167,14 @@ class CenterController extends Controller
         session()->flash('success', 'Center updated successfully.');
         return redirect()->route('centersPage');
     }
+
+    public function deleteCenter(Request $request): RedirectResponse
+    {
+        $chechPassword = Hash::check($request->password, auth()->user()->password);
+        if (!$chechPassword) {
+            return redirect()->back()->with('validation_errors', ['Password Mismatch.']);
+        }
+        Center::find($request->center_id)->user->delete();
+        return redirect()->back()->with('success', 'Center Deleted Successfully');
+    }
 }

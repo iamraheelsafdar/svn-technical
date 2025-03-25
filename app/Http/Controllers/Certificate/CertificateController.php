@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Certificate;
 
 use App\Http\Controllers\Result\ResultController;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
@@ -79,6 +80,17 @@ class CertificateController extends Controller
     }
 
     /**
+     * Generate a certificate for a student.
+     *
+     * @param $studentId
+     * @return Response|RedirectResponse|View
+     */
+    public function provisonalCertificate($studentId): Response|RedirectResponse|View
+    {
+        return $this->generateCertificate($studentId, 'provisonal-certificate', 'provisonal-certificate');
+    }
+
+    /**
      * Generate consolidated results for a student.
      *
      * @param $studentId
@@ -103,15 +115,45 @@ class CertificateController extends Controller
     }
 
     /**
+     * Generate result cum for a student.
+     *
+     * @param $studentId
+     * @param $subjectIds
+     * @param $duration
+     * @return Response|RedirectResponse|View
+     */
+    public function viewStudentResult($key): Response|RedirectResponse|View
+    {
+        $data = json_decode(base64_decode($key), true);
+        if (!$data || !isset($data['student_id'], $data['subject_ids'], $data['duration'])) {
+            return redirect()->back()->with('validation_errors', ['Invalid Data Provided.']);
+        }
+
+        // Extract values
+        $studentId = $data['student_id'];
+        $subjectIds = $data['subject_ids'];
+        $duration = $data['duration'];
+
+        // Fetch student and results (Example)
+        $student = Students::find($studentId);
+        if (!$student) {
+            return redirect()->back()->with('validation_errors', ['Invalid Data Provided.']);
+        }
+        return $this->generateCertificate($studentId, 'result-cum', 'result-cum', $subjectIds, $duration, true);
+    }
+
+    /**
      * Common logic for generating certificates.
      *
      * @param  $studentId
      * @param  $viewName
      * @param  $certificateType
      * @param null $subjectIds
+     * @param null $duration
+     * @param bool $isResult
      * @return Response|RedirectResponse|View
      */
-    private function generateCertificate($studentId, $viewName, $certificateType, $subjectIds = null, $duration = null): Response|RedirectResponse|View
+    private function generateCertificate($studentId, $viewName, $certificateType, $subjectIds = null, $duration = null, bool $isResult = false): Response|RedirectResponse|View
     {
         $student = $this->findStudent($studentId);
         if (!$student) {
@@ -125,6 +167,9 @@ class CertificateController extends Controller
 
         // Prepare data for the certificate
         $data = $this->prepareCertificateData($student, $admissionDate, $completionDate, $certificateType, $subjectIds, $duration);
+        if ($isResult) {
+            return view('certificate.student-result', ['data' => $data, 'student' => $student]);
+        }
         // Generate PDF
         $pdf = PDF::loadView("certificate.$viewName", ['student' => $student, 'data' => $data]);
         $pdf->setPaper([0, 0, 600, 847]);
@@ -194,6 +239,7 @@ class CertificateController extends Controller
      * @param $completionDate
      * @param $certificateType
      * @param null $subjectIds
+     * @param null $duration
      * @return array
      */
     private function prepareCertificateData($student, $admissionDate, $completionDate, $certificateType, $subjectIds = null, $duration = null): array
@@ -209,6 +255,17 @@ class CertificateController extends Controller
 
         // Prepare result data for consolidate-result type
         $resultData = $this->prepareResultData($student, $certificateType, $admissionDate, $subjectIds, $duration);
+        $url = '-';
+        if ($subjectIds) {
+            $key = base64_encode(json_encode([
+                'student_id' => $student->id,
+                'subject_ids' => $subjectIds,
+                'duration' => $duration
+            ]));
+            $url = route('viewStudentResult', ['key' => $key]); // Get the URL from the named route
+        }
+        $qrCode = QrCode::format('svg')->size(100)->generate($url);
+        $base64Qr = 'data:image/svg+xml;base64,' . base64_encode($qrCode);
 
         $payload = [
             'stream' => $streamName,
@@ -229,8 +286,8 @@ class CertificateController extends Controller
             'date_of_birth' => Carbon::parse($student->dob)->format('d-M-Y'),
             'certificate_image' => $this->getCertificateImage($baseUrl, $streamName, $certificateType),
             'student_image' => $student['photo'] ? asset($baseUrl . 'storage/' . $student['photo']) : asset($baseUrl . 'assets/img/profileImage.png'),
+            'qr_code' => Carbon::parse($student->admission_date)->year > 2013 ? $base64Qr : null,
         ];
-//        dd($payload);
         return array_merge($resultData, $payload);
     }
 
@@ -294,46 +351,38 @@ class CertificateController extends Controller
                 'footer_result_date' => '',
             ];
         }
-        $month = Carbon::parse($student->admission_date)->format('M');
         if ($subjectIds) {
             $studentResult = StudentResult::where('student_id', $student->id)->whereIn('subject_id', $subjectIds);
-            if ($duration == '1'){
-                $firstYear = $admissionDate->format('Y');
-                $lastYear = $student->rollNumbers->where('duration', $duration)->first()->roll_number;
-            }else{
-                $firstYear = $student->rollNumbers->where('duration', $duration-1)->first()->roll_number;
-                $lastYear = $student->rollNumbers->where('duration', $duration)->first()->roll_number;
-            }
-
-            $firstYearRollNumber = $student->rollNumbers->where('duration', $duration)->first()->roll_number;
-
-
-
-            if (!$lastYear) {
-                $firstYear = $student->rollNumbers->where('duration', $duration-1)->first()->roll_number;
-                $firstYearRollNumber = $student->rollNumbers->where('duration', $duration-1)->first()->roll_number;
-                $lastYear = $student->rollNumbers->last()->roll_number;
-            }
+            $resultDuration = $student->rollNumbers->where('duration', $duration)->first();
+            $resultSession = $resultDuration->session;
+            $resultYear = $resultDuration->year;
+            $selectedDurationRollNumber = $resultDuration->roll_number;
+            preg_match('/\w+ \d{4}$/', $resultDuration->session, $matches);
+            $endSession = $matches[0] ?? null;
         } else {
             $studentResult = StudentResult::where('student_id', $student->id);
-
-            $firstYear = $admissionDate->format('Y');
-            $lastYear = $student->rollNumbers->last()->roll_number;
+            $firstDurationSession = $student->rollNumbers->first()->session;
+            $lastDurationSession = $student->rollNumbers->last();
+            preg_match('/^\w+ \d{4}/', $firstDurationSession, $matches);
+            $startSession = $matches[0] ?? null;
+            preg_match('/\w+ \d{4}$/', $lastDurationSession->session, $matches);
+            $endSession = $matches[0] ?? null;
+            $resultSession = $startSession . '-' . $endSession;
+            $resultYear = $lastDurationSession->year;
+            $selectedDurationRollNumber = $lastDurationSession->roll_number;
         }
-        $startYear = explode("/", $firstYear)[0];
-        $endYear = explode("/", $lastYear)[0];
+        $date = Carbon::createFromFormat('M Y', $endSession);
 
-        $result = "{$month} {$startYear} - {$month} {$endYear}";
-        $resultFooter = $admissionDate->addMonth()->format('m-M-') . $endYear;
+        $exactFooterYear = $date->addMonth()->format('M-Y');
+        $resultFooter = $admissionDate->addMonth()->format('m-') . $exactFooterYear;
         $finalResult = ResultController::resultCalculation($student, $studentResult);
 
 
         return array_merge($finalResult, [
-            'result_session' => $result,
+            'result_session' => $resultSession,
             'footer_result_date' => $resultFooter,
-            'result_serail_number' => $endYear . $admissionDate->format('m') . rand(1000, 9999),
-            'result_cum_roll_number' => $student->course->prefix->prefix . ($firstYearRollNumber ?? ''),
-            'result_cum_sesssion' => ($firstYearRollNumber ?? '')
+            'result_serail_number' => $resultYear . $admissionDate->format('m') . rand(1000, 9999),
+            'result_cum_roll_number' => $student->course->prefix->prefix . ($selectedDurationRollNumber ?? ''),
         ]);
     }
 
@@ -373,6 +422,7 @@ class CertificateController extends Controller
             'certificate' => 'certificate',
             'consolidate-result' => 'consolidate',
             'result-cum' => 'result-cum',
+            'provisonal-certificate' => 'provisonal-certificate',
             default => 'paramedical-registration-certificate',
         };
 

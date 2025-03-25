@@ -12,6 +12,7 @@ use App\Filters\Student\StudentNameFilter;
 use App\Filters\Student\StreamNameFilter;
 use App\Filters\Student\CourseTypeFilter;
 use App\Filters\Student\CourseNameFilter;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\View\Factory;
 use App\Filters\Student\CenterStudent;
@@ -142,25 +143,37 @@ class StudentController extends Controller
             'admission_date' => Carbon::createFromFormat('d-m-Y', $request->admission_date)->format('Y-m-d'),
             'enrollment' => Carbon::createFromFormat('d-m-Y', $request->admission_date)->format('dmY') . '/' . ($allStudents + 1),
         ]);
+
         $course = $student->course;
         $skipLateral = $request->input('lateral_duration', 0);
-
-        // Convert admission_date back to Carbon instance
         $admissionDate = Carbon::parse($student->admission_date);
+        $sessions = [];
 
-        for ($i = 1; $i <= ($course->duration - $skipLateral); $i++) {
+        for ($i = 0; $i < ($course->duration - $skipLateral); $i++) {
+            $sessionStart = $admissionDate->format('M Y');
 
             if ($course->type == 'year') {
-                $rollWithDate = $admissionDate->copy()->addYears($i)->format('Y');
+                $admissionDate->addMonths(11)->endOfMonth();
             } elseif ($course->type == 'semester') {
-                $rollWithDate = $admissionDate->copy()->addMonths(6 * $i)->format('Y');
-            } else {
-                $rollWithDate = $admissionDate->copy()->addMonths($course->duration * $i)->format('Y');
+                $admissionDate->addMonths(5)->endOfMonth();
             }
+
+            $sessionEnd = $admissionDate->format('M Y');
+            $sessions[$i + 1] = "{$sessionStart} - {$sessionEnd}";
+            $admissionDate->addDay(); // Move to next session
+            $year = $admissionDate->format('Y'); // Move to next session
+        }
+
+        // Insert roll numbers with session details
+        foreach ($sessions as $duration => $session) {
+            $sessionParts = explode(" - ", $session);
+            $sessionEnd = end($sessionParts); // Get session end date
             StudentRollNumber::create([
                 'student_id' => $student->id,
-                'duration' => $rollWithDate,
-                'roll_number' => $rollWithDate . '/' . rand(99, 999) . '/' . rand(1, 1000)
+                'duration' => $skipLateral + $duration,
+                'roll_number' => Carbon::parse($student->admission_date)->year . '/' . rand(99, 999) . '/' . rand(1, 1000),
+                'year' => Carbon::parse($sessionEnd)->year, // Use session end year,
+                'session' => $session,
             ]);
         }
         session()->flash('success', 'Student registered successfully.');
@@ -247,5 +260,15 @@ class StudentController extends Controller
 
         session()->flash('success', 'Student updated successfully.');
         return redirect()->route('studentsView');
+    }
+
+    public function deleteStudent(Request $request): RedirectResponse
+    {
+        $chechPassword = Hash::check($request->password, auth()->user()->password);
+        if (!$chechPassword) {
+            return redirect()->back()->with('validation_errors', ['Password Mismatch.']);
+        }
+        Students::find($request->student_id)->delete();
+        return redirect()->back()->with('success', 'Student Deleted Successfully');
     }
 }

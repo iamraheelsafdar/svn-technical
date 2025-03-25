@@ -72,7 +72,7 @@
                     </td>
                     <td>{{ $prefix['created_at'] }}</td>
                     <td>
-                        <a href="{{ route('updatePrefixView', ['prefix_id' => $prefix['id']]) }}" class="btn btn-danger"><i class="bi bi-pencil-square"></i> Edit</a>
+                        <a href="{{ route('updatePrefixView', ['prefix_id' => $prefix['id']]) }}" class="btn btn-info"><i class="bi bi-pencil-square"></i> Edit</a>
                     </td>
                 </tr>
             @empty

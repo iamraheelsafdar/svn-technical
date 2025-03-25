@@ -77,7 +77,7 @@ class ResultController extends Controller
             return redirect()->back()->with('validation_errors', ['Student not found.']);
         }
         $studentResult = StudentResult::where('student_id', $student->id);
-        if (!$studentResult->exists()){
+        if (!$studentResult->exists()) {
             return redirect()->back()->with('validation_errors', ['Student reult not found.']);
         }
         $finalResult = self::resultCalculation($student, $studentResult);
@@ -86,7 +86,7 @@ class ResultController extends Controller
 
     public static function resultCalculation($student, $studentResult): array
     {
-        $allSubjects = $student->course->subjects->whereIn('id',$studentResult->pluck('subject_id')->toArray())->sortBy('duration_part');
+        $allSubjects = $student->course->subjects->whereIn('id', $studentResult->pluck('subject_id')->toArray())->sortBy('duration_part');
         $finalResult = [
             'results' => [], // Initialize an array to store grouped results by duration
             'student_id' => $student->id,
@@ -103,18 +103,18 @@ class ResultController extends Controller
         foreach ($allSubjects->groupBy('duration_part') as $duration => $subjects) {
             $durationResults = [
                 'subjects' => [], // Initialize an array to store subject results for this duration
-                'digit_duration' =>$duration,
-                'ids'=>$subjects->pluck('id')->toArray(),
+                'digit_duration' => $duration,
+                'ids' => $subjects->pluck('id')->toArray(),
                 'duration' => ucfirst($student->course->type) . ' ' . $duration, // e.g., "Year 1" or "Semester 1"
-                'roll_number' => $student->course->prefix->prefix . $student->rollNumbers->where('duration' , $duration)->first()?->roll_number, // e.g., "Year 1" or "Semester 1"
+                'roll_number' => $student->course->prefix->prefix . $student->rollNumbers->where('duration', $duration)->first()?->roll_number, // e.g., "Year 1" or "Semester 1"
             ];
 
             foreach ($subjects as $subject) {
-                $subjectResult = $subject->subjectResult->where('subject_id', $subject->id)->where('student_id',$student->id)->first(); // Assuming one result per subject per student
+                $subjectResult = $subject->subjectResult->where('subject_id', $subject->id)->where('student_id', $student->id)->first(); // Assuming one result per subject per student
                 $durationResults['subjects'][] = [
                     'id' => $subject->id,
                     'subject_name' => $subject->name,
-                    'subject_max_marks' => $subject->max_marks,
+                    'subject_max_marks' => $subject->max_marks + $subject->practical_max_marks,
                     'subject_obtained_marks' => $subjectResult ? $subjectResult->subject_obtained_marks : '--',
                     'total_marks' => $subjectResult ? ($subjectResult->subject_obtained_marks + $subjectResult->practical_obtained_marks) : '--',
                     'practical_obtained_marks' => $subjectResult ? ($subjectResult->practical_obtained_marks == 0 ? '--' : $subjectResult->practical_obtained_marks) : '--',

@@ -66,7 +66,7 @@
                     <td>{{ $reference['created_at'] }}</td>
                     <td>
                         <a href="{{ route('updateStudentReference', ['id' => $reference['id']]) }}"
-                           class="btn btn-danger"><i class="bi bi-pencil-square"></i> Edit</a>
+                           class="btn btn-info"><i class="bi bi-pencil-square"></i> Edit</a>
                     </td>
                 </tr>
             @empty

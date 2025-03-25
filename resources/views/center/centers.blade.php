@@ -96,7 +96,14 @@
                     </td>
                     <td>{{ $center['last_login'] }}</td>
                     <td>
-                        <a href="{{ route('updateCenterView', ['center_id' => $center['id']]) }}" class="btn btn-danger"><i class="bi bi-pencil-square"></i> Edit</a>
+                        <a href="{{ route('updateCenterView', ['center_id' => $center['id']]) }}" class="btn btn-info"><i class="bi bi-pencil-square"></i> Edit</a>
+                        <a href="#" class="btn btn-danger delete-btn"
+                           data-bs-toggle="modal"
+                           data-bs-target="#deleteModal"
+                           data-entity="center"
+                           data-id="{{ $center['id'] }}">
+                            <i class="bi bi-trash"></i> Delete
+                        </a>
                     </td>
                 </tr>
             @empty

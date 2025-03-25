@@ -105,7 +105,7 @@
                     </td>
                     <td>
                         <a href="{{ count($course['subjects']) > 0 ? route('updateSubjectView', ['course_id' => $course['id']]) : route('addSubjectPage', ['course_id' => $course['id']]) }}"
-                           class="btn {{count($course['subjects']) > 0 ? 'btn-danger': 'btn-success'}} "> {!! count($course['subjects']) > 0 ? '<i class="bi bi-pencil-square"></i> Edit Subject' : 'Add Subject' !!}</a>
+                           class="btn {{count($course['subjects']) > 0 ? 'btn-info': 'btn-success'}} "> {!! count($course['subjects']) > 0 ? '<i class="bi bi-pencil-square"></i> Edit Subject' : 'Add Subject' !!}</a>
                         <a href="{{ route('updateCourseView', ['course_id' => $course['id']]) }}"
                            class="btn btn-info"><i class="bi bi-pencil-square"></i> Edit Course</a>
                     </td>

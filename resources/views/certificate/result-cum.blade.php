@@ -45,7 +45,7 @@
     $fontSize = $isSingleRecord ? '13px' : ($isLargeDataset ? '6px' : '8px');
 
     $columnWidths = $isSingleRecord
-        ? ['all_entries'=>'50px' , 'subject'=>'450px']
+        ? ['all_entries'=>'20px' , 'subject'=>'423px']
         : ['all_entries'=>'', 'subject'=>''];
 
     $tableWidth = $isSingleRecord ? '100%' : ($isLargeDataset ? '33.33%' : '50%');
@@ -68,7 +68,7 @@
 
                     <h4 style="
                     position: absolute;
-    top: -74px;
+    top: -56px;
     right: 120px;
     /*transform: translateX(-50%);*/
     font-weight: bold;
@@ -80,19 +80,28 @@
                         {{$singleResults['duration']}}
                     </h4>
 
-                    <table style="width: 100%; border: 2px solid #6e6c6c; border-collapse: collapse; margin-bottom: -10px">
+                    <table style="width: 100%; border: 2px solid #6e6c6c; border-collapse: collapse; margin-bottom: -10px; margin-top: 20px">
                         <thead>
                         <tr>
-                            <th style="border: 2px solid #6e6c6c; padding: 2px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">S.No.</th>
-                            <th style="border: 2px solid #6e6c6c; padding: 2px; font-size: {{ $fontSize }}; width: {{$columnWidths['subject']}}">Subjects</th>
-                            <th style="border: 2px solid #6e6c6c; padding: 2px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">M.M</th>
-                            <th style="border: 2px solid #6e6c6c; padding: 2px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">T</th>
-                            <th style="border: 2px solid #6e6c6c; padding: 2px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">P</th>
-                            <th style="border: 2px solid #6e6c6c; padding: 2px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">M.O</th>
+                            <th style="border: 2px solid #6e6c6c; padding: 2px;white-space: nowrap; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">S. No.</th>
+                            <th style="border: 2px solid #6e6c6c; padding: 2px; white-space: nowrap;font-size: {{ $fontSize }}; width: {{$columnWidths['subject']}}">Subjects</th>
+                            <th style="border: 2px solid #6e6c6c; padding: 2px;white-space: nowrap; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">Max. Marks</th>
+                            <th style="border: 2px solid #6e6c6c; padding: 2px; white-space: nowrap;font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">Theory</th>
+                            <th style="border: 2px solid #6e6c6c; padding: 2px;white-space: nowrap; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">Practical</th>
+                            <th style="border: 2px solid #6e6c6c; padding: 2px; white-space: nowrap; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">Marks. Obt</th>
                         </tr>
                         </thead>
                         <tbody>
+                        @php
+                            $totalMaxMarks = 0;
+                            $totalObtainedMarks = 0;
+                        @endphp
+
                         @foreach($singleResults['subjects'] as $index => $singleResult)
+                            @php
+                                $totalMaxMarks += $singleResult['subject_max_marks'];
+                                $totalObtainedMarks += $singleResult['total_marks'];
+                            @endphp
                             <tr>
                                 <td style="border: 2px solid #6e6c6c; padding: 2px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$index+1}}</td>
                                 <td style="border: 2px solid #6e6c6c; padding: 2px; font-size: {{ $fontSize }}; width: {{$columnWidths['subject']}}">{{$singleResult['subject_name']}}</td>
@@ -102,6 +111,14 @@
                                 <td style="border: 2px solid #6e6c6c; padding: 2px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$singleResult['total_marks']}}</td>
                             </tr>
                         @endforeach
+
+                        <!-- Total Row -->
+                        <tr>
+                            <td colspan="2" style="border: 2px solid #6e6c6c; padding: 5px; font-weight: bold; text-align: right;">Total:</td>
+                            <td style="border: 2px solid #6e6c6c; padding: 5px; font-weight: bold;">{{ $totalMaxMarks }}</td>
+                            <td colspan="2" style="border: 2px solid #6e6c6c;"></td>
+                            <td style="border: 2px solid #6e6c6c; padding: 5px; font-weight: bold;">{{ $totalObtainedMarks }}</td>
+                        </tr>
                         </tbody>
                     </table>
 
@@ -118,8 +135,13 @@
         @endif
     </table>
 </div>
-
-
+@if($data['qr_code'])
+<img style="
+    position: absolute;
+    bottom: 58px;
+    transform: translateX(-50%);
+    text-align: center; margin: 0 auto 0 500px;" src="{{ $data['qr_code'] }}" alt="QR Code">
+@endif
 <h4 style="
     position: absolute;
     bottom: 38px;
