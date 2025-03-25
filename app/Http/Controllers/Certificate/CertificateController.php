@@ -117,9 +117,7 @@ class CertificateController extends Controller
     /**
      * Generate result cum for a student.
      *
-     * @param $studentId
-     * @param $subjectIds
-     * @param $duration
+     * @param $key
      * @return Response|RedirectResponse|View
      */
     public function viewStudentResult($key): Response|RedirectResponse|View
