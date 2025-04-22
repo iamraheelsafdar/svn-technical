@@ -138,9 +138,9 @@
 @if($data['qr_code'])
 <img style="
     position: absolute;
-    bottom: 58px;
+    bottom: 150px;
     transform: translateX(-50%);
-    text-align: center; margin: 0 auto 0 500px;" src="{{ $data['qr_code'] }}" alt="QR Code">
+    text-align: left; margin: 0 auto 0 100px;" src="{{ $data['qr_code'] }}" alt="QR Code">
 @endif
 <h4 style="
     position: absolute;

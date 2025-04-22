@@ -6,10 +6,10 @@
             <div class="form-box p-0" style="max-width: 1100px;">
                 <div class="card shadow-lg">
                     <div class="card-body">
-                        <div class="row">
+                        <div class="row align-items-center">
                             <!-- Left: Student Image -->
                             <div class="col-md-3 text-center">
-                                <img src="{{$data['student_image']}}" class="img-fluid w-100 rounded" alt="Student Image">
+                                <img src="{{$data['student_image']}}" class="img-fluid rounded" alt="Student Image">
                             </div>
 
                             <!-- Right: Student Details -->
@@ -29,16 +29,18 @@
                                         <td>{{$data['dob']}}</td>
                                     </tr>
                                     <tr>
-                                        <th>Enrollment No:</th>
-                                        <td>{{$data['para_reg_no']}}</td>
-                                        <th>Roll Number:</th>
-                                        <td>{{$data['result_cum_roll_number']}}</td>
-                                    </tr>
-                                    <tr>
                                         <th>Year/Sem:</th>
                                         <td>{{ implode(', ', array_column($data['results'], 'duration')) }}</td>
                                         <th>Division:</th>
                                         <td>{{ $data['division'] }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Enrollment No:</th>
+                                        <td>{{$data['para_reg_no']}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Roll Number:</th>
+                                        <td>{{$data['result_cum_roll_number']}}</td>
                                     </tr>
                                     <tr>
                                         <th>Institute:</th>

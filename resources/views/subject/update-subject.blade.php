@@ -17,67 +17,90 @@
                                 {{ ucfirst($course->type) }} {{ $duration }}
                             </div>
                             <div class="card-body">
-                                <!-- Loop through each subject in this duration -->
-                                @foreach ($subjects as $index => $subject)
-                                    <h5>Subject {{$index+1}}</h5>
-                                    <input type="hidden" name="subjects[{{ $duration }}][{{ $index }}][id]" value="{{ $subject->id }}">
+                                <div id="subject-container-{{count($subjects)+1}}">
+                                    <!-- Loop through each subject in this duration -->
+                                    @foreach ($subjects as $index => $subject)
+                                        <h5>Subject {{$index+1}}</h5>
+                                        <input type="hidden" name="subjects[{{ $duration }}][{{ $index }}][id]"
+                                               value="{{ $subject->id }}">
 
-                                    <div class="mb-3">
-                                        <label class="form-label">Subject Name</label>
-                                        <input type="text"
-                                               class="form-control"
-                                               name="subjects[{{ $duration }}][{{ $index }}][name]"
-                                               value="{{ old("subjects.$duration.$index.name", $subject->name) }}"
-                                               placeholder="Enter Subject Name" required>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Subject Code</label>
-                                        <input type="text"
-                                               class="form-control"
-                                               name="subjects[{{ $duration }}][{{ $index }}][code]"
-                                               value="{{ old("subjects.$duration.$index.code", $subject->code) }}"
-                                               placeholder="Enter Subject Code" required>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label class="form-label">Min Marks</label>
-                                            <input type="number"
+                                        <div class="mb-3">
+                                            <label class="form-label">Subject Name</label>
+                                            <input type="text"
                                                    class="form-control"
-                                                   name="subjects[{{ $duration }}][{{ $index }}][min_marks]"
-                                                   value="{{ old("subjects.$duration.$index.min_marks", $subject->min_marks) }}"
-                                                   placeholder="Enter Min Marks" required>
+                                                   name="subjects[{{ $duration }}][{{ $index }}][name]"
+                                                   value="{{ old("subjects.$duration.$index.name", $subject->name) }}"
+                                                   placeholder="Enter Subject Name" required>
                                         </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Max Marks</label>
-                                            <input type="number"
-                                                   class="form-control"
-                                                   name="subjects[{{ $duration }}][{{ $index }}][max_marks]"
-                                                   value="{{ old("subjects.$duration.$index.max_marks", $subject->max_marks) }}"
-                                                   placeholder="Enter Max Marks" required>
-                                        </div>
-                                    </div>
 
-                                    <div class="mb-3 mt-3">
-                                        <label class="form-label">Is Practical?</label>
-                                        <select class="form-select practical-dropdown" id="practical-dropdown-{{ $duration }}-{{ $index }}" name="subjects[{{ $duration }}][{{ $index }}][is_practical]" required>
-                                            <option value="false" {{ old("is_practical", $subject->is_practical) == 0 ? 'selected' : '' }}>No</option>
-                                            <option value="true" {{ old("is_practical", $subject->is_practical) == 1 ? 'selected' : '' }}>Yes</option>
-                                        </select>
-                                    </div>
-                                    <!-- Practical Marks Section (Initially Hidden or Visible Based on Dropdown) -->
-                                    <div id="practical-marks-{{ $duration }}-{{ $index }}" class="practical-marks row {{ old("subjects.$duration.$index.is_practical", $subject->is_practical) == 1 ? '' : 'd-none' }}">
-                                        <div class="col-md-6">
-                                            <label class="form-label">Practical Min Marks</label>
-                                            <input type="number" class="form-control" name="subjects[{{ $duration }}][{{ $index }}][practical_min_marks]" value="{{ old("subjects.$duration.$index.practical_min_marks", $subject->practical_min_marks) }}" placeholder="Min Practical Marks">
+                                        <div class="mb-3">
+                                            <label class="form-label">Subject Code</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   name="subjects[{{ $duration }}][{{ $index }}][code]"
+                                                   value="{{ old("subjects.$duration.$index.code", $subject->code) }}"
+                                                   placeholder="Enter Subject Code" required>
                                         </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Practical Max Marks</label>
-                                            <input type="number" class="form-control" name="subjects[{{ $duration }}][{{ $index }}][practical_max_marks]" value="{{ old("subjects.$duration.$index.practical_max_marks", $subject->practical_max_marks) }}" placeholder="Max Practical Marks">
+
+                                        <div class="row">
+                                           <div class="col-md-6">
+                                                <label class="form-label">Max Marks</label>
+                                                <input type="number"
+                                                       class="form-control"
+                                                       name="subjects[{{ $duration }}][{{ $index }}][max_marks]"
+                                                       value="{{ old("subjects.$duration.$index.max_marks", $subject->max_marks) }}"
+                                                       placeholder="Enter Max Marks" required>
+                                           </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Min Marks</label>
+                                                <input type="number"
+                                                       class="form-control"
+                                                       name="subjects[{{ $duration }}][{{ $index }}][min_marks]"
+                                                       value="{{ old("subjects.$duration.$index.min_marks", $subject->min_marks) }}"
+                                                       placeholder="Enter Min Marks" required>
+                                            </div>
                                         </div>
-                                    </div>
-                                @endforeach
+
+                                        <div class="mb-3 mt-3">
+                                            <label class="form-label">Is Practical?</label>
+                                            <select class="form-select practical-dropdown"
+                                                    id="practical-dropdown-{{ $duration }}-{{ $index }}"
+                                                    name="subjects[{{ $duration }}][{{ $index }}][is_practical]"
+                                                    required>
+                                                <option
+                                                    value="false" {{ old("is_practical", $subject->is_practical) == 0 ? 'selected' : '' }}>
+                                                    No
+                                                </option>
+                                                <option
+                                                    value="true" {{ old("is_practical", $subject->is_practical) == 1 ? 'selected' : '' }}>
+                                                    Yes
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <!-- Practical Marks Section (Initially Hidden or Visible Based on Dropdown) -->
+                                        <div id="practical-marks-{{ $duration }}-{{ $index }}"
+                                             class="practical-marks row {{ old("subjects.$duration.$index.is_practical", $subject->is_practical) == 1 ? '' : 'd-none' }}">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Practical Max Marks</label>
+                                                <input type="number" class="form-control"
+                                                       name="subjects[{{ $duration }}][{{ $index }}][practical_max_marks]"
+                                                       value="{{ old("subjects.$duration.$index.practical_max_marks", $subject->practical_max_marks) }}"
+                                                       placeholder="Max Practical Marks">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Practical Min Marks</label>
+                                                <input type="number" class="form-control"
+                                                       name="subjects[{{ $duration }}][{{ $index }}][practical_min_marks]"
+                                                       value="{{ old("subjects.$duration.$index.practical_min_marks", $subject->practical_min_marks) }}"
+                                                       placeholder="Min Practical Marks">
+                                            </div>
+                                        </div>
+
+                                    @endforeach
+                                    <button type="button" class="btn btn-success add-subject-btn mt-3"
+                                            data-index="{{count($subjects)+1}}">Add Subject
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

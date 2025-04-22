@@ -37,20 +37,20 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label class="form-label">Min Marks</label>
-                                                <input type="number"
-                                                       class="form-control"
-                                                       name="subjects[{{ $i }}][min_marks][]"
-                                                       value="{{ old('subjects.' . $i . '.min_marks.0') }}"
-                                                       placeholder="Enter Min Marks" required>
-                                            </div>
-                                            <div class="col-md-6">
                                                 <label class="form-label">Max Marks</label>
                                                 <input type="number"
                                                        class="form-control"
                                                        name="subjects[{{ $i }}][max_marks][]"
                                                        value="{{ old('subjects.' . $i . '.max_marks.0') }}"
                                                        placeholder="Enter Max Marks" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Min Marks</label>
+                                                <input type="number"
+                                                       class="form-control"
+                                                       name="subjects[{{ $i }}][min_marks][]"
+                                                       value="{{ old('subjects.' . $i . '.min_marks.0') }}"
+                                                       placeholder="Enter Min Marks" required>
                                             </div>
                                         </div>
                                         <div class="mb-3 mt-3">
@@ -72,20 +72,20 @@
                                         <div class="practical-marks row
                                     {{ old('subjects.' . $i . '.is_practical.0') === 'true' ? '' : 'd-none' }}">
                                             <div class="col-md-6">
-                                                <label class="form-label">Practical Min Marks</label>
-                                                <input type="number"
-                                                       class="form-control"
-                                                       name="subjects[{{ $i }}][practical_min_marks][]"
-                                                       value="{{ old('subjects.' . $i . '.practical_min_marks.0') }}"
-                                                       placeholder="Min Practical Marks">
-                                            </div>
-                                            <div class="col-md-6">
                                                 <label class="form-label">Practical Max Marks</label>
                                                 <input type="number"
                                                        class="form-control"
                                                        name="subjects[{{ $i }}][practical_max_marks][]"
                                                        value="{{ old('subjects.' . $i . '.practical_max_marks.0') }}"
                                                        placeholder="Max Practical Marks">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Practical Min Marks</label>
+                                                <input type="number"
+                                                       class="form-control"
+                                                       name="subjects[{{ $i }}][practical_min_marks][]"
+                                                       value="{{ old('subjects.' . $i . '.practical_min_marks.0') }}"
+                                                       placeholder="Min Practical Marks">
                                             </div>
                                         </div>
                                     </div>

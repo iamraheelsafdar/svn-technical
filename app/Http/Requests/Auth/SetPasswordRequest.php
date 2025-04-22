@@ -26,7 +26,7 @@ class SetPasswordRequest extends BaseRequestForWeb
             'password' => [
                 'required',
                 'string',
-                'min:12',
+                'min:8',
                 'confirmed',
                 'regex:/[!@#$%^&*(),.?":{}|<>]/' // Must include at least one special character
             ],

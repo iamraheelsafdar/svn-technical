@@ -68,12 +68,12 @@ $(document).ready(function () {
                             </div>
                             <div id="practicalMarksSection_${yearSemesterCounter}_1" class="row g-3 mt-2 d-none">
                                 <div class="col-md-6">
-                                    <label for="practicalMinMarks_${yearSemesterCounter}_1" class="form-label">Practical Min Marks</label>
-                                    <input type="number" class="form-control" id="practicalMinMarks_${yearSemesterCounter}_1" name="subjects[${yearSemesterCounter}][1][practicalMinMarks]" min="0">
-                                </div>
-                                <div class="col-md-6">
                                     <label for="practicalMarks_${yearSemesterCounter}_1" class="form-label">Practical Marks</label>
                                     <input type="number" class="form-control" id="practicalMarks_${yearSemesterCounter}_1" name="subjects[${yearSemesterCounter}][1][practicalMarks]" min="0">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="practicalMinMarks_${yearSemesterCounter}_1" class="form-label">Practical Min Marks</label>
+                                    <input type="number" class="form-control" id="practicalMinMarks_${yearSemesterCounter}_1" name="subjects[${yearSemesterCounter}][1][practicalMinMarks]" min="0">
                                 </div>
                             </div>
                         </div>
@@ -126,12 +126,12 @@ $(document).ready(function () {
             </div>
             <div id="practicalMarksSection_${sectionId}_${subjectCounter}" class="row g-3 mt-2 d-none">
                 <div class="col-md-6">
-                    <label for="practicalMinMarks_${sectionId}_${subjectCounter}" class="form-label">Practical Min Marks</label>
-                    <input type="number" class="form-control" id="practicalMinMarks_${sectionId}_${subjectCounter}" name="subjects[${sectionId}][${subjectCounter}][practicalMinMarks]" min="0">
-                </div>
-                <div class="col-md-6">
                     <label for="practicalMarks_${sectionId}_${subjectCounter}" class="form-label">Practical Marks</label>
                     <input type="number" class="form-control" id="practicalMarks_${sectionId}_${subjectCounter}" name="subjects[${sectionId}][${subjectCounter}][practicalMarks]" min="0">
+                </div>
+                <div class="col-md-6">
+                    <label for="practicalMinMarks_${sectionId}_${subjectCounter}" class="form-label">Practical Min Marks</label>
+                    <input type="number" class="form-control" id="practicalMinMarks_${sectionId}_${subjectCounter}" name="subjects[${sectionId}][${subjectCounter}][practicalMinMarks]" min="0">
                 </div>
             </div>
         </div>

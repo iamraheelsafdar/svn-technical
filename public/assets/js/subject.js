@@ -24,12 +24,12 @@ $(document).ready(function () {
           </div>
           <div class="row">
             <div class="col-md-6">
-              <label class="form-label">Min Marks</label>
-              <input type="number" class="form-control min-marks" name="subjects[${index}][min_marks][]" placeholder="Enter Min Marks" required>
-            </div>
-            <div class="col-md-6">
               <label class="form-label">Max Marks</label>
               <input type="number" class="form-control max-marks" name="subjects[${index}][max_marks][]" placeholder="Enter Max Marks" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Min Marks</label>
+              <input type="number" class="form-control min-marks" name="subjects[${index}][min_marks][]" placeholder="Enter Min Marks" required>
             </div>
           </div>
           <div class="mb-3 mt-3">
@@ -41,12 +41,12 @@ $(document).ready(function () {
           </div>
           <div class="practical-marks row d-none">
             <div class="col-md-6">
-              <label class="form-label">Practical Min Marks</label>
-              <input type="number" class="form-control practical-min-marks" name="subjects[${index}][practical_min_marks][]" placeholder="Min Practical Marks">
-            </div>
-            <div class="col-md-6">
               <label class="form-label">Practical Max Marks</label>
               <input type="number" class="form-control practical-max-marks" name="subjects[${index}][practical_max_marks][]" placeholder="Max Practical Marks">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Practical Min Marks</label>
+              <input type="number" class="form-control practical-min-marks" name="subjects[${index}][practical_min_marks][]" placeholder="Min Practical Marks">
             </div>
           </div>
         </div>
