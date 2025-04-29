@@ -29,7 +29,14 @@ class UpdateSubjectRequest extends BaseRequestForWeb
 
         foreach ($this->input('subjects') as $duration => $subjects) {
             foreach ($subjects as $key => $subject) {
-                $rules["subjects.$duration.$key.id"] = 'required|exists:subjects,id';
+                // Allow 'new' as a valid value for id when creating new subjects
+                $rules["subjects.$duration.$key.id"] = 'required';
+
+                // For existing subjects, validate that the ID exists
+                if (isset($subject['id']) && $subject['id'] !== 'new') {
+                    $rules["subjects.$duration.$key.id"] .= '|exists:subjects,id';
+                }
+
                 $rules["subjects.$duration.$key.name"] = 'required|string|max:255';
                 $rules["subjects.$duration.$key.code"] = 'required|string|max:100';
                 $rules["subjects.$duration.$key.min_marks"] = 'required|integer|min:0';
@@ -42,7 +49,7 @@ class UpdateSubjectRequest extends BaseRequestForWeb
                     }
                 };
 
-                // Fix: Validate is_practical as a string (either "true" or "false")
+                // Validate is_practical as a string (either "true" or "false")
                 $rules["subjects.$duration.$key.is_practical"] = 'required|string|in:true,false';
 
                 // Practical Marks should be required only when is_practical is "true"

@@ -27,6 +27,7 @@ class CertificateController extends Controller
         'margin-bottom' => 0,
         'margin-left' => 0,
         'margin-right' => 0,
+        'dpi' => 300,
     ];
 
     /**
@@ -262,7 +263,7 @@ class CertificateController extends Controller
             ]));
             $url = route('viewStudentResult', ['key' => $key]); // Get the URL from the named route
         }
-        $qrCode = QrCode::format('svg')->size(100)->generate($url);
+        $qrCode = QrCode::format('svg')->size(300)->generate($url);
         $base64Qr = 'data:image/svg+xml;base64,' . base64_encode($qrCode);
 
         $payload = [

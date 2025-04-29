@@ -87,21 +87,38 @@ class SubjectController extends Controller
         foreach ($subjectsData as $duration => $subjects) {
             // Loop through each subject in the duration
             foreach ($subjects as $subjectData) {
-                // Update each subject based on the subject ID
-                Subject::where('id', $subjectData['id'])->where('course_id', $request->course_id)->update([
-                    'name' => $subjectData['name'],
-                    'code' => $subjectData['code'],
-                    'min_marks' => $subjectData['min_marks'],
-                    'max_marks' => $subjectData['max_marks'],
-                    'is_practical' => $subjectData['is_practical'] == 'true' ? 1 : 0,
-                    'practical_min_marks' => $subjectData['practical_min_marks'] ?? null,
-                    'practical_max_marks' => $subjectData['practical_max_marks'] ?? null,
-                ]);
+                // Check if it's a new subject or an existing one
+                if ($subjectData['id'] === 'new') {
+                    // Create a new subject
+                    Subject::create([
+                        'course_id' => $request->course_id,
+                        'duration_part' => $duration,
+                        'name' => $subjectData['name'],
+                        'code' => $subjectData['code'],
+                        'min_marks' => $subjectData['min_marks'],
+                        'max_marks' => $subjectData['max_marks'],
+                        'is_practical' => $subjectData['is_practical'] == 'true' ? 1 : 0,
+                        'practical_min_marks' => $subjectData['is_practical'] == 'true' ? $subjectData['practical_min_marks'] : null,
+                        'practical_max_marks' => $subjectData['is_practical'] == 'true' ? $subjectData['practical_max_marks'] : null,
+                    ]);
+                } else {
+                    // Update existing subject
+                    Subject::where('id', $subjectData['id'])
+                        ->where('course_id', $request->course_id)
+                        ->update([
+                            'name' => $subjectData['name'],
+                            'code' => $subjectData['code'],
+                            'min_marks' => $subjectData['min_marks'],
+                            'max_marks' => $subjectData['max_marks'],
+                            'is_practical' => $subjectData['is_practical'] == 'true' ? 1 : 0,
+                            'practical_min_marks' => $subjectData['is_practical'] == 'true' ? $subjectData['practical_min_marks'] : null,
+                            'practical_max_marks' => $subjectData['is_practical'] == 'true' ? $subjectData['practical_max_marks'] : null,
+                        ]);
+                }
             }
         }
 
         session()->flash('success', 'Subjects updated successfully.');
         return redirect()->route('coursesPage');
-
     }
 }

@@ -19,52 +19,37 @@
 </head>
 
 <body style="background: url('{{ $data['certificate_image'] }}');height: 100%; width: 100%; background-size: contain;">
-<h2 style="position: relative; top:50px; margin-left: 165px; display: block; font-weight: bold;color: #6e6c6c; font-size: 16px">{{$data['para_reg_no']}}</h2>
-<img
-    style="display: block; margin-left: 370px; text-align: center; width: auto;height: 70px; position: relative; top: 455px"
-    src="{{$data['student_image']}}" alt="">
-<table
-    style="width: 80%; white-space: nowrap; border-collapse: collapse; border: 1px solid #000; position: relative; top: 483px; margin-left: 80px">
+
+<h2 style="position: absolute;top: 162px;transform: translateX(-50%);font-weight: bold;color: #6e6c6c;text-transform: uppercase;font-size: 44px;margin-left: 780px;">{{$data['para_reg_no']}}</h2>
+<img style="position: absolute;top: 1600px;transform: translateX(-50%); display: block;margin-left: 1250px; width: auto;height: 400px;" src="{{$data['student_image']}}" alt="">
+
+<table style="width: 90%; white-space: nowrap; border-collapse: collapse; border: 1px solid #6e6c6c; position: absolute;top: 2100px;transform: translateX(-50%); margin-left: 1250px;">
     <tr>
-        <th style="white-space: nowrap; border-collapse: collapse; border: 1px solid #000; text-align: left; padding: 10px 6px;  font-size: 12px; margin-left: 6px ">
-            Student Name
-        </th>
-        <td style="width: 100%; white-space: nowrap; border-collapse: collapse; border: 1px solid #000; text-align: left; text-transform: uppercase; padding: 10px 6px; font-size: 12px; margin-left: 6px">{{ $student->name }}</td>
+        <th style="white-space: nowrap; border-collapse: collapse; border: 1px solid #6e6c6c; text-align: left; text-transform: uppercase; padding: 28px 20px;  font-size: 44px; margin-left: 6px ">Student Name</th>
+        <td style="width: 100%; white-space: nowrap; border-collapse: collapse; border: 1px solid #6e6c6c; text-align: left; text-transform: uppercase; padding: 28px 20px; font-size: 44px; margin-left: 6px">{{ $student->name }}</td>
     </tr>
     <tr>
-        <th style="white-space: nowrap; border-collapse: collapse; border: 1px solid #000; text-align: left; text-transform: uppercase; padding: 10px 6px;  font-size: 12px; margin-left: 6px">
-            Father's Name
-        </th>
-        <td style="width: 100%; white-space: nowrap; border-collapse: collapse; border: 1px solid #000; text-align: left; text-transform: uppercase; padding: 10px 6px; font-size: 12px; margin-left: 6px">{{$student->father_name}}</td>
+        <th style="white-space: nowrap; border-collapse: collapse; border: 1px solid #6e6c6c; text-align: left; text-transform: uppercase; padding: 28px 20px;  font-size: 44px; margin-left: 6px">Father's Name</th>
+        <td style="width: 100%; white-space: nowrap; border-collapse: collapse; border: 1px solid #6e6c6c; text-align: left; text-transform: uppercase; padding: 28px 20px; font-size: 44px; margin-left: 6px">{{$student->father_name}}</td>
     </tr>
     <tr>
-        <th style="white-space: nowrap; border-collapse: collapse; border: 1px solid #000; text-align: left; text-transform: uppercase; padding: 10px 6px;  font-size: 12px; margin-left: 6px">
-            Date Of Birth
-        </th>
-        <td style="width: 100%; white-space: nowrap; border-collapse: collapse; border: 1px solid #000; text-align: left; text-transform: uppercase; padding: 10px 6px; font-size: 12px; margin-left: 6px">{{ $data['date_of_birth'] }}</td>
+        <th style="white-space: nowrap; border-collapse: collapse; border: 1px solid #6e6c6c; text-align: left; text-transform: uppercase; padding: 28px 20px;  font-size: 44px; margin-left: 6px">Date Of Birth</th>
+        <td style="width: 100%; white-space: nowrap; border-collapse: collapse; border: 1px solid #6e6c6c; text-align: left; text-transform: uppercase; padding: 28px 20px; font-size: 44px; margin-left: 6px">{{ $data['date_of_birth'] }}</td>
     </tr>
     <tr>
-        <th style="white-space: nowrap; border-collapse: collapse; border: 1px solid #000; text-align: left; text-transform: uppercase; padding: 10px 6px;  font-size: 12px; margin-left: 6px">
-            Name Of Course
-        </th>
-        <td style="width: 100%; white-space: nowrap; border-collapse: collapse; border: 1px solid #000; text-align: left; text-transform: uppercase; padding: 10px 6px; font-size: 12px; margin-left: 6px">{{ $data['course_name'] }}</td>
+        <th style="white-space: nowrap; border-collapse: collapse; border: 1px solid #6e6c6c; text-align: left; text-transform: uppercase; padding: 28px 20px;  font-size: 44px; margin-left: 6px">Name Of Course</th>
+        <td style="width: 100%; white-space: nowrap; border-collapse: collapse; border: 1px solid #6e6c6c; text-align: left; text-transform: uppercase; padding: 28px 20px; font-size: 44px; margin-left: 6px">{{ $data['course_name'] }}</td>
     </tr>
     <tr>
-        <th style="white-space: nowrap; border-collapse: collapse; border: 1px solid #000; text-align: left; text-transform: uppercase; padding: 10px 6px;  font-size: 12px; margin-left: 6px">
-            Name Of Institute
-        </th>
-        <td style="width: 100%; white-space: nowrap; border-collapse: collapse; border: 1px solid #000; text-align: left; text-transform: uppercase; padding: 10px 6px; font-size: 12px; margin-left: 6px">
-            {{$data['institute_name']}}
-        </td>
+        <th style="white-space: nowrap; border-collapse: collapse; border: 1px solid #6e6c6c; text-align: left; text-transform: uppercase; padding: 28px 20px;  font-size: 44px; margin-left: 6px">Name Of Institute</th>
+        <td style="width: 100%; white-space: nowrap; border-collapse: collapse; border: 1px solid #6e6c6c; text-align: left; text-transform: uppercase; padding: 28px 20px; font-size: 44px; margin-left: 6px">{{$data['institute_name']}}</td>
     </tr>
     <tr>
-        <th style="white-space: nowrap; border-collapse: collapse; border: 1px solid #000; text-align: left; text-transform: uppercase; padding: 10px 6px;  font-size: 12px; margin-left: 6px">
-            Date Of Registration
-        </th>
-        <td style="width: 100%; white-space: nowrap; border-collapse: collapse; border: 1px solid #000; text-align: left; text-transform: uppercase; padding: 10px 6px; font-size: 12px; margin-left: 6px">{{$data['reg_date']}}</td>
+        <th style="white-space: nowrap; border-collapse: collapse; border: 1px solid #6e6c6c; text-align: left; text-transform: uppercase; padding: 28px 20px;  font-size: 44px; margin-left: 6px">Date Of Registration</th>
+        <td style="width: 100%; white-space: nowrap; border-collapse: collapse; border: 1px solid #6e6c6c; text-align: left; text-transform: uppercase; padding: 28px 20px; font-size: 44px; margin-left: 6px">{{$data['reg_date']}}</td>
     </tr>
 </table>
-<h4 style="position: relative; top:680px; margin-left: 115px; display: block; color: #6e6c6c; text-transform: uppercase">{{$data['footer_date']}}</h4>
+<h4 style="position: absolute;top: 3168px;transform: translateX(-50%);color: #6e6c6c;text-transform: uppercase;font-size: 44px;margin-left: 475px;">{{$data['footer_date']}}</h4>
 
 </body>
 </html>

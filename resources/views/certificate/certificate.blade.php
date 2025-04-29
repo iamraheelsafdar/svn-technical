@@ -19,63 +19,63 @@
 </head>
 
 <body style="background: url('{{ $data['certificate_image'] }}');height: 100%; width: 100%; background-size: contain;">
-<h2 style="position: relative; top:58px; margin-left: 30px; text-align: left; display: block; font-weight: bold;color: #6e6c6c;font-size: 15px">{{$data['serial_number']}}</h2>
-<h2 style="position: relative; top:25px; text-align: center; display: block; font-weight: bold;color: #6e6c6c;font-size: 15px">{{$data['para_reg_no']}}</h2>
-<h2 style="position: relative; top:-6px; margin-right: 30px; text-align: right; display: block; font-weight: bold;color: #6e6c6c;font-size: 15px">{{$data['roll_number']}}</h2>
+<h2 style="position: absolute;top: 165px;transform: translateX(-50%);font-weight: bold;color: #6e6c6c;text-transform: uppercase;font-size: 44px;margin-left: 230px;">{{$data['serial_number']}}</h2>
+<h2 style="position: absolute;top: 165px;transform: translateX(-50%);font-weight: bold;color: #6e6c6c;text-transform: uppercase;font-size: 44px;margin-left: 1250px;">{{$data['para_reg_no']}}</h2>
+<h2 style="position: absolute;top: 165px;transform: translateX(-50%);font-weight: bold;color: #6e6c6c;text-transform: uppercase;font-size: 44px;margin-left: 2080px;">{{$data['roll_number']}}</h2>
 
 @if($data['stream'] == 'PARAMEDICAL')
-<img style="display: block; margin-left: 680px; text-align: center; width: auto;height: 70px; position: relative; top: 210px" src="{{$data['student_image']}}" alt="">
+<img style="position: absolute;top: 1000px;transform: translateX(-50%); display: block;margin-left: 2225px; width: auto;height: 215px;" src="{{$data['student_image']}}" alt="">
 
 @endif
 
 @if($data['stream'] == 'TECHNOLOGY & MGMT')
-<img style="display: block; margin-left: 680px; text-align: center; width: auto;height: 70px; position: relative; top: 230px" src="{{$data['student_image']}}" alt="">
+<img style="position: absolute;top: 1050px;transform: translateX(-50%); display: block;margin-left: 2225px; width: auto;height: 215px;" src="{{$data['student_image']}}" alt="">
 @endif
 
 @if($data['stream'] == 'ITI')
-<img style="display: block; margin-left: 680px; text-align: center; width: auto;height: 70px; position: relative; top: 230px" src="{{$data['student_image']}}" alt="">
+<img style="position: absolute;top: 1050px;transform: translateX(-50%); display: block;margin-left: 2225px; width: auto;height: 215px;" src="{{$data['student_image']}}" alt="">
 @endif
 
-<h2 style="position: relative; top:215px; text-align: center; display: block; font-weight: bold;color: #6e6c6c;font-size: 20px">{{ $student->name }}</h2>
-<h2 style="position: relative; top:240px; text-align: center; display: block; font-weight: bold;color: #6e6c6c;font-size: 24px">{{ $data['course_name']  }}</h2>
-<p style="position: relative; top:220px; text-align: center; display: block;color: #6e6c6c;font-size: 16px">{{ $data['division']  }}</p>
+<h2 style="position: absolute;top: 1200px;transform: translateX(-50%);color: #6e6c6c;text-transform: uppercase;font-size: 60px;margin-left: 1250px;">{{ $student->name }}</h2>
+<h2 style="position: absolute;top: 1420px;transform: translateX(-50%);color: #6e6c6c;text-transform: uppercase;font-size: 65px;margin-left: 1250px;white-space: nowrap">{{ $data['course_name']  }}</h2>
+<p style="position: absolute;top: 1525px;transform: translateX(-50%);color: #6e6c6c;text-transform: uppercase;font-size: 44px;margin-left: 1250px;">{{ $data['division']  }}</p>
 
 @if($data['stream'] == 'PARAMEDICAL')
-<h2 style="position: relative; text-align: center; display: block;font-weight: bold; color: #6e6c6c;font-size: 18px; top:290px;">{{ $data['year_completion']  }}</h2>
+<h2 style="position: absolute;top: 1880px;transform: translateX(-50%);color: #6e6c6c;text-transform: uppercase;font-size: 44px;margin-left: 1250px;">{{ $data['year_completion']  }}</h2>
 @endif
 
 @if($data['stream'] == 'TECHNOLOGY & MGMT')
-<h2 style="position: relative; text-align: center; display: block;font-weight: bold; color: #6e6c6c;font-size: 18px; top: 295px;">{{ $data['year_completion']  }}</h2>
+<h2 style="position: absolute;top: 1880px;transform: translateX(-50%);color: #6e6c6c;text-transform: uppercase;font-size: 44px;margin-left: 1250px;">{{ $data['year_completion']  }}</h2>
 @endif
 
 @if($data['stream'] == 'ITI')
-<h2 style="position: relative; text-align: center; display: block;font-weight: bold; color: #6e6c6c;font-size: 18px; top: 295px;">{{ $data['year_completion']  }}</h2>
+<h2 style="position: absolute;top: 1880px;transform: translateX(-50%);color: #6e6c6c;text-transform: uppercase;font-size: 44px;margin-left: 1250px;">{{ $data['year_completion']  }}</h2>
 @endif
 
 @if($data['stream'] == 'ITI')
-<h2 style="position: relative; top:365px; text-align: center; display: block; font-weight: bold;color: #6e6c6c;font-size: 28px">{{ $data['course_name']  }}</h2>
+<h2 style="position: absolute;top: 2225px;transform: translateX(-50%);color: #6e6c6c;text-transform: uppercase;font-size: 65px;margin-left: 1250px;">{{ $data['course_name']  }}</h2>
 @else
-<h2 style="position: relative; top:385px; text-align: center; display: block; font-weight: bold;color: #6e6c6c;font-size: 28px">{{ $data['course_name']  }}</h2>
+<h2 style="position: absolute;top: 2300px;transform: translateX(-50%);color: #6e6c6c;text-transform: uppercase;font-size: 65px;margin-left: 1250px;white-space: nowrap">{{ $data['course_name']  }}</h2>
 @endif
 
 @if($data['stream'] == 'ITI')
-<h2 style="position: relative; text-align: center; display: block; font-weight: bold;color: #6e6c6c;font-size: 28px;top:375px;">{{ $student->name }}</h2>
-<h2 style="position: relative; left:85px; text-align: center; display: block;font-weight: bold; color: #6e6c6c;font-size: 18px; top: 415px">{{ $data['year_completion']  }}</h2>
+<h2 style="position: absolute;top: 2440px;transform: translateX(-50%);color: #6e6c6c;text-transform: uppercase;font-size: 60px;margin-left: 1250px;">{{ $student->name }}</h2>
+<h2 style="position: absolute;top: 2760px;transform: translateX(-50%);color: #6e6c6c;text-transform: uppercase;font-size: 44px;margin-left: 1450px; font-weight: bold;">{{ $data['year_completion']  }}</h2>
 @endif
 
 @if($data['stream'] == 'PARAMEDICAL')
-<h2 style="position: relative; text-align: center; display: block; font-weight: bold;color: #6e6c6c;font-size: 28px;top:400px">{{ $student->name }}</h2>
-<h2 style="position: relative; left:85px; text-align: center; display: block;font-weight: bold; color: #6e6c6c;font-size: 18px; top:458px">{{ $data['year_completion']  }}</h2>
+<h2 style="position: absolute;top: 2540px;transform: translateX(-50%);color: #6e6c6c;text-transform: uppercase;font-size: 60px;margin-left: 1250px;">{{ $student->name }}</h2>
+<h2 style="position: absolute;top: 2900px;transform: translateX(-50%);color: #6e6c6c;text-transform: uppercase;font-size: 44px;margin-left: 1450px; font-weight: bold;">{{ $data['year_completion']  }}</h2>
 @endif
 
 @if($data['stream'] == 'TECHNOLOGY & MGMT')
-<h2 style="position: relative; text-align: center; display: block; font-weight: bold;color: #6e6c6c;font-size: 28px;top:395px">{{ $student->name }}</h2>
-<h2 style="position: relative; left:85px; text-align: center; display: block;font-weight: bold; color: #6e6c6c;font-size: 18px; top: 450px">{{ $data['year_completion']  }}</h2>
+<h2 style="position: absolute;top: 2540px;transform: translateX(-50%);color: #6e6c6c;text-transform: uppercase;font-size: 60px;margin-left: 1250px;">{{ $student->name }}</h2>
+<h2 style="position: absolute;top: 2875px;transform: translateX(-50%);color: #6e6c6c;text-transform: uppercase;font-size: 44px;margin-left: 1450px; font-weight: bold;">{{ $data['year_completion']  }}</h2>
 @endif
 
 
 
-<h4 style="position: relative; top:550px; margin-left: 135px; display: block; font-weight: bold;color: #6e6c6c; text-transform: uppercase">{{$data['footer_date']}}</h4>
+<h4 style="position: absolute;top: 3280px;transform: translateX(-50%);color: #6e6c6c;text-transform: uppercase;font-size: 44px;margin-left: 400px; font-weight: bold;">{{$data['footer_date']}}</h4>
 
 </body>
 </html>
