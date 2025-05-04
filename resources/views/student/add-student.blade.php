@@ -22,23 +22,23 @@
                        value="{{ old('mother_name') }}"
                        placeholder="Enter Mother Name">
             </div>
-            <div class="col-6 col-md-6 col-lg-3 mb-3">
-                <label for="logo" class="form-label">Select State</label>
-                <select name="state" class="form-select" aria-label="Default select example">
-                    @php
-                        $states = array("Andaman and Nicobar Islands","Andhra Pradesh","Arunachal
-                Pradesh","Assam","Bihar","Chandigarh","Chhattisgarh","Dadra and Nagar Haveli","Daman and
-                Diu","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh","Jammu and
-                Kashmir","Jharkhand","Karnataka","Lakshadweep","Puducherry","Kerala","Madhya
-                Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil
-                Nadu","Telangana","Tripura","Uttarakhand","Uttar Pradesh","West Bengal");
-                    @endphp
-                    <option value="Rajasthan" selected>Rajasthan</option>
-                    @foreach ($states as $state)
-                        <option value="{{$state}}">{{$state}}</option>
-                    @endforeach
-                </select>
-            </div>
+{{--            <div class="col-6 col-md-6 col-lg-3 mb-3">--}}
+{{--                <label for="logo" class="form-label">Select State</label>--}}
+{{--                <select name="state" class="form-select" aria-label="Default select example">--}}
+{{--                    @php--}}
+{{--                        $states = array("Andaman and Nicobar Islands","Andhra Pradesh","Arunachal--}}
+{{--                Pradesh","Assam","Bihar","Chandigarh","Chhattisgarh","Dadra and Nagar Haveli","Daman and--}}
+{{--                Diu","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh","Jammu and--}}
+{{--                Kashmir","Jharkhand","Karnataka","Lakshadweep","Puducherry","Kerala","Madhya--}}
+{{--                Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil--}}
+{{--                Nadu","Telangana","Tripura","Uttarakhand","Uttar Pradesh","West Bengal");--}}
+{{--                    @endphp--}}
+{{--                    <option value="Rajasthan" selected>Rajasthan</option>--}}
+{{--                    @foreach ($states as $state)--}}
+{{--                        <option value="{{$state}}">{{$state}}</option>--}}
+{{--                    @endforeach--}}
+{{--                </select>--}}
+{{--            </div>--}}
 
             <div class="col-6 col-md-6 col-lg-3 mb-3">
                 <label for="stream_name" class="form-label">Select Stream</label>
@@ -118,12 +118,12 @@
             </div>
             <div class="col-6 col-md-6 col-lg-3 mb-3">
                 <label for="dob" class="form-label">Date Of Birth</label>
-                <input required class="form-control" type="text" id="dateInput" name="dob"
+                <input required class="form-control" type="text" name="dob"
                        value="{{ request()->input('dob') }}" placeholder="dd-mm-yyyy"/>
             </div>
             <div class="col-6 col-md-6 col-lg-3 mb-3">
                 <label for="admission_date" class="form-label">Admission Date</label>
-                <input required class="form-control" type="text" id="dateInput" name="admission_date"
+                <input required class="form-control" type="text" name="admission_date"
                        value="{{ request()->input('admission_date') }}" placeholder="dd-mm-yyyy"/>
             </div>
             <div class="col-6 col-md-6 col-lg-3 mb-3">
@@ -135,20 +135,20 @@
             <div class="col-6 col-md-6 col-lg-3 mb-3">
                 <label for="student_qualification" class="form-label">Last Qualification Mark Sheet</label>
                 <div class="d-flex align-items-center">
-                    <input required type="file" name="student_qualification" id="student_qualification"
+                    <input type="file" name="student_qualification" id="student_qualification"
                            class="form-control">
                 </div>
             </div>
             <div class="col-6 col-md-6 col-lg-3 mb-3">
                 <label for="student_id" class="form-label">Identity Card</label>
                 <div class="d-flex align-items-center">
-                    <input required type="file" name="student_id" id="logo" class="form-control">
+                    <input type="file" name="student_id" id="logo" class="form-control">
                 </div>
             </div>
             <div class="col-6 col-md-6 col-lg-3 mb-3">
                 <label for="student_signature" class="form-label">Signature</label>
                 <div class="d-flex align-items-center">
-                    <input required type="file" name="student_signature" id="student_signature" class="form-control">
+                    <input type="file" name="student_signature" id="student_signature" class="form-control">
                 </div>
             </div>
 

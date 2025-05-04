@@ -90,6 +90,7 @@ Route::group(['middleware' => 'logs'], function () {
             Route::post('/delete-student', [StudentController::class, 'deleteStudent'])->name('deleteStudent');
             Route::get('/update-student/{student_id}', [StudentController::class, 'updateStudentView'])->name('updateStudentView');
             Route::post('/update-student', [StudentController::class, 'updateStudent'])->name('updateStudent');
+            Route::get('/export-student' , [StudentController::class, 'exportStudent'])->name('exportStudent');
 
             /************************* Subject Routes *********************************/
             Route::get('/add-subject/{course_id}', [SubjectController::class, 'addSubjectView'])->name('addSubjectPage');

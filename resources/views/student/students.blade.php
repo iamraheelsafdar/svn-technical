@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('title', "Total ({$students['total']}) Students")
 @section('content')
-    <div class="table-responsive d-block">
-        <table class="table table-striped pagination-table d-block" style="width: 100px">
+    <div class="table-responsive">
+        <table class="table table-striped pagination-table">
             <thead>
             <tr>
                 <th>#</th>
@@ -99,6 +99,9 @@
                         <a href="{{route('studentsView')}}" class="btn btn-dark d-block ms-2" type="submit">Clear</a>
                         @if(auth()->user()->role == "Center")
                             <a href="{{ route('addStudentView') }}" class="btn btn-warning ms-2">Add Student</a>
+                        @endif
+                        @if(auth()->user()->role == "Admin")
+                            <a href="{{ route('exportStudent') }}" class="btn btn-primary ms-2">Export Student</a>
                         @endif
                     </th>
                 </tr>

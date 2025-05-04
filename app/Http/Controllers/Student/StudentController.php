@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Student;
 
+use App\Exports\StudentExport;
 use App\Http\Requests\Student\UpdateStudentRequest;
 use App\Http\Requests\Student\AddStudentRequest;
 use App\Http\Resources\Student\StudentsResource;
@@ -30,6 +31,7 @@ use App\Models\Students;
 use App\Models\Prefix;
 use App\Models\Course;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudentController extends Controller
 {
@@ -270,5 +272,11 @@ class StudentController extends Controller
         }
         Students::find($request->student_id)->delete();
         return redirect()->back()->with('success', 'Student Deleted Successfully');
+    }
+
+    public function exportStudent(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+        $students = Students::with('center', 'course', 'stream', 'reference')->get();
+        return Excel::download(new StudentExport($students), 'Student.xlsx');
     }
 }
