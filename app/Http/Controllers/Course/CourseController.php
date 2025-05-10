@@ -63,7 +63,7 @@ class CourseController extends Controller
     {
         $streams = SvnStream::where('status', 1)
             ->with(['enrollments' => function ($query) {
-                $query->where('status', 1)->select('id', 'name', 'stream_id'); // Fetch specific columns
+                $query->where('status', 1)->select('id', 'name', 'stream_id','prefix_id'); // Fetch specific columns
             }])
             ->get()
             ->map(function ($stream) {
@@ -73,7 +73,7 @@ class CourseController extends Controller
                     'enrollments' => $stream->enrollments->map(function ($enrollment) {
                         return [
                             'enrollment_id' => $enrollment->id,
-                            'enrollment_name' => $enrollment->name,
+                            'enrollment_name' => $enrollment->prefix->prefix,
                         ];
                     })->toArray(),
                 ];
@@ -125,7 +125,7 @@ class CourseController extends Controller
         }
         $streams = SvnStream::where('status', 1)
             ->with(['enrollments' => function ($query) {
-                $query->where('status', 1)->select('id', 'name', 'stream_id'); // Fetch specific columns
+                $query->where('status', 1)->select('id', 'name', 'stream_id', 'prefix_id'); // Fetch specific columns
             }])
             ->get()
             ->map(function ($stream) {
@@ -135,7 +135,7 @@ class CourseController extends Controller
                     'enrollments' => $stream->enrollments->map(function ($enrollment) {
                         return [
                             'enrollment_id' => $enrollment->id,
-                            'enrollment_name' => $enrollment->name,
+                            'enrollment_name' => $enrollment->prefix->prefix
                         ];
                     })->toArray(),
                 ];

@@ -98,9 +98,11 @@
                                         </div>
                                     @endforeach
                                 </div>
-                                <button type="button" class="btn btn-success add-subject-btn mt-3"
-                                        data-duration="{{$duration}}">Add Subject
-                                </button>
+                                @if(!$add_subject)
+                                    <button type="button" class="btn btn-success add-subject-btn mt-3"
+                                            data-duration="{{$duration}}">Add Subject
+                                    </button>
+                                @endif
                             </div>
                         </div>
                     </div>

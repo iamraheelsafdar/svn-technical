@@ -63,7 +63,7 @@
             </div>
             <div
                 class="{{(auth()->user()->role == 'Center' || $student->course->duration == '1') ? 'col-6 col-md-6 col-lg-6 mb-3' : 'col-6 col-md-3 col-lg-3 mb-3'}}">
-                <label for="course" class="form-label">Enrollment</label>
+                <label for="course" class="form-label">Course</label>
                 <div id="course-container">
                     <input list="courses" id="course-input" name="course" disabled
                            value="{{$student->course->name}}, {{$student->course->duration}} {{ucfirst($student->course->type)}}"

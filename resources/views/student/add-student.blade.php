@@ -55,7 +55,7 @@
             </div>
 
             <div class="col-6 col-md-6 col-lg-3 mb-3">
-                <label for="course" class="form-label">Enrollment</label>
+                <label for="course" class="form-label">Course</label>
                 <div id="course-container">
                     <input list="courses" id="course-input" name="course" class="form-control" placeholder="Search Course" >
                     <datalist id="courses"></datalist>

@@ -101,7 +101,7 @@
         <main class="content">
             <nav class="navbar navbar-expand-md navbar-light bg-light top-bar" aria-label="Main navigation">
                 <div class="container-fluid">
-                    <div class="d-flex d-md-none d-block">
+                    <div class="d-flex d-lg-none d-block">
                         <button class="btn px-1 py-0 open-btn me-2 text-white open-menu" aria-label="Open sidebar">
                             <i class="bi bi-list" style="font-size: 28px !important;"></i>
                         </button>

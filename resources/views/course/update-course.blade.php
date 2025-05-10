@@ -62,7 +62,7 @@
                         @php
                             $name = $course->stream->enrollments->where('stream_id', $course->stream_id)->first()
                         @endphp
-                        <option value="{{$name->id}}" >{{$name->name}}</option>
+                        <option value="{{$name->id}}" >{{$name->prefix->prefix}}</option>
                     </select>
                 </div>
             </div>

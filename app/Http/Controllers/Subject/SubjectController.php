@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Subject;
 
 use App\Http\Requests\Subject\UpdateSubjectRequest;
 use App\Http\Requests\Subject\AddSubjectRequest;
+use App\Models\Students;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
@@ -73,7 +74,8 @@ class SubjectController extends Controller
         if (!$course) {
             return redirect()->back()->with('validation_errors', ['Subject not found.']);
         }
-        return view('subject.update-subject', ['course' => $course]);
+        $addSubject = Students::where('course_id', $courseId)->exists();
+        return view('subject.update-subject', ['course' => $course, 'add_subject' => $addSubject]);
     }
 
     /**
