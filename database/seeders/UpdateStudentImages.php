@@ -28,38 +28,19 @@ class UpdateStudentImages extends Seeder
             $filePath = $folderPath . '/' . $file;
             $fileExtension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 
-            // Check if the file exists in the database in any column
-            $student = DB::table('old_students')
-                ->where('photo', $file)
-                ->orWhere('aadhar_card', $file)
-                ->orWhere('qualification', $file)
-                ->orWhere('signature', $file)
-                ->first();
-
-            if (!$student || !file_exists($filePath)) {
+            // Skip if file doesn't exist
+            if (!file_exists($filePath)) {
+                echo "{$key} - File doesn't exist at path: $filePath\n";
                 continue;
             }
 
-            // Determine which field this file belongs to
-            $columnToUpdate = null;
-            if ($student->photo === $file) {
-                $columnToUpdate = 'photo';
-            } elseif ($student->aadhar_card === $file) {
-                $columnToUpdate = 'identity_card';
-            } elseif ($student->qualification === $file) {
-                $columnToUpdate = 'qualification';
-            } elseif ($student->signature === $file) {
-                $columnToUpdate = 'signature';
-            }
-
-            if (!$columnToUpdate) {
-                continue; // Skip if file is not linked to any column
-            }
-
-            // Generate a hashed filename to store
-            $storedPath = 'students/' . md5(pathinfo($file, PATHINFO_FILENAME)) . '.jpg';
+            // Process the file once
+            $storedPath = null;
 
             if (in_array($fileExtension, ['jpg', 'jpeg', 'png'])) {
+                // Generate a hashed filename to store
+                $storedPath = 'students/' . md5(pathinfo($file, PATHINFO_FILENAME) . time()) . '.jpg';
+
                 // Resize the image
                 $resizedImage = Image::make($filePath)
                     ->resize(800, 600, function ($constraint) {
@@ -72,27 +53,78 @@ class UpdateStudentImages extends Seeder
                 Storage::disk('public')->put($storedPath, $resizedImage);
                 echo "{$key} - Stored resized image: $file\n";
             } elseif ($fileExtension === 'pdf') {
-                $this->command->info($student->name);
-                // Convert PDF to Image
-//                try {
-//                    $pdf = new Pdf($filePath);
-//                    $pdf->setOutputFormat('jpg')->saveImage(public_path($storedPath));
-//                    echo "{$key} - Converted PDF to Image: $file\n";
-//                } catch (\Exception $e) {
-//                    echo "Error converting PDF: {$e->getMessage()}\n";
-//                    continue;
-//                }
+                // Generate a hashed filename to store
+                $storedPath = 'students/' . md5(pathinfo($file, PATHINFO_FILENAME) . time()) . '.jpg';
+
+                // PDF handling code commented out
+                // $this->command->info("Processing PDF: $file");
+                // try {
+                //     $pdf = new Pdf($filePath);
+                //     $pdf->setOutputFormat('jpg')->saveImage(public_path($storedPath));
+                //     echo "{$key} - Converted PDF to Image: $file\n";
+                // } catch (\Exception $e) {
+                //     echo "Error converting PDF: {$e->getMessage()}\n";
+                //     continue;
+                // }
             } else {
+                echo "{$key} - Skipped unsupported file type: $fileExtension\n";
                 continue; // Skip unsupported file types
             }
 
-            // Update the correct column in the database
-            Students::where('name', $student->name)
+            if (!$storedPath) {
+                continue; // Skip if file processing failed
+            }
+
+            // Now find ALL students that use this file and update each one
+            // For photo column
+            $this->updateStudentsWithFile($file, 'photo', 'photo', $storedPath, $key);
+
+            // For aadhar_card column
+            $this->updateStudentsWithFile($file, 'aadhar_card', 'identity_card', $storedPath, $key);
+
+            // For qualification column
+            $this->updateStudentsWithFile($file, 'qualification', 'qualification', $storedPath, $key);
+
+            // For signature column
+            $this->updateStudentsWithFile($file, 'signature', 'signature', $storedPath, $key);
+        }
+    }
+
+    /**
+     * Update all students that use a specific file in a specific column
+     *
+     * @param string $file Original filename
+     * @param string $oldColumn Column name in old_students table
+     * @param string $newColumn Column name in students table
+     * @param string $storedPath New path to the stored file
+     * @param int $key Processing index for logging
+     * @return void
+     */
+    private function updateStudentsWithFile(string $file, string $oldColumn, string $newColumn, string $storedPath, int $key): void
+    {
+        // Get all students who have this file in the specified column
+        $matchingStudents = DB::table('old_students')
+            ->where($oldColumn, $file)
+            ->get();
+
+        if ($matchingStudents->isEmpty()) {
+            return;
+        }
+
+        $updateCount = 0;
+
+        // Update each student individually
+        foreach ($matchingStudents as $student) {
+            $updated = Students::where('name', $student->name)
                 ->where('father_name', $student->father_name)
                 ->where('mother_name', $student->mother_name)
-                ->update([$columnToUpdate => $storedPath]);
+                ->update([$newColumn => $storedPath]);
 
-            echo "{$key} - Updated database for: $file ($columnToUpdate)\n";
+            $updateCount += $updated;
+        }
+
+        if ($updateCount > 0) {
+            echo "{$key} - Updated {$updateCount} students with file: $file ($oldColumn -> $newColumn)\n";
         }
     }
 }

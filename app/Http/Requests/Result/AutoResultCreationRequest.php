@@ -24,7 +24,7 @@ class AutoResultCreationRequest extends BaseRequestForWeb
     {
         return [
             'student_id' => 'required|exists:students,id',
-            'result_percentage' => 'required|numeric|min:40|max:100'
+            'result_percentage' => 'required|numeric|min:60|max:100'
         ];
     }
 }

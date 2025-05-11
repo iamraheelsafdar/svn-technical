@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Result;
 
 use App\Http\Requests\Result\AutoResultCreationRequest;
 use App\Http\Requests\Result\CreateResultRequest;
+use App\Models\Prefix;
+use App\Models\StudentRollNumber;
+use App\Models\Subject;
+use App\Models\SvnStream;
 use Illuminate\Console\View\Components\Factory;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
@@ -13,6 +17,7 @@ use App\Models\StudentResult;
 use App\Models\Students;
 use App\Models\Course;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class ResultController extends Controller
 {
@@ -138,29 +143,45 @@ class ResultController extends Controller
 
         $resultPercentage = max(60, min(100, $request->result_percentage)); // Ensure within 60-100 range
 
-        // Calculate total max marks
-        $totalMaxTheoryMarks = $student->course->subjects->sum('max_marks');
-        $totalMaxPracticalMarks = $student->course->subjects->sum('practical_max_marks');
+        // Get all subjects for this course
+        $subjects = $student->course->subjects;
 
-        // Calculate total obtained marks for both theory and practical
-        $totalObtainedTheoryMarks = ceil(($totalMaxTheoryMarks * $resultPercentage) / 100);
-        $totalObtainedPracticalMarks = ceil(($totalMaxPracticalMarks * $resultPercentage) / 100);
+        // Create an empty array to store results
+        $results = [];
 
-        // Distribute the obtained marks proportionally among subjects
-        foreach ($student->course->subjects as $subject) {
-            // Calculate proportionate marks for each subject
-            $theoryObtained = ceil(($subject->max_marks / $totalMaxTheoryMarks) * $totalObtainedTheoryMarks);
-            $practicalObtained = ($subject->practical_max_marks > 0)
-                ? ceil(($subject->practical_max_marks / $totalMaxPracticalMarks) * $totalObtainedPracticalMarks)
-                : null;
+        // Process each subject individually with realistic variation
+        foreach ($subjects as $subject) {
+            // Calculate base target percentage with some randomization
+            // This creates variation between subjects while maintaining the overall target percentage
+            $subjectPercentage = $this->getRandomizedPercentage($resultPercentage);
 
-            // Ensure obtained marks are not lower than min required
-            $theoryObtained = max($theoryObtained, $subject->min_marks + random_int(0, 2));
-            if ($practicalObtained !== null) {
-                $practicalObtained = max($practicalObtained, $subject->practical_min_marks + random_int(0, 2));
+            // Calculate theory marks with the randomized percentage
+            $theoreticalMarks = ceil(($subject->max_marks * $subjectPercentage) / 100);
+
+            // Ensure theory marks are at least the minimum required (with some buffer above minimum)
+            $theoryMinimum = $subject->min_marks;
+            $theoryObtained = max($theoreticalMarks, $theoryMinimum + random_int(1, 5));
+
+            // Ensure we don't exceed maximum marks
+            $theoryObtained = min($theoryObtained, $subject->max_marks);
+
+            // Calculate practical marks if applicable
+            $practicalObtained = null;
+            if ($subject->practical_max_marks > 0) {
+                // Use a slightly different percentage for practical to add more variation
+                $practicalPercentage = $this->getRandomizedPercentage($resultPercentage);
+
+                $practicalMarks = ceil(($subject->practical_max_marks * $practicalPercentage) / 100);
+
+                // Ensure practical marks are at least the minimum required
+                $practicalMinimum = $subject->practical_min_marks;
+                $practicalObtained = max($practicalMarks, $practicalMinimum + random_int(1, 3));
+
+                // Ensure we don't exceed maximum practical marks
+                $practicalObtained = min($practicalObtained, $subject->practical_max_marks);
             }
 
-            // Insert result into student_result table
+            // Store the calculated marks
             StudentResult::create([
                 'student_id' => $student->id,
                 'subject_id' => $subject->id,
@@ -171,5 +192,159 @@ class ResultController extends Controller
 
         session()->flash('success', 'Result created successfully for ' . $student->name . '.');
         return redirect()->route('studentsView');
+    }
+
+    /**
+     * Generate a randomized percentage around the target percentage
+     * This creates realistic variation between subjects
+     */
+    private function getRandomizedPercentage(float $targetPercentage): float
+    {
+        // Determine variation range based on target percentage
+        // Higher target percentages have less variation, lower have more
+        $variationRange = match(true) {
+            $targetPercentage >= 90 => 8,  // 90-100% scores vary by ±8%
+            $targetPercentage >= 80 => 10, // 80-89% scores vary by ±10%
+            $targetPercentage >= 70 => 12, // 70-79% scores vary by ±12%
+            default => 15,                 // Below 70% can vary by ±15%
+        };
+
+        // Generate random variation within the range
+        $variation = random_int(-$variationRange, $variationRange);
+
+        // Apply variation to target percentage
+        $adjustedPercentage = $targetPercentage + $variation;
+
+        // Ensure the result stays within reasonable bounds (50-100%)
+        return max(50, min(100, $adjustedPercentage));
+    }
+
+
+    public function getStudentResult(Request $request)
+    {
+        $parts = explode('/', $request['roll_number']);
+
+        $firstPart = $parts[0] . '/' . $parts[1] . '/';
+        $secondPart = $parts[2] . '/' . $parts[3] . '/' . $parts[4];
+
+        $formattedDate = Carbon::createFromFormat('d/m/Y', $request['dob'])->format('Y-m-d');
+        $studentRollNumber = StudentRollNumber::where('roll_number', $secondPart)->first();
+        $checkPrefixes = Prefix::where('prefix' , $firstPart)->first();
+
+        if ($studentRollNumber && $checkPrefixes) {
+            $student = Students::where([['dob', $formattedDate], ['id', $studentRollNumber->student_id], ['status', 1]])->first();
+            if (!$student) {
+                return response()->json(['error' => 'Result not found'], 404);
+            }
+            $courseSteam = SvnStream::whereIn('name', $request['steam_name'])->where('id', $student->course?->stream_id)->first();
+            $subjectIds = Subject::where('course_id' , $student->course->id)->where('duration_part',$studentRollNumber->duration)->pluck('id')->toArray();
+            if ($courseSteam) {
+                $studentResults = StudentResult::where('student_id', $student['id'])->whereIn('subject_id',$subjectIds)->get();
+
+                if (count($studentResults) > 0) {
+                    $studentDetail = [];
+                    foreach ($studentResults as $studentResult) {
+                        $studentDetail[] = [
+                            'subject_name' => $studentResult->subject->name,
+                            'total_marks' => $studentResult->subject->max_marks,
+                            'theory_marks' => $studentResult->subject_obtained_marks,
+                            'practical_marks' => $studentResult->practical_obtained_marks,
+                            'obtained_marks' => $studentResult->subject_obtained_marks + $studentResult->practical_obtained_marks,
+                        ];
+                    }
+
+                    $studentData = [
+                        'student_name' => $student['name'],
+                        'father_name' => $student['father_name'],
+                        'mother_name' => $student['mother_name'],
+                        'dob' => $student['dob'],
+                        'enrolment_no_start' => $student->course->prefix->prefix . $student->enrollment,
+                        'roll_number' => $request['roll_number'],
+                        'session' => $studentRollNumber->year,
+                        'mobile_number' => '-',
+                        'course_name' => $student->course->name . ($student['laterl_entry'] ? ' (LE) ' : ''),
+                        'institute' => self::getInstituteName($student->course->stream->name),
+                        'student_image' => env('LIVE_URL').'storage/' . $student->photo,
+                        'type' => strtoupper($student->course->type) . '-' . $studentRollNumber->duration,
+                    ];
+
+
+//                    if ($lastYearResult->id == $studentResults[0]['id']) {
+
+                    $summery = [];
+                    $allSubjectIds = []; // <-- collect relevant subject IDs only
+
+// Loop through all periods (years/semesters) up to the total
+                    for ($i = 1; $i <= $studentRollNumber->duration; $i++) {
+                        $durationPart = $student->lateral_duration + $i;
+
+                        $subjectIdValid = Subject::where('course_id', $student->course->id)
+                            ->where('duration_part', $durationPart)
+                            ->pluck('id')
+                            ->toArray();
+
+                        // Merge subject IDs into master list
+                        $allSubjectIds = array_merge($allSubjectIds, $subjectIdValid);
+
+                        $periodResults = StudentResult::where('student_id', $student['id'])
+                            ->whereIn('subject_id', $subjectIdValid)
+                            ->get();
+
+                        if ($periodResults->count() > 0) {
+                            $periodObtained = $periodResults->sum(function ($result) {
+                                return $result->subject_obtained_marks + ($result->practical_obtained_marks ?: 0);
+                            });
+
+                            $periodMax = $periodResults->sum(function ($result) {
+                                return $result->subject->max_marks;
+                            });
+
+                            if ($periodMax > 0) {
+                                $summery[] = [
+                                    'year' => strtoupper($student->course->type) . '-' . $durationPart,
+                                    'marks' => $periodObtained . '/' . $periodMax
+                                ];
+                            }
+                        }
+                    }
+
+                    // Filter all results by relevant subject IDs only
+                    $filteredResults = StudentResult::where('student_id', $student['id'])
+                        ->whereIn('subject_id', $allSubjectIds)
+                        ->get();
+
+                    $totalObtained = $filteredResults->sum(function ($result) {
+                        return $result->subject_obtained_marks + ($result->practical_obtained_marks ?: 0);
+                    });
+
+                    $totalMax = $filteredResults->sum(function ($result) {
+                        return $result->subject->max_marks;
+                    });
+
+                    $summery[] = [
+                        'total_marks' => $totalObtained . '/' . $totalMax,
+                    ];
+
+                    $response['summery'] = $summery;
+//                    }
+                    $response['student_detail'] = $studentData;
+                    $response['student_result'] = $studentDetail;
+
+                    return response()->json($response, 200);
+                }
+                return response()->json(['error' => 'Result not found'], 404);
+            }
+            return response()->json(['error' => 'Result not found'], 404);
+
+        }
+        return response()->json(['error' => 'Result not found'], 404);
+    }
+    private function getInstituteName(string $streamName): string
+    {
+        return match ($streamName) {
+            'ITI' => 'SWAMI VIVEKANAND INDUSTRIAL & VOCATIONAL TRAINING INSTITUTE , SOHNA',
+            'TECHNOLOGY & MGMT' => 'SWAMI VIVEKANAND INSTITUTE OF TECHNOLOGY & MANAGEMENT , SOHNA',
+            default => 'SWAMI VIVEKANAND INSTITUTE OF PARAMEDICAL SCIENCE , SOHNA',
+        };
     }
 }

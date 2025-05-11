@@ -223,7 +223,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label">Enter Percentage (40-100)</label>
+                            <label class="form-label">Enter Percentage (60-100)</label>
                             <input type="number" name="result_percentage" class="form-control" min="40" max="100" placeholder="Enter Percentage">
                         </div>
                     </div>
