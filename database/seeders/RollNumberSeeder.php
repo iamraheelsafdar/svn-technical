@@ -24,9 +24,10 @@ class RollNumberSeeder extends Seeder
                 ->get();
 
             // Find the student in the new system
-            $savedStudent = Students::where('father_name', $student->father_name)
-                ->where('mother_name', $student->mother_name)
-                ->where('name', $student->name)
+            $savedStudent = Students::where('mother_name', 'like', "%{$student->mother_name}%")
+                ->where('father_name', 'like', "%{$student->father_name}%")
+                ->where('name', 'like', "%{$student->name}%")
+                ->where('email', 'like', "%{$student->email}%")
                 ->where('lateral_duration', $student->lateral_duration)
                 ->where('lateral_entry', $student->laterl_entry == 'No' ? 0 : 1)
                 ->whereHas('course', function ($q) use ($student) {

@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->string('name')->nullable();
             $table->string('father_name')->nullable();
             $table->string('mother_name')->nullable();
+            $table->string('email')->nullable();
             $table->date('dob')->nullable();
             $table->date('registration_date')->nullable();
             $table->date('admission_date')->nullable();

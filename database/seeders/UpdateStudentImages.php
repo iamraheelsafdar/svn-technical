@@ -115,9 +115,10 @@ class UpdateStudentImages extends Seeder
 
         // Update each student individually
         foreach ($matchingStudents as $student) {
-            $updated = Students::where('name', $student->name)
-                ->where('father_name', $student->father_name)
-                ->where('mother_name', $student->mother_name)
+            $updated = Students::where('mother_name', 'like', "%{$student->mother_name}%")
+                ->where('father_name', 'like', "%{$student->father_name}%")
+                ->where('name', 'like', "%{$student->name}%")
+                ->where('email', 'like', "%{$student->email}%")
                 ->update([$newColumn => $storedPath]);
 
             $updateCount += $updated;

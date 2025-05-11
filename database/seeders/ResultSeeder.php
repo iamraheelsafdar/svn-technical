@@ -45,6 +45,7 @@ class ResultSeeder extends Seeder
 
             $oldStudent = DB::table('old_students')
                 ->where('name', 'like', "%{$allNewStudent->name}%")
+                ->where('email', 'like', "%{$allNewStudent->email}%")
                 ->where('father_name', 'like', "%{$allNewStudent->father_name}%")
                 ->where('mother_name', 'like', "%{$allNewStudent->mother_name}%")
                 ->where('mode', 'like', "%{$allNewStudent->mode}%")

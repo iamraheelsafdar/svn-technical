@@ -79,6 +79,7 @@ class AddStudentSeeder extends Seeder
                 'name' => ucfirst($student->name),
                 'father_name' => ucfirst($student->father_name),
                 'mother_name' => ucfirst($student->mother_name),
+                'email' => $student->email,
                 'dob' => $student->dob ? Carbon::parse($student->dob)->format('Y-m-d') : null,
                 'registration_date' => $student->reg_date ? Carbon::parse($student->reg_date)->format('Y-m-d') : null,
                 'admission_date' => $student->admission_date ? Carbon::parse($student->admission_date)->format('Y-m-d') : null,
