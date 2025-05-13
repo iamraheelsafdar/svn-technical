@@ -75,7 +75,7 @@
 
 
 
-<h4 style="position: absolute;top: 3280px;transform: translateX(-50%);color: #6e6c6c;text-transform: uppercase;font-size: 44px;margin-left: 400px; font-weight: bold;">{{$data['footer_date']}}</h4>
+<h4 style="position: absolute;top: 3280px;transform: translateX(-50%);color: #6e6c6c;text-transform: uppercase;font-size: 44px;margin-left: 550px; font-weight: bold;">{{$data['footer_date']}}</h4>
 
 </body>
 </html>
