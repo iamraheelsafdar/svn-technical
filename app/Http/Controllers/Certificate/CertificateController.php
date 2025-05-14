@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Certificate;
 
 use App\Http\Controllers\Result\ResultController;
+use App\Models\StudentRollNumber;
+use App\Models\Subject;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
@@ -287,7 +289,72 @@ class CertificateController extends Controller
             'student_image' => $student['photo'] ? asset($baseUrl . 'storage/' . $student['photo']) : asset($baseUrl . 'assets/img/profileImage.png'),
             'qr_code' => Carbon::parse($student->admission_date)->year > 2013 ? $base64Qr : null,
         ];
+        if ($duration == $student->course->duration){
+            $payload['summary'] = [
+                 self::summaryForConsolidate($student, $student->rollNumbers()->latest('id')->first()?->roll_number)
+            ];
+        }
         return array_merge($resultData, $payload);
+    }
+
+
+    public function summaryForConsolidate($student,$rollNumber)
+    {
+        $studentRollNumber = StudentRollNumber::where('roll_number', $rollNumber)->first();
+        $summery = [];
+        $allSubjectIds = []; // <-- collect relevant subject IDs only
+
+        for ($i = 1; $i <= $studentRollNumber->duration; $i++) {
+            $durationPart = $student->lateral_duration + $i;
+
+            $subjectIdValid = Subject::where('course_id', $student->course->id)
+                ->where('duration_part', $durationPart)
+                ->pluck('id')
+                ->toArray();
+
+            // Merge subject IDs into master list
+            $allSubjectIds = array_merge($allSubjectIds, $subjectIdValid);
+
+            $periodResults = StudentResult::where('student_id', $student['id'])
+                ->whereIn('subject_id', $subjectIdValid)
+                ->get();
+
+            if ($periodResults->count() > 0) {
+                $periodObtained = $periodResults->sum(function ($result) {
+                    return $result->subject_obtained_marks + ($result->practical_obtained_marks ?: 0);
+                });
+
+                $periodMax = $periodResults->sum(function ($result) {
+                    return $result->subject->max_marks + ($result->subject->practical_max_marks ?: 0);
+                });
+
+                if ($periodMax > 0) {
+                    $summery[] = [
+                        'year' => strtoupper($student->course->type) . '-' . $durationPart,
+                        'marks' => $periodObtained . '/' . $periodMax
+                    ];
+                }
+            }
+        }
+
+        // Filter all results by relevant subject IDs only
+        $filteredResults = StudentResult::where('student_id', $student['id'])
+            ->whereIn('subject_id', $allSubjectIds)
+            ->get();
+
+        $totalObtained = $filteredResults->sum(function ($result) {
+            return $result->subject_obtained_marks + ($result->practical_obtained_marks ?: 0);
+        });
+
+        $totalMax = $filteredResults->sum(function ($result) {
+            return $result->subject->max_marks + ($result->subject->practical_max_marks ?: 0);
+        });
+
+        $summery[] = [
+            'total_marks' => $totalObtained . '/' . $totalMax,
+        ];
+
+        return $summery;
     }
 
     /**

@@ -144,7 +144,11 @@ class ResultController extends Controller
         $resultPercentage = max(60, min(100, $request->result_percentage)); // Ensure within 60-100 range
 
         // Get all subjects for this course
-        $subjects = $student->course->subjects;
+        if ($student->lateral_entry){
+            $subjects = $student->course->subjects->where('duration_part', '>' ,$student->lateral_duration);
+        } else {
+            $subjects = $student->course->subjects;
+        }
 
         // Create an empty array to store results
         $results = [];
@@ -240,13 +244,12 @@ class ResultController extends Controller
             $subjectIds = Subject::where('course_id' , $student->course->id)->where('duration_part',$studentRollNumber->duration)->pluck('id')->toArray();
             if ($courseSteam) {
                 $studentResults = StudentResult::where('student_id', $student['id'])->whereIn('subject_id',$subjectIds)->get();
-
                 if (count($studentResults) > 0) {
                     $studentDetail = [];
                     foreach ($studentResults as $studentResult) {
                         $studentDetail[] = [
                             'subject_name' => $studentResult->subject->name,
-                            'total_marks' => $studentResult->subject->max_marks,
+                            'total_marks' => $studentResult->subject->max_marks + ($studentResult->subject->practical_max_marks ?? 0) ,
                             'theory_marks' => $studentResult->subject_obtained_marks,
                             'practical_marks' => $studentResult->practical_obtained_marks,
                             'obtained_marks' => $studentResult->subject_obtained_marks + $studentResult->practical_obtained_marks,
@@ -257,7 +260,7 @@ class ResultController extends Controller
                         'student_name' => $student['name'],
                         'father_name' => $student['father_name'],
                         'mother_name' => $student['mother_name'],
-                        'dob' => $student['dob'],
+                        'dob' => Carbon::parse($student['dob'])->format('d-m-Y'),
                         'enrolment_no_start' => $student->course->prefix->prefix . $student->enrollment,
                         'roll_number' => $request['roll_number'],
                         'session' => $studentRollNumber->year,
@@ -268,13 +271,11 @@ class ResultController extends Controller
                         'type' => strtoupper($student->course->type) . '-' . $studentRollNumber->duration,
                     ];
 
-
-//                    if ($lastYearResult->id == $studentResults[0]['id']) {
+                    if ($studentRollNumber->duration == $student->course->duration) {
 
                     $summery = [];
                     $allSubjectIds = []; // <-- collect relevant subject IDs only
 
-// Loop through all periods (years/semesters) up to the total
                     for ($i = 1; $i <= $studentRollNumber->duration; $i++) {
                         $durationPart = $student->lateral_duration + $i;
 
@@ -296,7 +297,7 @@ class ResultController extends Controller
                             });
 
                             $periodMax = $periodResults->sum(function ($result) {
-                                return $result->subject->max_marks;
+                                return $result->subject->max_marks + ($result->subject->practical_max_marks ?: 0);
                             });
 
                             if ($periodMax > 0) {
@@ -318,7 +319,7 @@ class ResultController extends Controller
                     });
 
                     $totalMax = $filteredResults->sum(function ($result) {
-                        return $result->subject->max_marks;
+                        return $result->subject->max_marks + ($result->subject->practical_max_marks ?: 0);
                     });
 
                     $summery[] = [
@@ -326,7 +327,7 @@ class ResultController extends Controller
                     ];
 
                     $response['summery'] = $summery;
-//                    }
+                    }
                     $response['student_detail'] = $studentData;
                     $response['student_result'] = $studentDetail;
 
@@ -339,6 +340,7 @@ class ResultController extends Controller
         }
         return response()->json(['error' => 'Result not found'], 404);
     }
+
     private function getInstituteName(string $streamName): string
     {
         return match ($streamName) {

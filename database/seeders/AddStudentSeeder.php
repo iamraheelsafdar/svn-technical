@@ -22,8 +22,8 @@ class AddStudentSeeder extends Seeder
         foreach ($students as $key => $student) {
             $course = Course::where('name', $student->course_name)
                 ->where('type', 'LIKE', "%{$student->course_type}%")
+                ->where('stream_id', $student->course_stream)
                 ->first();
-
             if (!$course) {
                 continue; // Skip if course not found
             }

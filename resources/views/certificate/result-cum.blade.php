@@ -20,25 +20,25 @@
 
 <body style="background: url('{{ $data['certificate_image'] }}');height: 100%; width: 100%; background-size: contain;">
 
-<h2 style="position: relative; top:70px; margin-left: 250px; text-align: left; display: block; font-weight: bold;color: #6e6c6c;font-size: 50px">{{$data['result_serail_number']}}</h2>
+<h2 style="position: relative; top:70px; margin-left: 250px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 50px">{{$data['result_serail_number']}}</h2>
 
-<h2 style="position: relative; top:880px; margin-left: 20px; text-align: center; display: block; font-weight: bold;color: #6e6c6c;font-size: 44px; margin-bottom: -30px">{{ $data['result_session'] }}</h2>
+<h2 style="position: relative; top:880px; margin-left: 20px; text-align: center; display: block; font-weight: bold;color: #4d4d4d;font-size: 44px; margin-bottom: -30px">{{ $data['result_session'] }}</h2>
 
-<h2 style="position: relative; top:995px; margin-left: 560px; text-align: left; display: block; font-weight: bold;color: #6e6c6c;font-size: 44px">{{ $student['name'] }}</h2>
+<h2 style="position: relative; top:995px; margin-left: 560px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 44px">{{ $student['name'] }}</h2>
 
-<h2 style="position: relative; top:995px; margin-left: 550px; text-align: left; display: block; font-weight: bold;color: #6e6c6c;font-size: 44px">{{ $student['father_name'] }}</h2>
+<h2 style="position: relative; top:995px; margin-left: 550px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 44px">{{ $student['father_name'] }}</h2>
 
-<h2 style="position: relative; top:990px; margin-left: 550px; text-align: left; display: block; font-weight: bold;color: #6e6c6c;font-size: 44px">{{ $student['mother_name'] }}</h2>
+<h2 style="position: relative; top:990px; margin-left: 550px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 44px">{{ $student['mother_name'] }}</h2>
 
-<h2 style="position: relative; top:990px; margin-left: 420px; text-align: left; display: block; font-weight: bold;color: #6e6c6c;font-size: 44px">{{ $data['course_name']  }}</h2>
+<h2 style="position: relative; top:990px; margin-left: 420px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 44px">{{ $data['course_name']  }}</h2>
 
-<h2 style="position: relative; top:985px; margin-left: 500px; text-align: left; display: block; font-weight: bold;color: #6e6c6c;font-size: 44px">{{$data['institute_name']}}</h2>
+<h2 style="position: relative; top:985px; margin-left: 500px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 44px">{{$data['institute_name']}}</h2>
 
-<h2 style="position: relative; top:540px; margin-right: 105px; text-align: right; display: block; font-weight: bold;color: #6e6c6c;font-size: 44px">{{$data['para_reg_no']}}</h2>
+<h2 style="position: relative; top:540px; margin-right: 90px; text-align: right; display: block; font-weight: bold;color: #4d4d4d;font-size: 44px">{{$data['para_reg_no']}}</h2>
 
-<h2 style="position: relative; top:540px; margin-right: 300px; text-align: right; display: block; font-weight: bold;color: #6e6c6c;font-size: 44px">{{$data['result_cum_roll_number']}}</h2>
+<h2 style="position: relative; top:540px; margin-right: 300px; text-align: right; display: block; font-weight: bold;color: #4d4d4d;font-size: 44px">{{$data['result_cum_roll_number']}}</h2>
 
-<h2 style="position: relative; top:535px; margin-right: 550px; text-align: right; font-weight: bold;color: #6e6c6c;font-size: 44px">{{ $data['date_of_birth'] }}</h2>
+<h2 style="position: relative; top:535px; margin-right: 550px; text-align: right; font-weight: bold;color: #4d4d4d;font-size: 44px">{{ $data['date_of_birth'] }}</h2>
 @php
     $isSingleRecord = count($data['results']) === 1;
     $isLargeDataset = count($data['results']) > 6;
@@ -52,11 +52,11 @@
     $tableTop = $data['lateral'] ? '650px' : '700px';
 @endphp
 <div style="position: relative; top:{{$tableTop}}; margin-left: 125px; margin-right: 125px;">
-    @if($data['lateral'])
-        <h4 style="margin-bottom: 8px; text-align: center; font-weight: bold; color: #6e6c6c; font-size: {{ $fontSize }};">
-            Lateral Entry
-        </h4>
-    @endif
+{{--    @if($data['lateral'])--}}
+{{--        <h4 style="margin-bottom: 8px; text-align: center; font-weight: bold; color: #4d4d4d; font-size: {{ $fontSize }};">--}}
+{{--            Lateral Entry--}}
+{{--        </h4>--}}
+{{--    @endif--}}
     <table style="width: 100%; border-collapse: collapse;">
         @foreach($data['results'] as $key => $singleResults)
             @if($key % ($isLargeDataset ? 3 : 2) == 0) <!-- Open a new row for every 3 tables if large dataset, otherwise 2 -->
@@ -66,19 +66,19 @@
                 <!-- Table Cell for Each Result -->
                 <td style="width: {{ $tableWidth }}; vertical-align: top; padding: 10px;">
 
-                    <h4 style="position: absolute;top: -230px;right: 425px;/*transform: translateX(-50%);*/font-weight: bold;color: #6e6c6c;text-transform: uppercase;font-size: 44px;margin-left: 170px;">
+                    <h4 style="position: absolute;top: -230px;right: 425px;/*transform: translateX(-50%);*/font-weight: bold;color: #4d4d4d;text-transform: uppercase;font-size: 44px;margin-left: 170px;">
                         {{$singleResults['duration']}}
                     </h4>
 
-                    <table style="width: 100%; border: 2px solid #6e6c6c; border-collapse: collapse; margin-bottom: -10px; margin-top: 20px">
+                    <table style="width: 100%; border: 2px solid #4d4d4d; border-collapse: collapse; margin-bottom: -10px; margin-top: 20px">
                         <thead>
                         <tr>
-                            <th style="border: 2px solid #6e6c6c; padding: 10px;white-space: nowrap; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">S. No.</th>
-                            <th style="border: 2px solid #6e6c6c; padding: 10px; white-space: nowrap;font-size: {{ $fontSize }}; width: {{$columnWidths['subject']}}">Subjects</th>
-                            <th style="border: 2px solid #6e6c6c; padding: 10px;white-space: nowrap; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">Max. Marks</th>
-                            <th style="border: 2px solid #6e6c6c; padding: 10px; white-space: nowrap;font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">Theory</th>
-                            <th style="border: 2px solid #6e6c6c; padding: 10px;white-space: nowrap; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">Practical</th>
-                            <th style="border: 2px solid #6e6c6c; padding: 10px; white-space: nowrap; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">Marks. Obt</th>
+                            <th style="border: 2px solid #4d4d4d; padding: 10px;white-space: nowrap; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">S. No.</th>
+                            <th style="border: 2px solid #4d4d4d; padding: 10px; white-space: nowrap;font-size: {{ $fontSize }}; width: {{$columnWidths['subject']}}">Subjects</th>
+                            <th style="border: 2px solid #4d4d4d; padding: 10px;white-space: nowrap; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">Max. Marks</th>
+                            <th style="border: 2px solid #4d4d4d; padding: 10px; white-space: nowrap;font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">Theory</th>
+                            <th style="border: 2px solid #4d4d4d; padding: 10px;white-space: nowrap; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">Practical</th>
+                            <th style="border: 2px solid #4d4d4d; padding: 10px; white-space: nowrap; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">Marks. Obt</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -93,21 +93,21 @@
                                 $totalObtainedMarks += $singleResult['total_marks'];
                             @endphp
                             <tr>
-                                <td style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$index+1}}</td>
-                                <td style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['subject']}}">{{$singleResult['subject_name']}}</td>
-                                <td style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$singleResult['subject_max_marks']}}</td>
-                                <td style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$singleResult['subject_obtained_marks']}}</td>
-                                <td style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$singleResult['practical_obtained_marks']}}</td>
-                                <td style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$singleResult['total_marks']}}</td>
+                                <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$index+1}}</td>
+                                <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['subject']}}">{{$singleResult['subject_name']}}</td>
+                                <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$singleResult['subject_max_marks']}}</td>
+                                <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$singleResult['subject_obtained_marks']}}</td>
+                                <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$singleResult['practical_obtained_marks']}}</td>
+                                <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$singleResult['total_marks']}}</td>
                             </tr>
                         @endforeach
 
                         <!-- Total Row -->
                         <tr>
-                            <td colspan="2" style="border: 2px solid #6e6c6c; padding: 10px; font-weight: bold; text-align: right;">Total:</td>
-                            <td style="border: 2px solid #6e6c6c; padding: 10px; font-weight: bold;">{{ $totalMaxMarks }}</td>
-                            <td colspan="2" style="border: 2px solid #6e6c6c;"></td>
-                            <td style="border: 2px solid #6e6c6c; padding: 10px; font-weight: bold;">{{ $totalObtainedMarks }}</td>
+                            <td colspan="2" style="border: 2px solid #4d4d4d; padding: 10px; font-weight: bold; text-align: right;">Total:</td>
+                            <td style="border: 2px solid #4d4d4d; padding: 10px; font-weight: bold;">{{ $totalMaxMarks }}</td>
+                            <td colspan="2" style="border: 2px solid #4d4d4d;"></td>
+                            <td style="border: 2px solid #4d4d4d; padding: 10px; font-weight: bold;">{{ $totalObtainedMarks }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -125,6 +125,53 @@
         @endif
     </table>
 </div>
+
+@if(isset($data['summary']))
+    @php
+        $summaryData = $data['summary'][0]; // Access the first (and only) array
+        $rows = [];
+        $total = '';
+
+        foreach ($summaryData as $entry) {
+            if (isset($entry['year']) && isset($entry['marks'])) {
+                $rows[] = [
+                    'duration' => $entry['year'],
+                    'marks' => $entry['marks'],
+                ];
+            } elseif (isset($entry['total_marks'])) {
+                $total = $entry['total_marks'];
+            }
+        }
+    @endphp
+
+    <div style="position:relative; margin-top:920px; text-align: left; margin-right: 18px">
+        <table style="border: 2px solid #4d4d4d; border-collapse: collapse; margin-left: auto; margin-right: 110px">
+            <tbody>
+            @foreach($rows as $row)
+                <tr>
+                    <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }};">
+                        {{ $row['duration'] }}
+                    </td>
+                    <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }};">
+                        {{ $row['marks'] }}
+                    </td>
+                </tr>
+            @endforeach
+            @if($total)
+                <tr>
+                    <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }};">
+                        Total-Marks
+                    </td>
+                    <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }};">
+                        {{ $total }}
+                    </td>
+                </tr>
+            @endif
+            </tbody>
+        </table>
+    </div>
+@endif
+
 @if($data['qr_code'])
 <img style="
     position: absolute;
@@ -137,7 +184,7 @@
     bottom: 120px;
     transform: translateX(-50%);
     font-weight: bold;
-    color: #6e6c6c;
+    color: #4d4d4d;
     text-transform: uppercase;
     font-size: 44px;
     margin-left: 500px;
