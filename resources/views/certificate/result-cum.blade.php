@@ -85,12 +85,16 @@
                         @php
                             $totalMaxMarks = 0;
                             $totalObtainedMarks = 0;
+                            $practicalObtainedMarks = 0;
+                            $subjectObtainedMarks = 0;
                         @endphp
 
                         @foreach($singleResults['subjects'] as $index => $singleResult)
                             @php
                                 $totalMaxMarks += $singleResult['subject_max_marks'];
                                 $totalObtainedMarks += $singleResult['total_marks'];
+                                $subjectObtainedMarks += is_numeric($singleResult['subject_obtained_marks']) ? $singleResult['subject_obtained_marks'] : 0;
+                                $practicalObtainedMarks += is_numeric($singleResult['practical_obtained_marks']) ? $singleResult['practical_obtained_marks'] : 0;
                             @endphp
                             <tr>
                                 <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$index+1}}</td>
@@ -106,7 +110,9 @@
                         <tr>
                             <td colspan="2" style="border: 2px solid #4d4d4d; padding: 10px; font-weight: bold; text-align: right;">Total:</td>
                             <td style="border: 2px solid #4d4d4d; padding: 10px; font-weight: bold;">{{ $totalMaxMarks }}</td>
-                            <td colspan="2" style="border: 2px solid #4d4d4d;"></td>
+                            <td style="border: 2px solid #4d4d4d; padding: 10px; font-weight: bold;">{{ $subjectObtainedMarks }}</td>
+                            <td style="border: 2px solid #4d4d4d; padding: 10px; font-weight: bold;">{{ $practicalObtainedMarks == 0 ? '--' : $practicalObtainedMarks }}</td>
+{{--                            <td colspan="2" style="border: 2px solid #4d4d4d;"></td>--}}
                             <td style="border: 2px solid #4d4d4d; padding: 10px; font-weight: bold;">{{ $totalObtainedMarks }}</td>
                         </tr>
                         </tbody>

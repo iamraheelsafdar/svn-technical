@@ -265,9 +265,15 @@ class CertificateController extends Controller
             ]));
             $url = route('viewStudentResult', ['key' => $key]); // Get the URL from the named route
         }
-        $qrCode = QrCode::format('svg')->size(300)->generate($url);
+        $qrCode = QrCode::format('svg')->size(200)->generate($url);
         $base64Qr = 'data:image/svg+xml;base64,' . base64_encode($qrCode);
 
+        $footerDate = $completionDate->copy()->addMonths(2);
+        $daysInMonth = $footerDate->daysInMonth;
+        $randomDay = rand(1, $daysInMonth);
+
+// Get a random date between start and end of the month
+        $randomDate = $footerDate->copy()->day($randomDay)->format('d-M-Y');
         $payload = [
             'stream' => $streamName,
             'division' => $division,
@@ -280,7 +286,7 @@ class CertificateController extends Controller
             'stream_prefix' => $stream->enrollments->first()->name,
             'institute_name' => $this->getInstituteName($streamName),
             'serial_number' => $completionDate->format('Yd') . rand(1000, 9999),
-            'footer_date' => $completionDate->copy()->addMonths(2)->format('d-M-Y'),
+            'footer_date' => $randomDate,
             'reg_no' => "MIG/REF/{$prefixParts[0]}/" . $completionDate->format('Y') . rand(0, 99),
             'roll_number' => $student->course->prefix->prefix . $student->rollNumbers()->latest('id')->first()?->roll_number,
             'course_name' => $student->course->name,
@@ -437,10 +443,29 @@ class CertificateController extends Controller
             $resultYear = $lastDurationSession->year;
             $selectedDurationRollNumber = $lastDurationSession->roll_number;
         }
+//        $date = Carbon::createFromFormat('M Y', $endSession);
+//        $daysInMonth = $date->daysInMonth;
+//        $randomDay = rand(1, $daysInMonth);
+//        $exactFooterYear = $date->addMonth()->format('M-Y');
+//        $resultFooter = $admissionDate->addMonth()->copp($randomDay)->format('m-') . $exactFooterYear;
+
         $date = Carbon::createFromFormat('M Y', $endSession);
 
-        $exactFooterYear = $date->addMonth()->format('M-Y');
-        $resultFooter = $admissionDate->addMonth()->format('m-') . $exactFooterYear;
+        // Step 1: Add one month to the date
+        $footerDate = $date->copy()->addMonth();
+
+        // Step 2: Pick a random day in that month
+        $daysInMonth = $footerDate->daysInMonth;
+        $randomDay = rand(1, $daysInMonth);
+        $footerDate->day($randomDay);
+
+        // Step 3: Format the result
+        $exactFooterYear = $footerDate->format('M-Y');
+
+        $admissionRandom = $admissionDate->copy()->addMonth()->day($randomDay);
+        $resultFooter = $admissionRandom->format('d-') . $exactFooterYear;
+
+
         $finalResult = ResultController::resultCalculation($student, $studentResult);
 
 
