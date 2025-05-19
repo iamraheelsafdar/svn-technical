@@ -66,13 +66,13 @@
     </div>
     <div class="email-body">
         <p>Hi {{$user->name}},</p>
-        <p>We received a request to reset your password for your SVNTECHNICAL account. If you made this request, you can reset your password by clicking the button below:</p>
+        <p>We received a request to reset your password for your IGNITM account. If you made this request, you can reset your password by clicking the button below:</p>
         <a href="{{env('LIVE_URL')}}set-password/{{$user->email}}/{{$user->remember_token}}" class="reset-button">Reset Password</a>
         <p>If the button above doesn’t work, copy and paste the following link into your browser:</p>
         <p><a href="{{env('LIVE_URL')}}set-password/{{$user->email}}/{{$user->remember_token}}">{{env('LIVE_URL')}}set-password/{{$user->email}}/{{$user->remember_token}}</a></p>
         <p>This link will expire in 24 hour, so be sure to reset your password soon.</p>
         <p>If you didn’t request a password reset, please ignore this email. Your account is secure.</p>
-        <p>If you have any questions, feel free to contact our support team at <a href="mailto:support@svntechnical.com">support@svntechnical.com</a>.</p>
+        <p>If you have any questions, feel free to contact our support team at <a href="mailto:support@ignitm.com">support@ignitm.com</a>.</p>
         <p>Thank you,</p>
         <p>The SVNTECHNICAL Team</p>
     </div>

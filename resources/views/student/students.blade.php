@@ -166,7 +166,7 @@
 
                         @if($student['status'] && $student['result'])
                             <a href="{{ route('certificate', ['student_id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Certificate</a>
-                            <a href="{{ route('provisonalCertificate', ['student_id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Provisonal Certificate</a>
+{{--                            <a href="{{ route('provisonalCertificate', ['student_id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Provisonal Certificate</a>--}}
                             <a href="{{ route('migrationForm', ['student_id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> Migration</a>
                             <a href="{{ route('viewResult', ['student_id' => $student['id']]) }}" class="btn btn-primary"><i class="bi bi-file-earmark-fill"></i> View Result</a>
                         @endif

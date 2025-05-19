@@ -65,7 +65,7 @@ class CenterController extends Controller
             'state' => $request->state,
             'address' => $request->address,
             'owner_name' => $request->owner_name,
-            'registration_prefix' => $center == 0 ? 'SVN/SC/0' . '331' : 'SVN/SC/0' . (331 + $center)
+            'registration_prefix' => $center == 0 ? 'IGNITM/CL/0' . '129' : 'IGNITM/CL/0' . (129 + $center)
         ]);
         InvitationMailJob::dispatch($user);
         session()->flash('success', 'Center registered successfully.');

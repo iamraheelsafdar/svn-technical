@@ -47,7 +47,7 @@
                     <th class="d-flex text-nowrap">
                         <button class="btn btn-primary" type="submit">Search</button>
                         <a href="{{route('enrollmentsPage')}}" class="btn btn-dark w-100 d-block ms-2" type="submit">Clear</a>
-                        <a href="{{ route('addEnrollmentPage') }}" class="btn btn-warning ms-2">Add Enrollment</a>
+                        {{--<a href="{{ route('addEnrollmentPage') }}" class="btn btn-warning ms-2">Add Enrollment</a>--}}
 
                     </th>
 

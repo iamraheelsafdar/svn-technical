@@ -26,8 +26,8 @@ class StudentsResource extends JsonResource
             'photo' => $this->photo,
             'steam_name' => $this->course->stream->name,
             'course_id' => $this->course_id,
-            'result' => count($this->result->toArray()) > 0
-//            'roll_number' => count($this->rollNumbers->pluck('roll_number')->toArray()) > 0
+            'result' => count($this->result->toArray()) > 0,
+            'institute_name' => count($this->rollNumbers->pluck('institute_name')->toArray()) > 0
         ];
     }
 }

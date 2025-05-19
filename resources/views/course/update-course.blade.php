@@ -31,7 +31,7 @@
 
             <div class="col-6 col-md-6 col-lg-3 mb-3">
                 <label for="duration" class="form-label">Duration (Years/Semesters/Monthly)</label>
-                <input type="number" class="form-control" id="duration" name="duration" min="1"
+                <input type="number" class="form-control" id="duration" name="duration" min="1" {{$course->subjects->count() > 0  ? 'disabled' : ''}}
                        value="{{ $course->duration }}"
                        placeholder="Select course type first" required>
             </div>

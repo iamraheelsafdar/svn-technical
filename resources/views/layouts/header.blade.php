@@ -32,12 +32,12 @@
                         <i class="bi bi-sliders"></i> Student Reference
                     </a>
                 </li>
-                <li class="{{ request()->routeIs(['enrollmentsPage', 'addEnrollmentPage', 'updateEnrollmentView']) ? 'active' : '' }}">
+            {{--    <li class="{{ request()->routeIs(['enrollmentsPage', 'addEnrollmentPage', 'updateEnrollmentView']) ? 'active' : '' }}">
                     <a href="{{ route('enrollmentsPage') }}" class="text-decoration-none px-3 py-3 d-block"
                        title="Enrollment">
                         <i class="bi bi-mortarboard-fill"></i> Enrollment
                     </a>
-                </li>
+                </li>--}}
                 <li class="{{ request()->routeIs(['centersPage', 'addCenterPage', 'updateCenterView']) ? 'active' : '' }}">
                     <a href="{{ route('centersPage') }}" class="text-decoration-none px-3 py-3 d-block" title="Centers">
                         <i class="bi bi-people-fill"></i> Centers
@@ -48,12 +48,12 @@
                         <span><i class="bi bi-pencil-fill"></i> Courses</span>
                     </a>
                 </li>
-                <li class="{{ request()->routeIs(['prefixesPage', 'addPrefixPage', 'updatePrefixView']) ? 'active' : '' }}">
+              {{--  <li class="{{ request()->routeIs(['prefixesPage', 'addPrefixPage', 'updatePrefixView']) ? 'active' : '' }}">
                     <a href="{{ route('prefixesPage') }}" class="text-decoration-none px-3 py-3 d-block"
                        title="Prefixes">
                         <i class="bi bi-sliders2-vertical"></i> Prefixes
                     </a>
-                </li>
+                </li>--}}
             @endif
         </ul>
     </nav>

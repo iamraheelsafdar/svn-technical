@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Certificate;
 
 use App\Http\Controllers\Result\ResultController;
+use App\Models\StudentRollNumber;
+use App\Models\Subject;
+use DateTime;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
@@ -254,7 +257,16 @@ class CertificateController extends Controller
 
         // Prepare result data for consolidate-result type
         $resultData = $this->prepareResultData($student, $certificateType, $admissionDate, $subjectIds, $duration);
-        $url = '-';
+        if ($streamName == 'ITI') {
+            $url = env('ITI_URL');
+        } elseif ($streamName == 'PARAMEDICAL') {
+            $url = env('PARAMEDICAL_URL');
+        } elseif ($streamName == 'TECHNOLOGY & MGMT') {
+            $url = env('TECT_URL');
+        } else {
+
+            $url = '-';
+        }
         if ($subjectIds) {
             $key = base64_encode(json_encode([
                 'student_id' => $student->id,
@@ -263,8 +275,25 @@ class CertificateController extends Controller
             ]));
             $url = route('viewStudentResult', ['key' => $key]); // Get the URL from the named route
         }
-        $qrCode = QrCode::format('svg')->size(300)->generate($url);
+        $qrCode = QrCode::format('svg')->size(200)->generate($url);
         $base64Qr = 'data:image/svg+xml;base64,' . base64_encode($qrCode);
+
+        $footerDate = $completionDate->copy()->addMonths(2);
+
+        if ($certificateType == 'migration-certificate'){
+            $daysInMonth = $streamName == 'ITI' ? 3 : ($streamName == 'PARAMEDICAL' ? 2 : 1);
+        }elseif ($certificateType == 'certificate'){
+            $daysInMonth = $streamName == 'ITI' ? 3 : ($streamName == 'PARAMEDICAL' ? 1 : 2);
+        }elseif ($certificateType == 'paramedical-registration-certificate'){
+            $daysInMonth = 0;
+            $student->course->duration = 0;
+            $footerDate = $completionDate->copy()->addMonths(4);
+        } else{
+            $daysInMonth = $streamName == 'ITI' ? 4 : ($streamName == 'PARAMEDICAL' ? 3 : 5);
+        }
+
+        // Get a random date between start and end of the month
+        $exactDate = $footerDate->copy()->addDay($student->course->duration+$daysInMonth)->format('d-M-Y');
 
         $payload = [
             'stream' => $streamName,
@@ -276,9 +305,9 @@ class CertificateController extends Controller
             'year_completion' => $completionDate->format('Y'),
             'completion_year' => $completionDate->format('m-d-Y'),
             'stream_prefix' => $stream->enrollments->first()->name,
-            'institute_name' => $this->getInstituteName($streamName),
+            'institute_name' => $this->getInstituteName($streamName, $student),
             'serial_number' => $completionDate->format('Yd') . rand(1000, 9999),
-            'footer_date' => $completionDate->copy()->addMonths(2)->format('d-M-Y'),
+            'footer_date' => $exactDate,
             'reg_no' => "MIG/REF/{$prefixParts[0]}/" . $completionDate->format('Y') . rand(0, 99),
             'roll_number' => $student->course->prefix->prefix . $student->rollNumbers()->latest('id')->first()?->roll_number,
             'course_name' => $student->course->name,
@@ -287,7 +316,72 @@ class CertificateController extends Controller
             'student_image' => $student['photo'] ? asset($baseUrl . 'storage/' . $student['photo']) : asset($baseUrl . 'assets/img/profileImage.png'),
             'qr_code' => Carbon::parse($student->admission_date)->year > 2013 ? $base64Qr : null,
         ];
+        if ($duration == $student->course->duration){
+            $payload['summary'] = [
+                self::summaryForConsolidate($student, $student->rollNumbers()->latest('id')->first()?->roll_number)
+            ];
+        }
         return array_merge($resultData, $payload);
+    }
+
+
+    public function summaryForConsolidate($student,$rollNumber)
+    {
+        $studentRollNumber = StudentRollNumber::where('roll_number', $rollNumber)->first();
+        $summery = [];
+        $allSubjectIds = []; // <-- collect relevant subject IDs only
+
+        for ($i = 1; $i <= $studentRollNumber->duration; $i++) {
+            $durationPart = $student->lateral_duration + $i;
+
+            $subjectIdValid = Subject::where('course_id', $student->course->id)
+                ->where('duration_part', $durationPart)
+                ->pluck('id')
+                ->toArray();
+
+            // Merge subject IDs into master list
+            $allSubjectIds = array_merge($allSubjectIds, $subjectIdValid);
+
+            $periodResults = StudentResult::where('student_id', $student['id'])
+                ->whereIn('subject_id', $subjectIdValid)
+                ->get();
+
+            if ($periodResults->count() > 0) {
+                $periodObtained = $periodResults->sum(function ($result) {
+                    return $result->subject_obtained_marks + ($result->practical_obtained_marks ?: 0);
+                });
+
+                $periodMax = $periodResults->sum(function ($result) {
+                    return $result->subject->max_marks + ($result->subject->practical_max_marks ?: 0);
+                });
+
+                if ($periodMax > 0) {
+                    $summery[] = [
+                        'year' => strtoupper($student->course->type) . '-' . $durationPart,
+                        'marks' => $periodObtained . '/' . $periodMax
+                    ];
+                }
+            }
+        }
+
+        // Filter all results by relevant subject IDs only
+        $filteredResults = StudentResult::where('student_id', $student['id'])
+            ->whereIn('subject_id', $allSubjectIds)
+            ->get();
+
+        $totalObtained = $filteredResults->sum(function ($result) {
+            return $result->subject_obtained_marks + ($result->practical_obtained_marks ?: 0);
+        });
+
+        $totalMax = $filteredResults->sum(function ($result) {
+            return $result->subject->max_marks + ($result->subject->practical_max_marks ?: 0);
+        });
+
+        $summery[] = [
+            'total_marks' => $totalObtained . '/' . $totalMax,
+        ];
+
+        return $summery;
     }
 
     /**
@@ -358,6 +452,9 @@ class CertificateController extends Controller
             $selectedDurationRollNumber = $resultDuration->roll_number;
             preg_match('/\w+ \d{4}$/', $resultDuration->session, $matches);
             $endSession = $matches[0] ?? null;
+            $date = Carbon::createFromFormat('M Y', $endSession);
+            $exactFooterYear = $date->addMonth()->format('M-Y');
+            $duration += 1;
         } else {
             $studentResult = StudentResult::where('student_id', $student->id);
             $firstDurationSession = $student->rollNumbers->first()->session;
@@ -366,19 +463,22 @@ class CertificateController extends Controller
             $startSession = $matches[0] ?? null;
             preg_match('/\w+ \d{4}$/', $lastDurationSession->session, $matches);
             $endSession = $matches[0] ?? null;
+            $date = DateTime::createFromFormat('M Y', $endSession);
+            $date->modify('+1 month');
+            $endSession = $date->format('M Y');
             $resultSession = $startSession . '-' . $endSession;
             $resultYear = $lastDurationSession->year;
             $selectedDurationRollNumber = $lastDurationSession->roll_number;
+            $date = Carbon::createFromFormat('M Y', $endSession);
+            $exactFooterYear = $date->addMonths(2)->format('M-Y');
+            $duration = $student->course->duration;
         }
-        $date = Carbon::createFromFormat('M Y', $endSession);
-
-        $exactFooterYear = $date->addMonth()->format('M-Y');
-        $resultFooter = $admissionDate->addMonth()->format('m-') . $exactFooterYear;
+        $resultFooter = $admissionDate->addMonth()->format('d') + $duration .'-' . $exactFooterYear;
         $finalResult = ResultController::resultCalculation($student, $studentResult);
 
 
         return array_merge($finalResult, [
-            'result_session' => $resultSession,
+            'result_session' => strtoupper($resultSession),
             'footer_result_date' => $resultFooter,
             'result_serail_number' => $resultYear . $admissionDate->format('m') . rand(1000, 9999),
             'result_cum_roll_number' => $student->course->prefix->prefix . ($selectedDurationRollNumber ?? ''),
@@ -389,14 +489,15 @@ class CertificateController extends Controller
      * Get the institute name based on the stream.
      *
      * @param string $streamName
+     * @param $student
      * @return string
      */
-    private function getInstituteName(string $streamName): string
+    public static function getInstituteName(string $streamName, $student): string
     {
         return match ($streamName) {
-            'ITI' => 'SWAMI VIVEKANAND INDUSTRIAL & VOCATIONAL TRAINING INSTITUTE , SOHNA',
-            'TECHNOLOGY & MGMT' => 'SWAMI VIVEKANAND INSTITUTE OF TECHNOLOGY & MANAGEMENT , SOHNA',
-            default => 'SWAMI VIVEKANAND INSTITUTE OF PARAMEDICAL SCIENCE , SOHNA',
+            'ITI' => strtoupper($student->institute_name) ?: 'SWAMI VIVEKANAND INDUSTRIAL & VOCATIONAL TRAINING INSTITUTE , SOHNA',
+            'TECHNOLOGY & MGMT' => strtoupper($student->institute_name) ?: 'SWAMI VIVEKANAND INSTITUTE OF TECHNOLOGY & MANAGEMENT , SOHNA',
+            default => strtoupper($student->institute_name) ?: 'SWAMI VIVEKANAND INSTITUTE OF PARAMEDICAL SCIENCE , SOHNA',
         };
     }
 

@@ -26,25 +26,13 @@
                        value="{{$student->mother_name}}"
                        placeholder="Enter Mother Name">
             </div>
-            @if(auth()->user()->role == 'Admin')
-                <div class="col-6 col-md-3 col-lg-3 mb-3">
-                    <label for="reference_name" class="form-label">Reference Name</label>
-                    <select id="reference_name" class="form-control" name="reference_id">
-                        <option
-                            value="{{ $student->reference->id ?? null }}"
-                            {{ isset($student->reference->id) ? 'selected' : '' }}>
-                            {{ $student->reference->reference ?? 'Select Reference' }}
-                        </option>
-                        @foreach($references as $reference)
-                            <option
-                                value="{{ $reference['id'] }}"
-                                {{ (request()->input('reference_id') == $reference['id'] || (isset($student->reference->id) && $student->reference->id == $reference['id'])) ? 'selected' : '' }}>
-                                {{ ucfirst($reference['reference']) }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-            @endif
+            <div class="{{(auth()->user()->role == 'Center') ? 'col-6 col-md-6 col-lg-6 mb-3' : 'col-6 col-md-3 col-lg-3 mb-3'}}">
+                <label for="institute_name" class="form-label">Institute Name</label>
+                <input type="text" name="institute_name" id="institute_name" class="form-control"
+                       value="{{$student->institute_name}}"
+                       placeholder="Enter Institute Name">
+            </div>
+
             <div
                 class="{{(auth()->user()->role == 'Center' || $student->course->duration == '1') ? 'col-6 col-md-6 col-lg-6 mb-3' : 'col-6 col-md-3 col-lg-3 mb-3'}}">
                 <label for="stream_name" class="form-label">Stream</label>
@@ -100,6 +88,26 @@
                 </div>
             @endif
 
+            @if(auth()->user()->role == 'Admin')
+                <div class="col-6 col-md-3 col-lg-3 mb-3">
+                    <label for="reference_name" class="form-label">Reference Name</label>
+                    <select id="reference_name" class="form-control" name="reference_id">
+                        <option
+                            value="{{ $student->reference->id ?? null }}"
+                            {{ isset($student->reference->id) ? 'selected' : '' }}>
+                            {{ $student->reference->reference ?? 'Select Reference' }}
+                        </option>
+                        @foreach($references as $reference)
+                            <option
+                                value="{{ $reference['id'] }}"
+                                {{ (request()->input('reference_id') == $reference['id'] || (isset($student->reference->id) && $student->reference->id == $reference['id'])) ? 'selected' : '' }}>
+                                {{ ucfirst($reference['reference']) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
+
             <div class="col-6 col-md-6 col-lg-3 mb-3">
                 <label for="gender" class="form-label">Gender</label>
                 <select required class="form-control" name="gender">
@@ -123,7 +131,7 @@
                 <label for="mode" class="form-label">Mode</label>
                 <select required class="form-control" name="mode">
                     <option
-                        value="{{ $student->mode }}">
+                        value="{{ strtolower($student->mode) }}">
                         {{ ucfirst($student->mode) }}
                     </option>
 
@@ -194,8 +202,9 @@
                     <input type="file" name="student_signature" id="student_signature" class="form-control">
                 </div>
             </div>
-
-            <button type="submit" class="btn btn-danger w-auto mx-auto">Update Student</button>
+            <div class="col-12 mx-auto text-center">
+                <button type="submit" class="btn btn-danger w-auto mx-auto">Update Student</button>
+            </div>
         </form>
     </div>
     <script>

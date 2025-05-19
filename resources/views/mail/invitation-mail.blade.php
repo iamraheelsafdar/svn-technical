@@ -66,14 +66,14 @@
     </div>
     <div class="email-body">
         <p><b>Dear {{$user->name}},</b></p>
-        <p>Welcome to SVN Technical! 🚀 We’re excited to have you on board. Your account has been successfully created, and you’re just one step away from accessing all our features.</p>
+        <p>Welcome to IGNITM! 🚀 We’re excited to have you on board. Your account has been successfully created, and you’re just one step away from accessing all our features.</p>
         <h4>Set Up Your Password:</h4>
         <p>To ensure your account security, please create a new password before logging in:</p>
 
         <p>🔹 Set Your Password Here:<br><a href="{{env('LIVE_URL')}}set-password/{{$user->email}}/{{$user->remember_token}}" class="reset-button">Set Password</a></p>
         <p>If the button above doesn’t work, copy and paste the following link into your browser:</p>
         <h4>Once your password is set, you can log in and start exploring:</h4>
-        <p>Login Here:<br><a class="reset-button" href="{{env('LIVE_URL')}}">SVN Technical Login</a></p>
+        <p>Login Here:<br><a class="reset-button" href="{{env('LIVE_URL')}}">IGNITM Login</a></p>
         <h4>What’s Next?</h4>
         <p>
             ✅ Complete Your Profile – Get personalized recommendations.<br>
@@ -81,16 +81,16 @@
             ✅ Stay Updated – Look out for exclusive insights, updates, and special offers.</p>
         <h4>Need Help?</h4>
 
-        <p>If you didn’t sign up for this account or need assistance, please contact us at <a href="mailto:support@svntechnical.com">support@svntechnical.com</a>.<br>
+        <p>If you didn’t sign up for this account or need assistance, please contact us at <a href="mailto:support@ignitm.com">support@ignitm.com</a>.<br>
         🔹 Follow us for the latest updates:<br>
         📌 LinkedIn | 📌 Twitter | 📌 Facebook</p>
         <p>Thank you for joining us! We’re here to support you every step of the way.</p>
         <p><b>Best regards,</b></p>
-        <p><b>The SVN Technical Team</b></p>
-        <p>🌐 <a href="www.svntechnical.com">www.svntechnical.com</a></p>
+        <p><b>The IGNITM Team</b></p>
+        <p>🌐 <a href="https://software.ignitm.com/">https://software.ignitm.com/</a></p>
     </div>
     <div class="email-footer">
-        &copy; {{date('Y')}} SVNTECHNICAL. All rights reserved.
+        &copy; {{date('Y')}} IGNITM. All rights reserved.
     </div>
 </div>
 </body>

@@ -20,33 +20,51 @@
 
 <body style="background: url('{{ $data['certificate_image'] }}');height: 100%; width: 100%; background-size: contain;">
 
-<h2 style="position: relative; top:70px; margin-left: 250px; text-align: left; display: block; font-weight: bold;color: #6e6c6c;font-size: 50px">{{$data['serial_number']}}</h2>
+@if($data['stream'] == 'ITI')
+    <h2 style="position: relative; top:60px; margin-left: 250px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 50px">{{$data['result_serail_number']}}</h2>
+    <h2 style="position: relative; top:895px; margin-left: 20px; text-align: center; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px; margin-bottom: -30px"><u>{{ $data['result_session'] }}</u></h2>
+    <h2 style="position: relative; top:1008px; margin-left: 560px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{ $student['name'] }}</h2>
+    <h2 style="position: relative; top:1013px; margin-left: 550px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{ $student['father_name'] }}</h2>
+    <h2 style="position: relative; top:1018px; margin-left: 555px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{ $student['mother_name'] }}</h2>
+    <h2 style="position: relative; top:1028px; margin-left: 400px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{ $data['course_name']  }}</h2>
+    <h2 style="position: relative; top:1033px; margin-left: 480px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{$data['institute_name']}}</h2>
+    <h2 style="position: absolute; left: 1880px; top:1170px; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{$data['para_reg_no']}}</h2>
+    <h2 style="position: absolute; left: 1730px; top:1253px; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{$data['result_cum_roll_number']}}</h2>
+    <h2 style="position: absolute; left: 1650px; top:1340px; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{ $data['date_of_birth'] }}</h2>
+@endif
+@if($data['stream'] == 'PARAMEDICAL')
+    <h2 style="position: relative; top:60px; margin-left: 250px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 50px">{{$data['result_serail_number']}}</h2>
+    <h2 style="position: relative; top:895px; margin-left: 20px; text-align: center; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px; margin-bottom: -30px"><u>{{ $data['result_session'] }}</u></h2>
+    <h2 style="position: relative; top:1008px; margin-left: 560px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{ $student['name'] }}</h2>
+    <h2 style="position: relative; top:1013px; margin-left: 550px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{ $student['father_name'] }}</h2>
+    <h2 style="position: relative; top:1018px; margin-left: 555px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{ $student['mother_name'] }}</h2>
+    <h2 style="position: relative; top:1028px; margin-left: 400px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{ $data['course_name']  }}</h2>
+    <h2 style="position: relative; top:1033px; margin-left: 480px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{$data['institute_name']}}</h2>
+    <h2 style="position: absolute; left: 1880px; top:1170px; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{$data['para_reg_no']}}</h2>
+    <h2 style="position: absolute; left: 1730px; top:1253px; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{$data['result_cum_roll_number']}}</h2>
+    <h2 style="position: absolute; left: 1650px; top:1340px; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{ $data['date_of_birth'] }}</h2>
+@endif
+@if($data['stream'] == 'TECHNOLOGY & MGMT')
+    <h2 style="position: relative; top:60px; margin-left: 250px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 50px">{{$data['result_serail_number']}}</h2>
+    <h2 style="position: relative; top:895px; margin-left: 20px; text-align: center; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px; margin-bottom: -30px"><u>{{ $data['result_session'] }}</u></h2>
+    <h2 style="position: relative; top:1008px; margin-left: 560px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{ $student['name'] }}</h2>
+    <h2 style="position: relative; top:1013px; margin-left: 550px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{ $student['father_name'] }}</h2>
+    <h2 style="position: relative; top:1018px; margin-left: 555px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{ $student['mother_name'] }}</h2>
+    <h2 style="position: relative; top:1028px; margin-left: 400px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{ $data['course_name']  }}</h2>
+    <h2 style="position: relative; top:1033px; margin-left: 480px; text-align: left; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{$data['institute_name']}}</h2>
+    <h2 style="position: absolute; left: 1880px; top:1170px; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{$data['para_reg_no']}}</h2>
+    <h2 style="position: absolute; left: 1730px; top:1253px; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{$data['result_cum_roll_number']}}</h2>
+    <h2 style="position: absolute; left: 1650px; top:1340px; display: block; font-weight: bold;color: #4d4d4d;font-size: 39px">{{ $data['date_of_birth'] }}</h2>
+@endif
 
-<h2 style="position: relative; top:880px; margin-left: 20px; text-align: center; display: block; font-weight: bold;color: #6e6c6c;font-size: 44px; margin-bottom: -30px">{{ $data['result_session'] }}</h2>
-
-<h2 style="position: relative; top:995px; margin-left: 560px; text-align: left; display: block; font-weight: bold;color: #6e6c6c;font-size: 44px">{{ $student['name'] }}</h2>
-
-<h2 style="position: relative; top:995px; margin-left: 550px; text-align: left; display: block; font-weight: bold;color: #6e6c6c;font-size: 44px">{{ $student['father_name'] }}</h2>
-
-<h2 style="position: relative; top:990px; margin-left: 550px; text-align: left; display: block; font-weight: bold;color: #6e6c6c;font-size: 44px">{{ $student['mother_name'] }}</h2>
-
-<h2 style="position: relative; top:990px; margin-left: 420px; text-align: left; display: block; font-weight: bold;color: #6e6c6c;font-size: 44px">{{ $data['course_name']  }}</h2>
-
-<h2 style="position: relative; top:985px; margin-left: 500px; text-align: left; display: block; font-weight: bold;color: #6e6c6c;font-size: 44px">{{$data['institute_name']}}</h2>
-
-<h2 style="position: relative; top:540px; margin-right: 105px; text-align: right; display: block; font-weight: bold;color: #6e6c6c;font-size: 44px">{{$data['para_reg_no']}}</h2>
-
-<h2 style="position: relative; top:540px; margin-right: 300px; text-align: right; display: block; font-weight: bold;color: #6e6c6c;font-size: 44px">{{$data['roll_number']}}</h2>
-
-<h2 style="position: relative; top:535px; margin-right: 550px; text-align: right; font-weight: bold;color: #6e6c6c;font-size: 44px">{{ $data['date_of_birth'] }}</h2>
 
 @php
-    $isSingleRecord = count($data['results']) === 1;
+    $isSingleRecord = count($data['results']) <= 2;
     $isLargeDataset = count($data['results']) > 6;
-    $fontSize = $isSingleRecord ? '44px' : '22px';
+    $fontSize = $isSingleRecord ? '39px' : '14px';
 
     $columnWidths = $isSingleRecord
-        ? ['all_entries'=>'50px' , 'subject'=>'1725px']
+        ? ['all_entries'=>'50px' , 'subject'=>'500px']
         : ['all_entries'=>'', 'subject'=>''];
 
     $tableWidth = $isSingleRecord ? '100%' : ($isLargeDataset ? '33.33%' : '50%');
@@ -70,15 +88,15 @@
     // Calculate grand total
     $grandTotalObtained = array_sum(array_column($totals, 'obtained'));
     $grandTotalMax = array_sum(array_column($totals, 'max'));
-    $tableTop = $data['lateral'] ? '650px' : '700px';
+//    $tableTop = $data['lateral'] ? '650px' : '700px';
 @endphp
-<div style="position: relative; top:{{$tableTop}}; margin-left: 125px; margin-right: 125px;">
+<div style="position: relative; top:950px; margin-left: 125px; margin-right: 125px;">
     @if($data['lateral'])
-        <h4 style="margin-bottom: 8px; text-align: center; font-weight: bold; color: #6e6c6c; font-size: {{ $fontSize }};">
+        <h4 style="position:absolute;top: 10px; left: 0; right: 0; text-align: center; font-weight: bold; color: #4d4d4d; font-size: 39px;">
             Lateral Entry
         </h4>
     @endif
-    <table style="width: 100%; border-collapse: collapse;">
+    <table style="width: 100%; border-collapse: collapse; margin-top: 18px">
         @foreach($data['results'] as $key => $singleResults)
             @if($key % ($isLargeDataset ? 3 : 2) == 0) <!-- Open a new row for every 3 tables if large dataset, otherwise 2 -->
             <tr>
@@ -87,30 +105,30 @@
                 <!-- Table Cell for Each Result -->
                 <td style="width: {{ $tableWidth }}; vertical-align: top; padding: 10px;">
 
-                    <h4 style="margin-bottom: 5px; text-align: center; font-weight: bold; color: #6e6c6c; font-size: {{ $fontSize }};">
+                    <h4 style="margin-bottom: 15px; text-align: center; font-weight: bold; color: #4d4d4d; font-size: 39px;">
                         {{$singleResults['duration']}}
                     </h4>
 
-                    <table style="width: 100%; border: 2px solid #6e6c6c; border-collapse: collapse; margin-bottom: -10px">
+                    <table style="width: 100%; border: 2px solid #4d4d4d; border-collapse: collapse; margin-bottom: -10px">
                         <thead>
                         <tr>
-                            <th style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">S.No.</th>
-                            <th style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['subject']}}">Subjects</th>
-                            <th style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">M.M</th>
-                            <th style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">T</th>
-                            <th style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">P</th>
-                            <th style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">M.O</th>
+                            <th style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">S.No.</th>
+                            <th style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['subject']}}">Subjects</th>
+                            <th style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">M.M</th>
+                            <th style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">T</th>
+                            <th style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">P</th>
+                            <th style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">M.O</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($singleResults['subjects'] as $index => $singleResult)
                             <tr>
-                                <td style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$index+1}}</td>
-                                <td style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['subject']}}">{{$singleResult['subject_name']}}</td>
-                                <td style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$singleResult['subject_max_marks']}}</td>
-                                <td style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$singleResult['subject_obtained_marks']}}</td>
-                                <td style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$singleResult['practical_obtained_marks']}}</td>
-                                <td style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$singleResult['total_marks']}}</td>
+                                <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$index+1}}</td>
+                                <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['subject']}}">{{$singleResult['subject_name']}}</td>
+                                <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$singleResult['subject_max_marks']}}</td>
+                                <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$singleResult['subject_obtained_marks']}}</td>
+                                <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$singleResult['practical_obtained_marks']}}</td>
+                                <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; width: {{$columnWidths['all_entries']}}">{{$singleResult['total_marks']}}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -129,24 +147,26 @@
         @endif
     </table>
 </div>
-<div style="position:relative; margin-top:780px;text-align: left">
-    <table style="border: 2px solid #6e6c6c; border-collapse: collapse; margin-left: auto; margin-right: 110px">
+
+
+<div style="position:absolute; bottom: {{$isSingleRecord ? '700px' : '500px'}} ; text-align: right; right: 0">
+    <table style="border: 2px solid #4d4d4d; border-collapse: collapse; margin-left: auto; margin-right: 135px">
         <thead>
         <tr>
-            <th style="text-align: left;border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }};">Duration</th>
-            <th style="text-align: left;border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }};">Obtained Marks</th>
+            <th style="text-align: left;border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }};">Duration</th>
+            <th style="text-align: left;border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }};">Obtained Marks</th>
         </tr>
         </thead>
         <tbody>
         @foreach($totals as $duration => $marks)
             <tr>
-                <td style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }};">{{ $duration }}</td>
-                <td style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }};">{{ $marks['obtained'] }}/{{ $marks['max'] }}</td>
+                <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }};">{{ $duration }}</td>
+                <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }};">{{ $marks['obtained'] }}/{{ $marks['max'] }}</td>
             </tr>
         @endforeach
         <tr>
-            <td style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; font-weight: bold;">Total Marks</td>
-            <td style="border: 2px solid #6e6c6c; padding: 10px; font-size: {{ $fontSize }}; font-weight: bold;">{{ $grandTotalObtained }}/{{ $grandTotalMax }}</td>
+            <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; font-weight: bold;">Total Marks</td>
+            <td style="border: 2px solid #4d4d4d; padding: 10px; font-size: {{ $fontSize }}; font-weight: bold;">{{ $grandTotalObtained }}/{{ $grandTotalMax }}</td>
         </tr>
         </tbody>
     </table>
@@ -158,9 +178,9 @@
     bottom: 120px;
     transform: translateX(-50%);
     font-weight: bold;
-    color: #6e6c6c;
+    color: #4d4d4d;
     text-transform: uppercase;
-    font-size: 44px;
+    font-size: 39px;
     margin-left: 500px;
 ">
     {{$data['footer_result_date']}}

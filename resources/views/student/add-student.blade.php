@@ -22,6 +22,12 @@
                        value="{{ old('mother_name') }}"
                        placeholder="Enter Mother Name">
             </div>
+            <div class="col-6 col-md-6 col-lg-3 mb-3">
+                <label for="institute_name" class="form-label">Institute Name</label>
+                <input required type="text" name="institute_name" id="institute_name" class="form-control"
+                       value="{{ old('institute_name') }}"
+                       placeholder="Enter Institute Name">
+            </div>
 {{--            <div class="col-6 col-md-6 col-lg-3 mb-3">--}}
 {{--                <label for="logo" class="form-label">Select State</label>--}}
 {{--                <select name="state" class="form-select" aria-label="Default select example">--}}

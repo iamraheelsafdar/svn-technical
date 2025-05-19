@@ -7,7 +7,7 @@
             <div class="col-6 mb-3">
                 <label for="reg_number" class="form-label">Center Reg No</label>
                 <input type="text" name="reg_number" id="reg_number" class="form-control" readonly
-                       value="SVN/SC/0{{ $counts == 0 ? 331 : 331 + $counts }}"
+                       value="IGNITM/CL/0{{ $counts == 0 ? 129 : 129 + $counts }}"
                 >
             </div>
 

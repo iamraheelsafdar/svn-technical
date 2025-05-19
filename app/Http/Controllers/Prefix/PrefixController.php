@@ -28,7 +28,7 @@ class PrefixController extends Controller
      */
     public function addPrefixView(): Factory|View|Application
     {
-        $assignPrefixes = ['Course Management', 'Svn Enrollment'];
+        $assignPrefixes = ['Course Management'];
         return view('prefix.add-prefix', ['assignPrefixes' => $assignPrefixes]);
     }
 
@@ -82,7 +82,7 @@ class PrefixController extends Controller
         if (!$prefix) {
             return redirect()->back()->with('validation_errors', ['Prefix not found.']);
         }
-        $assignPrefixes = ['Course Management', 'Svn Enrollment'];
+        $assignPrefixes = ['Course Management'];
         return view('prefix.update-prefix', ['prefix' => $prefix, 'assignPrefixes' => $assignPrefixes]);
     }
 
