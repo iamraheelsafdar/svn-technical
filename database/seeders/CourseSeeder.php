@@ -35,6 +35,7 @@ class CourseSeeder extends Seeder
             $courseData = [
                 'stream_id' => $svnStream->id,
                 'prefix_id' => $prefix->id,
+                'old_course_id' => $oldCourse->id,
                 'name' => trim($oldCourse->course_name),
                 'code' => trim($oldCourse->course_code),
                 'duration' => $oldCourse->course_semesters,

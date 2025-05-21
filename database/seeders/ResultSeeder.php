@@ -36,6 +36,7 @@ class ResultSeeder extends Seeder
                 ->where('course_type', 'like', "%{$allNewCourse->type}%")
                 ->where('course_semesters', $allNewCourse->duration)
                 ->where('roll_no', $prefix->prefix)
+                ->where('id', $allNewCourse->old_course_id)
                 ->first();
 
             if (!$oldCourse) {

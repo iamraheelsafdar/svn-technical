@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Result;
 
+use App\Http\Controllers\Certificate\CertificateController;
 use App\Http\Requests\Result\AutoResultCreationRequest;
 use App\Http\Requests\Result\CreateResultRequest;
 use App\Models\Prefix;
@@ -261,12 +262,12 @@ class ResultController extends Controller
                         'father_name' => $student['father_name'],
                         'mother_name' => $student['mother_name'],
                         'dob' => Carbon::parse($student['dob'])->format('d-m-Y'),
-                        'enrolment_no_start' => $student->course->prefix->prefix . $student->enrollment,
+                        'enrolment_no_start' => $student->course->stream?->enrollments->first()?->prefix->prefix . $student->enrollment,
                         'roll_number' => $request['roll_number'],
                         'session' => $studentRollNumber->year,
                         'mobile_number' => '-',
                         'course_name' => $student->course->name . ($student['laterl_entry'] ? ' (LE) ' : ''),
-                        'institute' => self::getInstituteName($student->course->stream->name),
+                        'institute' => CertificateController::getInstituteName($student->course->stream->name, $student),
                         'student_image' => env('LIVE_URL').'storage/' . $student->photo,
                         'type' => strtoupper($student->course->type) . '-' . $studentRollNumber->duration,
                     ];
@@ -339,14 +340,5 @@ class ResultController extends Controller
 
         }
         return response()->json(['error' => 'Result not found'], 404);
-    }
-
-    private function getInstituteName(string $streamName): string
-    {
-        return match ($streamName) {
-            'ITI' => 'SWAMI VIVEKANAND INDUSTRIAL & VOCATIONAL TRAINING INSTITUTE , SOHNA',
-            'TECHNOLOGY & MGMT' => 'SWAMI VIVEKANAND INSTITUTE OF TECHNOLOGY & MANAGEMENT , SOHNA',
-            default => 'SWAMI VIVEKANAND INSTITUTE OF PARAMEDICAL SCIENCE , SOHNA',
-        };
     }
 }

@@ -46,7 +46,7 @@
     </tr>
     <tr>
         <th style="white-space: nowrap; border-collapse: collapse; border: 1px solid #4d4d4d; text-align: left; text-transform: uppercase; padding: 28px 20px;  font-size: 44px; margin-left: 6px">Date Of Registration</th>
-        <td style="width: 100%; white-space: nowrap; border-collapse: collapse; border: 1px solid #4d4d4d; text-align: left; text-transform: uppercase; padding: 28px 20px; font-size: 44px; margin-left: 6px">{{$data['reg_date']}}</td>
+        <td style="width: 100%; white-space: nowrap; border-collapse: collapse; border: 1px solid #4d4d4d; text-align: left; text-transform: uppercase; padding: 28px 20px; font-size: 44px; margin-left: 6px">{{$data['footer_date']}}</td>
     </tr>
 </table>
 <h4 style="position: absolute;top: 3168px;transform: translateX(-50%);color: #4d4d4d;text-transform: uppercase;font-size: 44px;margin-left: 475px;">{{$data['footer_date']}}</h4>

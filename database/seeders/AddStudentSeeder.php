@@ -23,6 +23,8 @@ class AddStudentSeeder extends Seeder
             $course = Course::where('name', $student->course_name)
                 ->where('type', 'LIKE', "%{$student->course_type}%")
                 ->where('stream_id', $student->course_stream)
+                ->where('duration', $student->course_duration)
+                ->where('old_course_id', $student->course_id)
                 ->first();
             if (!$course) {
                 continue; // Skip if course not found
@@ -74,6 +76,7 @@ class AddStudentSeeder extends Seeder
             // Insert only once per student
             Students::create([
                 'center_id' => $savedCenter->center->id,
+                'old_student_id' => $student->id,
                 'course_id' => $course->id,
                 'enrollment' => $newSecondPart,
                 'name' => ucfirst($student->name),

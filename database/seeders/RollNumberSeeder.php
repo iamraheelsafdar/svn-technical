@@ -86,6 +86,7 @@ class RollNumberSeeder extends Seeder
 
                         StudentRollNumber::create([
                             'student_id' => $savedStudent->id,
+                            'old_roll_number_id' => $rollNumber->id,
                             'year' => $year, // Use session end year
                             'session' => $session,
                             'roll_number' => $extractedPart,
