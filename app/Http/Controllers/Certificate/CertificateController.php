@@ -6,6 +6,7 @@ use App\Http\Controllers\Result\ResultController;
 use App\Models\StudentRollNumber;
 use App\Models\Subject;
 use DateTime;
+use Illuminate\Support\Str;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
@@ -306,9 +307,9 @@ class CertificateController extends Controller
             'completion_year' => $completionDate->format('m-d-Y'),
             'stream_prefix' => $stream->enrollments->first()->name,
             'institute_name' => $this->getInstituteName($streamName, $student),
-            'serial_number' => $completionDate->format('Yd') . rand(1000, 9999),
+            'serial_number' => $completionDate->format('Yd') . $student->id,
             'footer_date' => $exactDate,
-            'reg_no' => "MIG/REF/{$prefixParts[0]}/" . $completionDate->format('Y') . rand(0, 99),
+            'reg_no' => "MIG/IGNITM/{$prefixParts[0]}/" . $completionDate->format('Y') . rand(0, 99),
             'roll_number' => $student->course->prefix->prefix . $student->rollNumbers()->latest('id')->first()?->roll_number,
             'course_name' => $student->course->name,
             'date_of_birth' => Carbon::parse($student->dob)->format('d-M-Y'),
@@ -480,7 +481,7 @@ class CertificateController extends Controller
         return array_merge($finalResult, [
             'result_session' => strtoupper($resultSession),
             'footer_result_date' => $resultFooter,
-            'result_serail_number' => $resultYear . $admissionDate->format('m') . rand(1000, 9999),
+            'result_serail_number' => $resultYear . $admissionDate->format('m') . $duration . Str::of($selectedDurationRollNumber)->explode('/')->last(),
             'result_cum_roll_number' => $student->course->prefix->prefix . ($selectedDurationRollNumber ?? ''),
         ]);
     }

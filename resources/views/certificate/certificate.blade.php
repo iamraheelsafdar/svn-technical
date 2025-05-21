@@ -34,7 +34,7 @@
     <h4 style="position: absolute;top:2775px;transform: translateX(-50%);color: #4d4d4d;text-transform: uppercase;font-size: 39px;margin-left:600px; font-weight: bold;">{{$data['footer_date']}}</h4>
 
 @if($data['qr_code'])
-    <img style="position: absolute;bottom: 500px;transform: translateX(-50%);text-align: left; margin: 0 auto 0 280px;" src="{{ $data['qr_code'] }}" alt="QR Code">
+    <img style="position: absolute;bottom: 800px;transform: translateX(-50%);text-align: left; margin: 0 auto 0 280px;" src="{{ $data['qr_code'] }}" alt="QR Code">
 @endif
 
 </body>

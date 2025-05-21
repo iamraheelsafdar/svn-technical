@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Http\Controllers\Certificate\CertificateController;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -26,14 +27,6 @@ class StudentExport implements FromCollection, WithHeadings
     /**
      * @return Collection
      */
-    private function getInstituteName(string $streamName): string
-    {
-        return match ($streamName) {
-            'ITI' => 'SWAMI VIVEKANAND INDUSTRIAL & VOCATIONAL TRAINING INSTITUTE , SOHNA',
-            'TECHNOLOGY & MGMT' => 'SWAMI VIVEKANAND INSTITUTE OF TECHNOLOGY & MANAGEMENT , SOHNA',
-            default => 'SWAMI VIVEKANAND INSTITUTE OF PARAMEDICAL SCIENCE , SOHNA',
-        };
-    }
     public function collection(): Collection
     {
         $records = [];
@@ -49,7 +42,7 @@ class StudentExport implements FromCollection, WithHeadings
                 'registration_date' => Carbon::parse($student->registration_date)->format('d-m-Y'),
                 'course_duration' => $student->course->duration,
                 'ref_name' => $student->reference->reference ?? '-',
-                'institute_name' => self::getInstituteName($student->course->stream->name)
+                'institute_name' => CertificateController::getInstituteName($student->course->stream->name , $student)
             ];
         }
         return collect($records);

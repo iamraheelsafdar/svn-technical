@@ -150,7 +150,7 @@
             <div class="col-6 col-md-6 col-lg-3 mb-3">
                 <label for="dob" class="form-label">Date Of Birth</label>
                 <input class="form-control" type="text" id="dateInput" name="dob"
-                       required value="{{ $student->dob }}" placeholder="dd-mm-yyyy" disabled/>
+                       required value="{{ $student->dob }}" placeholder="dd-mm-yyyy"/>
             </div>
             <div class="col-6 col-md-6 col-lg-3 mb-3">
                 <label for="admission_date" class="form-label">Admission Date</label>

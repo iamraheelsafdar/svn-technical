@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Student;
 
 use App\Exports\StudentExport;
+use App\Http\Controllers\Certificate\CertificateController;
 use App\Http\Requests\Student\UpdateStudentRequest;
 use App\Http\Requests\Student\AddStudentRequest;
 use App\Http\Resources\Student\StudentsResource;
@@ -240,6 +241,7 @@ class StudentController extends Controller
             'mother_name' => $request->mother_name,
             'reference_id' => $request->reference_id,
             'institute_name'=> $request->institute_name ?? null,
+            'dob' => Carbon::createFromFormat('d-m-Y', $request->dob)->format('Y-m-d'),
         ]);
 
         $files = ['student_image', 'student_qualification', 'student_id', 'student_signature'];
@@ -282,5 +284,29 @@ class StudentController extends Controller
     {
         $students = Students::with('center', 'course', 'stream', 'reference')->get();
         return Excel::download(new StudentExport($students), 'Student.xlsx');
+    }
+
+    public function getStudentDetails(Request $request): JsonResponse
+    {
+        $string = $request['enrollment_no'];
+
+        $lastParts = implode('/', array_slice(explode('/', $string), -2));
+
+        $student = Students::where('enrollment', $lastParts)->first();
+
+        if (!$student) {
+            return response()->json(['error' => 'Result not found'], 404);
+        }
+        $details = [
+            'student_name' => $student['name'],
+            'father_name' => $student['father_name'],
+            'mother_name' => $student['mother_name'],
+            'dob' => Carbon::parse($student['dob'])->format('d-m-Y'),
+            'enrolment_no' => $student->course->prefix->prefix . $student->enrollment,
+            'course_name' => $student->course->name . ($student['laterl_entry'] ? ' (LE) ' : ''),
+            'institute' => CertificateController::getInstituteName($student->course->stream->name , $student),
+            'student_image' => env('LIVE_URL').'storage/' . $student->photo,
+        ];
+        return response()->json(['student' => $details]);
     }
 }

@@ -20,3 +20,4 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::post('/get-result' , [\App\Http\Controllers\Result\ResultController::class , 'getStudentResult']);
+Route::get('/student-detail' , [\App\Http\Controllers\Student\StudentController::class , 'getStudentDetails']);
