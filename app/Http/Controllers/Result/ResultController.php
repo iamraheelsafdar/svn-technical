@@ -92,7 +92,7 @@ class ResultController extends Controller
 
     public static function resultCalculation($student, $studentResult): array
     {
-        $allSubjects = $student->course->subjects->whereIn('id', $studentResult->pluck('subject_id')->toArray())->sortBy('duration_part');
+        $allSubjects = $student->course->subjects->whereIn('id', $studentResult->pluck('subject_id')->toArray())->sortBy('duration_part')->sortBy('code');
         $finalResult = [
             'results' => [], // Initialize an array to store grouped results by duration
             'student_id' => $student->id,
