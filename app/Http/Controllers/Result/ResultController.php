@@ -164,7 +164,7 @@ class ResultController extends Controller
             $theoreticalMarks = ceil(($subject->max_marks * $subjectPercentage) / 100);
 
             // Ensure theory marks are at least the minimum required (with some buffer above minimum)
-            $theoryMinimum = $subject->min_marks;
+            $theoryMinimum = $subject->min_marks > 30 ? $subject->min_marks - 30 : $subject->min_marks;
             $theoryObtained = max($theoreticalMarks, $theoryMinimum + random_int(1, 5));
 
             // Ensure we don't exceed maximum marks
@@ -179,7 +179,7 @@ class ResultController extends Controller
                 $practicalMarks = ceil(($subject->practical_max_marks * $practicalPercentage) / 100);
 
                 // Ensure practical marks are at least the minimum required
-                $practicalMinimum = $subject->practical_min_marks;
+                $practicalMinimum = $subject->practical_min_marks > 15 ? $subject->practical_min_marks - 15 : $subject->practical_min_marks;
                 $practicalObtained = max($practicalMarks, $practicalMinimum + random_int(1, 3));
 
                 // Ensure we don't exceed maximum practical marks

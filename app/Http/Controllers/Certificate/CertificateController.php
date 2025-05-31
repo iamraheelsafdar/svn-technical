@@ -309,7 +309,7 @@ class CertificateController extends Controller
             'institute_name' => $this->getInstituteName($streamName, $student),
             'serial_number' => $completionDate->format('Yd') . $student->id,
             'footer_date' => $exactDate,
-            'reg_no' => "MIG/IGNITM/{$prefixParts[0]}/" . $completionDate->format('Y') . rand(0, 99),
+            'reg_no' => "MIG/RGTMI/{$prefixParts[0]}/" . $completionDate->format('Y') . rand(0, 99),
             'roll_number' => $student->course->prefix->prefix . $student->rollNumbers()->latest('id')->first()?->roll_number,
             'course_name' => $student->course->name,
             'date_of_birth' => Carbon::parse($student->dob)->format('d-M-Y'),

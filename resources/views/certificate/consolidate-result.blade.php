@@ -36,7 +36,7 @@
 @php
     $isSingleRecord = count($data['results']) <= 2;
     $isLargeDataset = count($data['results']) > 6;
-    $fontSize = $isSingleRecord ? '39px' : '16px';
+    $fontSize = $isSingleRecord ? '39px' : '19px';
 
     $columnWidths = $isSingleRecord
         ? ['all_entries'=>'50px' , 'subject'=>'500px']

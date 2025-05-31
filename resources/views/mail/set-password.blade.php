@@ -5,7 +5,7 @@
         <div class="overlay"></div>
         <div class="login-form-container">
             <div class="form-box">
-                <h2 class="mb-4 text-dark">Set Password <span class="title">IGNITM</span></h2>
+                <h2 class="mb-4 text-dark">Set Password <span class="title">RGTMI</span></h2>
                 <form method="POST" action="{{ route('setPassword') }}">
                     @csrf
                     <input type="hidden" name="email" value="{{$user->email}}">
