@@ -169,14 +169,12 @@ class StudentController extends Controller
         }
 
         // Insert roll numbers with session details
-        $rollNumber = StudentRollNumber::orderBy('id', 'desc')->first();
         foreach ($sessions as $duration => $session) {
             $sessionParts = explode(" - ", $session);
             $sessionEnd = end($sessionParts); // Get session end date
             StudentRollNumber::create([
                 'student_id' => $student->id,
                 'duration' => $skipLateral + $duration,
-                'old_roll_number_id' => $rollNumber->old_roll_number_id + $duration,
                 'roll_number' => Carbon::parse($student->admission_date)->year . '/' . rand(99, 999) . '/' . rand(1, 1000),
                 'year' => Carbon::parse($sessionEnd)->year, // Use session end year,
                 'session' => $session,
